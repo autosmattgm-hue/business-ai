@@ -4,7 +4,56 @@
 ═══════════════════════════════════════════════════════ */
 
 // ── GLOBALS ─────────────────────────────────────────────
-const API_BASE = window.location.origin;
+const LOCAL_API_PORTS = [3010, 3000, 3001, 3100, 3200];
+const API_BASES = (() => {
+  const bases = [];
+  const addBase = (value) => {
+    const normalized = String(value || "").trim().replace(/\/+$/, "");
+    if (normalized && !bases.includes(normalized)) {
+      bases.push(normalized);
+    }
+  };
+
+  if (window.SMART_BOSS_API_BASE) {
+    addBase(window.SMART_BOSS_API_BASE);
+  }
+
+  if (window.location.protocol === "http:" || window.location.protocol === "https:") {
+    addBase(window.location.origin);
+  }
+
+  const isLocalPage =
+    window.location.protocol === "file:" ||
+    ["localhost", "127.0.0.1"].includes(window.location.hostname);
+
+  if (isLocalPage) {
+    LOCAL_API_PORTS.forEach((port) => addBase(`http://localhost:${port}`));
+    LOCAL_API_PORTS.forEach((port) => addBase(`http://127.0.0.1:${port}`));
+  }
+
+  return bases;
+})();
+
+async function fetchApi(path, init = {}) {
+  const requestPath = path.startsWith("/") ? path : `/${path}`;
+  let lastError = null;
+
+  for (const base of API_BASES) {
+    try {
+      const response = await fetch(`${base}${requestPath}`, init);
+
+      if (response.status === 404 && base !== API_BASES[API_BASES.length - 1]) {
+        continue;
+      }
+
+      return response;
+    } catch (error) {
+      lastError = error;
+    }
+  }
+
+  throw lastError || new Error("Could not connect to the local or deployed AI server.");
+}
 
 function sanitizeAiText(text) {
   return String(text || "")
@@ -87,8 +136,215 @@ function copyText(text) {
   navigator.clipboard.writeText(text).then(() => showToast("Copied to clipboard!", "copy"));
 }
 
+const externalScriptPromises = new Map();
+
+function loadExternalScript(src) {
+  if (externalScriptPromises.has(src)) {
+    return externalScriptPromises.get(src);
+  }
+
+  const promise = new Promise((resolve, reject) => {
+    const existing = document.querySelector(`script[src="${src}"]`);
+    if (existing) {
+      existing.addEventListener("load", resolve, { once: true });
+      existing.addEventListener("error", () => reject(new Error(`Failed to load ${src}`)), { once: true });
+      if (existing.dataset.loaded === "true") resolve();
+      return;
+    }
+
+    const script = document.createElement("script");
+    script.src = src;
+    script.async = true;
+    script.onload = () => {
+      script.dataset.loaded = "true";
+      resolve();
+    };
+    script.onerror = () => reject(new Error(`Failed to load ${src}`));
+    document.head.appendChild(script);
+  });
+
+  externalScriptPromises.set(src, promise);
+  return promise;
+}
+
+function readFileAsArrayBuffer(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = () => reject(new Error(`Could not read ${file.name}`));
+    reader.readAsArrayBuffer(file);
+  });
+}
+
+function readFileAsText(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(String(reader.result || ""));
+    reader.onerror = () => reject(new Error(`Could not read ${file.name}`));
+    reader.readAsText(file);
+  });
+}
+
+async function extractPdfText(file) {
+  await loadExternalScript("https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js");
+  if (!window.pdfjsLib) throw new Error("PDF reader library did not load");
+
+  window.pdfjsLib.GlobalWorkerOptions.workerSrc = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
+  const arrayBuffer = await readFileAsArrayBuffer(file);
+  const pdf = await window.pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+  const pages = [];
+
+  for (let pageNumber = 1; pageNumber <= pdf.numPages; pageNumber += 1) {
+    const page = await pdf.getPage(pageNumber);
+    const content = await page.getTextContent();
+    const text = content.items.map((item) => item.str).join(" ");
+    pages.push(`Page ${pageNumber}:\n${text}`);
+  }
+
+  return pages.join("\n\n");
+}
+
+async function extractDocxText(file) {
+  await loadExternalScript("https://unpkg.com/mammoth@1.9.0/mammoth.browser.min.js");
+  if (!window.mammoth) throw new Error("DOCX reader library did not load");
+
+  const arrayBuffer = await readFileAsArrayBuffer(file);
+  const result = await window.mammoth.extractRawText({ arrayBuffer });
+  return result.value || "";
+}
+
+async function extractLegacyDocText(file) {
+  const arrayBuffer = await readFileAsArrayBuffer(file);
+  const byteArray = new Uint8Array(arrayBuffer);
+  let text = "";
+
+  for (let index = 0; index < byteArray.length; index += 1) {
+    const code = byteArray[index];
+    if ((code >= 32 && code <= 126) || code === 10 || code === 13 || code === 9) {
+      text += String.fromCharCode(code);
+    }
+  }
+
+  return text.replace(/\s{2,}/g, " ").trim();
+}
+
+function truncateDocumentText(text, maxLength = 45000) {
+  const cleanText = String(text || "").trim();
+  if (cleanText.length <= maxLength) return cleanText;
+  return `${cleanText.slice(0, maxLength)}\n\n[Document truncated for processing due to length.]`;
+}
+
+async function extractTextFromFile(file) {
+  if (!file) throw new Error("No file selected");
+
+  const extension = file.name.toLowerCase().split(".").pop();
+
+  if (extension === "pdf") return extractPdfText(file);
+  if (extension === "docx") return extractDocxText(file);
+  if (extension === "doc") return extractLegacyDocText(file);
+  if (["txt", "md", "rtf"].includes(extension)) return readFileAsText(file);
+
+  throw new Error("Unsupported file type. Use PDF, DOC, DOCX, TXT, or MD.");
+}
+
+function getSpeechRecognitionConstructor() {
+  return window.SpeechRecognition || window.webkitSpeechRecognition || null;
+}
+
+function supportsSpeechRecognition() {
+  return Boolean(getSpeechRecognitionConstructor());
+}
+
+function supportsSpeechSynthesis() {
+  return typeof window !== "undefined" && "speechSynthesis" in window;
+}
+
+function stopSpeaking() {
+  if (supportsSpeechSynthesis()) {
+    window.speechSynthesis.cancel();
+  }
+}
+
+function speakText(text) {
+  if (!supportsSpeechSynthesis()) {
+    throw new Error("Text-to-speech is not supported in this browser.");
+  }
+
+  const spokenText = String(text || "").replace(/\s+/g, " ").trim();
+  if (!spokenText) {
+    throw new Error("There is no text to read aloud.");
+  }
+
+  stopSpeaking();
+  const utterance = new SpeechSynthesisUtterance(spokenText);
+  utterance.rate = 1;
+  utterance.pitch = 1;
+  utterance.volume = 1;
+  window.speechSynthesis.speak(utterance);
+}
+
+function createDictationSession({ textarea, onStart, onStop, onError }) {
+  const SpeechRecognitionCtor = getSpeechRecognitionConstructor();
+  if (!SpeechRecognitionCtor) {
+    throw new Error("Voice dictation is not supported in this browser.");
+  }
+
+  const recognition = new SpeechRecognitionCtor();
+  recognition.lang = "en-US";
+  recognition.interimResults = true;
+  recognition.continuous = true;
+
+  const originalValue = textarea ? textarea.value.trim() : "";
+  let finalTranscript = "";
+  let stoppedManually = false;
+
+  recognition.onstart = () => {
+    if (onStart) onStart();
+  };
+
+  recognition.onresult = (event) => {
+    let interimTranscript = "";
+
+    for (let index = event.resultIndex; index < event.results.length; index += 1) {
+      const result = event.results[index];
+      const transcript = result[0]?.transcript || "";
+      if (result.isFinal) finalTranscript += `${transcript} `;
+      else interimTranscript += transcript;
+    }
+
+    const combined = [originalValue, finalTranscript.trim(), interimTranscript.trim()]
+      .filter(Boolean)
+      .join(originalValue ? "\n" : " ")
+      .replace(/\n /g, "\n");
+
+    if (textarea) {
+      textarea.value = combined.trim();
+      autoResize(textarea);
+      textarea.dispatchEvent(new Event("input", { bubbles: true }));
+    }
+  };
+
+  recognition.onerror = (event) => {
+    if (onError) onError(event.error || "Voice dictation failed.");
+  };
+
+  recognition.onend = () => {
+    if (onStop) onStop(stoppedManually);
+  };
+
+  return {
+    start() {
+      recognition.start();
+    },
+    stop() {
+      stoppedManually = true;
+      recognition.stop();
+    },
+  };
+}
+
 async function streamSmartBossResponse({ message, mode, history = [], onToken, onDone }) {
-  const res = await fetch(`${API_BASE}/api/chat`, {
+  const res = await fetchApi("/api/chat", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ message, mode, history }),
@@ -142,11 +398,17 @@ class SmartBossChat {
     this.mode = options.mode || "business";
     this.history = [];
     this.isStreaming = false;
+    this.lastAssistantText = "";
+    this.dictationSession = null;
+    this.dictationActive = false;
 
     this.messagesEl = document.getElementById("chat-messages");
     this.inputEl = document.getElementById("chat-input");
     this.sendBtn = document.getElementById("send-btn");
     this.welcomeEl = document.getElementById("chat-welcome");
+    this.voiceInputBtn = document.getElementById("voice-input-btn");
+    this.readResponseBtn = document.getElementById("read-response-btn");
+    this.stopVoiceBtn = document.getElementById("stop-voice-btn");
 
     this.init();
   }
@@ -169,6 +431,21 @@ class SmartBossChat {
 
     if (this.sendBtn) {
       this.sendBtn.addEventListener("click", () => this.send());
+    }
+
+    if (this.voiceInputBtn) {
+      this.voiceInputBtn.addEventListener("click", () => this.toggleDictation());
+      if (!supportsSpeechRecognition()) this.voiceInputBtn.disabled = true;
+    }
+
+    if (this.readResponseBtn) {
+      this.readResponseBtn.addEventListener("click", () => this.readLastResponse());
+      if (!supportsSpeechSynthesis()) this.readResponseBtn.disabled = true;
+    }
+
+    if (this.stopVoiceBtn) {
+      this.stopVoiceBtn.addEventListener("click", () => stopSpeaking());
+      if (!supportsSpeechSynthesis()) this.stopVoiceBtn.disabled = true;
     }
 
     // Suggestion chips
@@ -204,6 +481,54 @@ class SmartBossChat {
   clearMessages() {
     if (this.messagesEl) this.messagesEl.innerHTML = "";
     if (this.welcomeEl) this.welcomeEl.style.display = "flex";
+    this.lastAssistantText = "";
+  }
+
+  updateVoiceButtonState(active) {
+    if (!this.voiceInputBtn) return;
+    this.voiceInputBtn.classList.toggle("is-listening", active);
+    this.voiceInputBtn.title = active ? "Stop dictation" : "Start dictation";
+    this.voiceInputBtn.setAttribute("aria-label", active ? "Stop dictation" : "Start dictation");
+  }
+
+  toggleDictation() {
+    if (!this.inputEl) return;
+
+    if (this.dictationActive && this.dictationSession) {
+      this.dictationSession.stop();
+      return;
+    }
+
+    try {
+      this.dictationSession = createDictationSession({
+        textarea: this.inputEl,
+        onStart: () => {
+          this.dictationActive = true;
+          this.updateVoiceButtonState(true);
+          showToast("Voice dictation started", "info");
+        },
+        onStop: () => {
+          this.dictationActive = false;
+          this.updateVoiceButtonState(false);
+        },
+        onError: (error) => {
+          this.dictationActive = false;
+          this.updateVoiceButtonState(false);
+          showToast(`Voice input error: ${error}`, "error");
+        },
+      });
+      this.dictationSession.start();
+    } catch (error) {
+      showToast(error.message, "error");
+    }
+  }
+
+  readLastResponse() {
+    try {
+      speakText(this.lastAssistantText);
+    } catch (error) {
+      showToast(error.message, "error");
+    }
   }
 
   async send(overrideMessage = null) {
@@ -226,49 +551,25 @@ class SmartBossChat {
     this.isStreaming = true;
     if (this.sendBtn) this.sendBtn.disabled = true;
 
-    let fullResponse = "";
-
     try {
-      const res = await fetch(`${API_BASE}/api/chat`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ message: text, mode: this.mode, history: this.history.slice(-10) }),
+      const cleanResponse = await streamSmartBossResponse({
+        message: text,
+        mode: this.mode,
+        history: this.history.slice(-6),
+        onToken: (fullText) => {
+          this.updateBubble(aiBubble, fullText, true);
+        },
       });
 
-      if (!res.ok) throw new Error(`Server error: ${res.status}`);
-
-      const reader = res.body.getReader();
-      const decoder = new TextDecoder();
-      let buffer = "";
-
-      while (true) {
-        const { done, value } = await reader.read();
-        if (done) break;
-
-        buffer += decoder.decode(value, { stream: true });
-        const lines = buffer.split("\n");
-        buffer = lines.pop();
-
-        for (const line of lines) {
-          if (!line.trim() || line === "data: [DONE]") continue;
-          if (!line.startsWith("data: ")) continue;
-          try {
-            const json = JSON.parse(line.slice(6));
-            if (json.token) {
-              fullResponse += json.token;
-              this.updateBubble(aiBubble, fullResponse, true);
-            }
-          } catch (_) {}
-        }
-      }
-
-      const cleanResponse = sanitizeAiText(fullResponse);
       this.updateBubble(aiBubble, cleanResponse, false);
       this.history.push({ role: "assistant", content: cleanResponse });
+      this.lastAssistantText = cleanResponse;
       this.addToHistory(text);
 
     } catch (err) {
-      this.updateBubble(aiBubble, `Connection Error:\n\nCould not reach the AI service. Please check the server is running.\n\nDetails: ${err.message}`, false);
+      const errorText = `Connection Error:\n\nCould not reach the AI service. Please check the server is running.\n\nDetails: ${err.message}`;
+      this.updateBubble(aiBubble, errorText, false);
+      this.lastAssistantText = errorText;
     } finally {
       this.isStreaming = false;
       if (this.sendBtn) this.sendBtn.disabled = false;
@@ -388,41 +689,26 @@ Create a detailed, ready-to-use prompt that covers all design and development re
     let fullText = "";
 
     try {
-      const res = await fetch(`${API_BASE}/api/chat`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ message, mode: "prompt", history: [] }),
+      const finalText = await streamSmartBossResponse({
+        message,
+        mode: "prompt",
+        history: [],
+        onToken: (streamedText) => {
+          fullText = streamedText;
+          if (this.resultContent) this.resultContent.textContent = sanitizeAiText(streamedText);
+          if (this.resultBox) this.resultBox.scrollTop = this.resultBox.scrollHeight;
+        },
       });
 
-      const reader = res.body.getReader();
-      const decoder = new TextDecoder();
-      let buffer = "";
-
-      while (true) {
-        const { done, value } = await reader.read();
-        if (done) break;
-        buffer += decoder.decode(value, { stream: true });
-        const lines = buffer.split("\n");
-        buffer = lines.pop();
-        for (const line of lines) {
-          if (!line.startsWith("data: ") || line === "data: [DONE]") continue;
-          try {
-            const json = JSON.parse(line.slice(6));
-            if (json.token) {
-              fullText += json.token;
-              if (this.resultContent) this.resultContent.textContent = sanitizeAiText(fullText);
-              this.resultBox.scrollTop = this.resultBox.scrollHeight;
-            }
-          } catch (_) {}
-        }
+      this.lastPrompt = sanitizeAiText(finalText || fullText);
+      if (this.resultContent) {
+        this.resultContent.className = "result-content";
+        this.resultContent.textContent = this.lastPrompt;
       }
-
-      this.lastPrompt = sanitizeAiText(fullText);
-      if (this.resultContent) this.resultContent.className = "result-content";
       showToast("Prompt generated successfully!", "success");
 
     } catch (err) {
-      if (this.resultContent) this.resultContent.textContent = "Error generating prompt. Please check server.";
+      if (this.resultContent) this.resultContent.textContent = `Error generating prompt: ${err.message}`;
       showToast("Generation failed", "error");
     } finally {
       this.generateBtn.disabled = false;
@@ -434,11 +720,30 @@ Create a detailed, ready-to-use prompt that covers all design and development re
 // ── NAVIGATION ───────────────────────────────────────────
 function initNav() {
   // Active nav link
-  const currentPath = window.location.pathname;
+  const normalizeNavPath = (value) => {
+    const path = String(value || "")
+      .split("?")[0]
+      .split("#")[0]
+      .replace(/\\/g, "/")
+      .replace(/^https?:\/\/[^/]+/i, "")
+      .replace(/^\/+/, "")
+      .toLowerCase();
+
+    if (!path || path === "index" || path === "index.html") {
+      return "index.html";
+    }
+
+    if (path.endsWith(".html")) {
+      return path;
+    }
+
+    return `${path}.html`;
+  };
+
+  const currentPath = normalizeNavPath(window.location.pathname);
   document.querySelectorAll(".nav-links a").forEach((a) => {
-    if (a.getAttribute("href") === currentPath ||
-        (currentPath === "/" && a.getAttribute("href") === "/") ||
-        (currentPath !== "/" && a.getAttribute("href") !== "/" && currentPath.startsWith(a.getAttribute("href")))) {
+    const href = normalizeNavPath(a.getAttribute("href"));
+    if (href === currentPath) {
       a.classList.add("active");
     }
   });
@@ -536,3 +841,10 @@ window.showToast = showToast;
 window.parseMarkdown = parseMarkdown;
 window.sanitizeAiText = sanitizeAiText;
 window.streamSmartBossResponse = streamSmartBossResponse;
+window.extractTextFromFile = extractTextFromFile;
+window.truncateDocumentText = truncateDocumentText;
+window.speakText = speakText;
+window.stopSpeaking = stopSpeaking;
+window.supportsSpeechRecognition = supportsSpeechRecognition;
+window.supportsSpeechSynthesis = supportsSpeechSynthesis;
+window.createDictationSession = createDictationSession;

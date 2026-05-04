@@ -1,11 +1,37 @@
 import { createRequire } from "node:module";
 
 const require = createRequire(import.meta.url);
+const { loadLocalEnv } = require("../lib/load-env.js");
 const {
   sanitizeModelText,
   validateChatRequest,
   requestChatCompletion,
 } = require("../lib/chat-service.js");
+
+loadLocalEnv(process.cwd());
+
+async function readJsonBody(req) {
+  if (req.body && typeof req.body === "object") {
+    return req.body;
+  }
+
+  if (typeof req.body === "string") {
+    return JSON.parse(req.body);
+  }
+
+  const chunks = [];
+
+  for await (const chunk of req) {
+    chunks.push(typeof chunk === "string" ? Buffer.from(chunk) : chunk);
+  }
+
+  const rawBody = Buffer.concat(chunks).toString("utf8").trim();
+  if (!rawBody) {
+    return {};
+  }
+
+  return JSON.parse(rawBody);
+}
 
 export default async function handler(req, res) {
   res.setHeader("Access-Control-Allow-Origin", "*");
@@ -25,7 +51,18 @@ export default async function handler(req, res) {
     return;
   }
 
-  const validationError = validateChatRequest(req.body);
+  let body;
+
+  try {
+    body = await readJsonBody(req);
+  } catch (error) {
+    res.statusCode = 400;
+    res.setHeader("Content-Type", "application/json; charset=utf-8");
+    res.end(JSON.stringify({ error: "Invalid JSON body", detail: error.message }));
+    return;
+  }
+
+  const validationError = validateChatRequest(body);
   if (validationError) {
     res.statusCode = 400;
     res.setHeader("Content-Type", "application/json; charset=utf-8");
@@ -34,7 +71,7 @@ export default async function handler(req, res) {
   }
 
   try {
-    const response = await requestChatCompletion(req.body, process.env.NVIDIA_API_KEY);
+    const response = await requestChatCompletion(body, process.env.NVIDIA_API_KEY);
 
     if (!response.ok) {
       const errorText = await response.text();

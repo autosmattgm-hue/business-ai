@@ -11,7 +11,7 @@
 <body data-mode="business">
 
 <nav class="nav">
-  <a href="/" class="nav-brand">
+  <a href="index.html" class="nav-brand">
     <div class="nav-logo">👑</div>
     <div class="nav-name">
       THE SMART BOSS
@@ -20,12 +20,14 @@
   </a>
 
   <ul class="nav-links" id="nav-links">
-    <li><a href="/">Home</a></li>
-    <li><a href="/business">Business AI</a></li>
-    <li><a href="/ideas">Idea Engine</a></li>
-    <li><a href="/resources">Toolkit</a></li>
-    <li><a href="/presentation">Pitch Coach</a></li>
-    <li><a href="/prompt">Web Prompts</a></li>
+    <li><a href="index.html">Home</a></li>
+    <li><a href="business.html">Business AI</a></li>
+    <li><a href="ideas.html">Idea Engine</a></li>
+    <li><a href="resources.html">Toolkit</a></li>
+    <li><a href="documents.html">Docs AI</a></li>
+    <li><a href="resume.html">Resume</a></li>
+    <li><a href="voice.html">Voice AI</a></li>
+    <li><a href="presentation.html">Pitch Coach</a></li>
   </ul>
 
   <div style="display:flex;gap:8px;align-items:center;">
@@ -79,6 +81,22 @@
         </div>
       </button>
 
+      <button class="sidebar-mode-btn" data-mode="documents">
+        <span class="sidebar-mode-icon">📄</span>
+        <div class="sidebar-mode-info">
+          <div class="sidebar-mode-name">Document Fixer</div>
+          <div class="sidebar-mode-desc">Review, rewrite, improve files</div>
+        </div>
+      </button>
+
+      <button class="sidebar-mode-btn" data-mode="resume">
+        <span class="sidebar-mode-icon">🧾</span>
+        <div class="sidebar-mode-info">
+          <div class="sidebar-mode-name">Resume Builder</div>
+          <div class="sidebar-mode-desc">ATS-friendly resumes and rewrites</div>
+        </div>
+      </button>
+
       <button class="sidebar-mode-btn" data-mode="presentation">
         <span class="sidebar-mode-icon">🎤</span>
         <div class="sidebar-mode-info">
@@ -108,22 +126,40 @@
     </div>
 
     <div style="border-top:1px solid rgba(255,255,255,0.05);padding-top:1rem;display:flex;flex-direction:column;gap:6px;">
-      <a href="/planner" class="sidebar-mode-btn">
+      <a href="planner.html" class="sidebar-mode-btn">
         <span class="sidebar-mode-icon">🔗</span>
         <div class="sidebar-mode-info">
           <div class="sidebar-mode-name" style="font-size:0.78rem;">Launch Planner Page</div>
         </div>
       </a>
-      <a href="/pricing" class="sidebar-mode-btn">
+      <a href="pricing.html" class="sidebar-mode-btn">
         <span class="sidebar-mode-icon">🔗</span>
         <div class="sidebar-mode-info">
           <div class="sidebar-mode-name" style="font-size:0.78rem;">Pricing Strategist Page</div>
         </div>
       </a>
-      <a href="/resources" class="sidebar-mode-btn">
+      <a href="resources.html" class="sidebar-mode-btn">
         <span class="sidebar-mode-icon">🔗</span>
         <div class="sidebar-mode-info">
           <div class="sidebar-mode-name" style="font-size:0.78rem;">Business Toolkit Page</div>
+        </div>
+      </a>
+      <a href="documents.html" class="sidebar-mode-btn">
+        <span class="sidebar-mode-icon">🔗</span>
+        <div class="sidebar-mode-info">
+          <div class="sidebar-mode-name" style="font-size:0.78rem;">Document AI Page</div>
+        </div>
+      </a>
+      <a href="resume.html" class="sidebar-mode-btn">
+        <span class="sidebar-mode-icon">🔗</span>
+        <div class="sidebar-mode-info">
+          <div class="sidebar-mode-name" style="font-size:0.78rem;">Resume Builder Page</div>
+        </div>
+      </a>
+      <a href="voice.html" class="sidebar-mode-btn">
+        <span class="sidebar-mode-icon">🔗</span>
+        <div class="sidebar-mode-info">
+          <div class="sidebar-mode-name" style="font-size:0.78rem;">Voice AI Page</div>
         </div>
       </a>
     </div>
@@ -135,10 +171,12 @@
         <h2 id="chat-mode-title">👑 Business AI Advisor</h2>
         <p id="chat-mode-desc">Ask about strategy, pricing, websites, launch plans, tools, growth, and market opportunities</p>
       </div>
-      <div style="display:flex;gap:8px;">
-        <button class="btn btn-ghost btn-sm" onclick="window.chatInstance && window.chatInstance.clearMessages()">Clear</button>
-        <a href="/resources" class="btn btn-ghost btn-sm">🧰</a>
-        <a href="/" class="btn btn-ghost btn-sm">🏠</a>
+      <div class="chat-header-actions">
+        <button class="btn btn-ghost btn-sm chat-header-clear" onclick="window.chatInstance && window.chatInstance.clearMessages()">Clear</button>
+        <button class="btn btn-ghost btn-sm chat-header-icon-btn" id="read-response-btn" aria-label="Read latest response aloud" title="Read latest response aloud">🔊</button>
+        <button class="btn btn-ghost btn-sm chat-header-icon-btn" id="stop-voice-btn" aria-label="Stop reading aloud" title="Stop reading aloud">⏹</button>
+        <a href="resources.html" class="btn btn-ghost btn-sm chat-header-icon-btn" aria-label="Open toolkit">🧰</a>
+        <a href="index.html" class="btn btn-ghost btn-sm chat-header-icon-btn" aria-label="Go home">🏠</a>
       </div>
     </div>
 
@@ -146,7 +184,7 @@
       <div class="chat-welcome" id="chat-welcome">
         <div class="chat-welcome-icon">👑</div>
         <h2>THE SMART BOSS AI</h2>
-        <p>Your AI business partner is ready. Ask for ideas, launch plans, pricing help, website builder recommendations, or deep strategy.</p>
+        <p>Your AI business partner is ready for ideas, launch plans, pricing help, website recommendations, and deep strategy.</p>
 
         <div class="chat-suggestions">
           <button class="suggestion-chip" data-prompt="Give me 5 profitable business ideas I can start with under $500">💰 Low-budget business ideas</button>
@@ -154,6 +192,8 @@
           <button class="suggestion-chip" data-prompt="Recommend the best websites and tools to build an online business, compare the options, and tell me which one is best for a beginner">🌐 Best business websites</button>
           <button class="suggestion-chip" data-prompt="Give me 3 website builder options for a coaching business with pricing, pros, cons, and the best choice">🧭 Website builder options</button>
           <button class="suggestion-chip" data-prompt="Help me price my service package with one best price and two alternatives">💸 Price my offer</button>
+          <button class="suggestion-chip" data-prompt="Help me rewrite a messy PDF or DOC into a professional version and tell me what to fix">📄 Fix my document</button>
+          <button class="suggestion-chip" data-prompt="Create a professional ATS-friendly resume for a target job and improve my work experience bullets">🧾 Build my resume</button>
           <button class="suggestion-chip" data-prompt="What are the most profitable service businesses right now in 2026?">📈 Most profitable services</button>
           <button class="suggestion-chip" data-prompt="How do I validate my business idea before investing money?">✅ Validate my idea</button>
           <button class="suggestion-chip" data-prompt="What business can I start in Africa with high growth potential?">🌍 Business in Africa</button>
@@ -170,10 +210,11 @@
           rows="1"
           maxlength="2000"
         ></textarea>
+        <button class="chat-action-btn" id="voice-input-btn" type="button" title="Start dictation" aria-label="Start dictation">🎙️</button>
         <button class="chat-send-btn" id="send-btn" title="Send (Enter)">➤</button>
       </div>
       <div class="chat-input-footer">
-        <span class="chat-input-hint">Enter to send · Shift+Enter for new line</span>
+        <span class="chat-input-hint">Enter to send · Shift+Enter for new line · Mic to dictate</span>
         <span class="char-count" id="char-count">0/2000</span>
       </div>
     </div>
@@ -190,6 +231,9 @@ const modeMeta = {
   planner: { title: "🗺️ Launch Planner", desc: "Create practical 30, 60, or 90 day launch plans and priorities" },
   pricing: { title: "💸 Pricing Strategist", desc: "Design smarter pricing, packages, and monetization options" },
   resources: { title: "🧰 Tool Finder", desc: "Compare websites, apps, platforms, and software options clearly" },
+  documents: { title: "📄 Document Fixer", desc: "Improve uploaded PDF, DOC, DOCX, and text documents professionally" },
+  resume: { title: "🧾 Resume Builder", desc: "Create ATS-friendly resumes, summaries, and stronger experience bullets" },
+  voice: { title: "🎙️ Voice AI", desc: "Dictate ideas, clean them up fast, and hear responses read aloud" },
   presentation: { title: "🎤 Pitch Coach", desc: "Master how to present and pitch your project or idea" },
   prompt: { title: "🌐 Website Prompt Generator", desc: "Get a detailed website prompt plus smart platform recommendations" },
 };

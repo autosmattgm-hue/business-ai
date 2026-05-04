@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Voice AI — THE SMART BOSS AI</title>
+  <meta name="description" content="Dictate ideas, notes, and prompts to Smart Boss AI and hear responses read aloud.">
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>👑</text></svg>">
+</head>
+<body>
+
+<nav class="nav">
+  <a href="index.html" class="nav-brand">
+    <div class="nav-logo">👑</div>
+    <div class="nav-name">THE SMART BOSS<span>AI Platform</span></div>
+  </a>
+  <ul class="nav-links" id="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="business.html">Business AI</a></li>
+    <li><a href="ideas.html">Idea Engine</a></li>
+    <li><a href="resources.html">Toolkit</a></li>
+    <li><a href="documents.html">Docs AI</a></li>
+    <li><a href="resume.html">Resume</a></li>
+    <li><a href="voice.html">Voice AI</a></li>
+  </ul>
+  <button class="nav-menu-btn" id="nav-menu-btn">☰</button>
+</nav>
+
+<div class="page-header">
+  <div class="page-header-content">
+    <span class="section-label">// Voice AI</span>
+    <h1 style="font-family:var(--font-display);color:var(--text-primary);margin:0.5rem 0 1rem;">
+      Dictate Ideas and Hear <span class="shimmer-text">Smart Responses</span>
+    </h1>
+    <p style="color:var(--text-muted);font-size:0.95rem;">
+      Speak into the mic, clean up spoken notes, turn voice drafts into usable writing,
+      and play the AI response aloud.
+    </p>
+  </div>
+</div>
+
+<section class="section" style="padding-top:0;">
+  <div class="section-inner" style="max-width:980px;">
+    <div class="prompt-form">
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:1.5rem;padding-bottom:1rem;border-bottom:1px solid rgba(255,255,255,0.05);">
+        <span style="font-size:1.6rem;">🎙️</span>
+        <div>
+          <div style="font-family:var(--font-display);font-size:1.2rem;color:var(--text-primary);font-weight:600;">Voice Workspace</div>
+          <div style="font-size:0.8rem;color:var(--text-muted);">Fast dictation, cleanup, and spoken feedback</div>
+        </div>
+      </div>
+
+      <div class="form-grid">
+        <div class="form-group">
+          <label class="form-label">Voice Task *</label>
+          <select class="form-select" id="voice-task">
+            <option value="">Select task...</option>
+            <option value="clean up my dictated notes and make them professional">Clean up dictated notes</option>
+            <option value="turn my spoken ideas into a structured business plan outline">Turn ideas into a plan</option>
+            <option value="rewrite my rough spoken text into a professional message or email">Create a polished message</option>
+            <option value="summarize my spoken notes and extract action steps">Summarize and extract actions</option>
+            <option value="respond as a fast voice-friendly business assistant">Voice business assistant</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Output Style</label>
+          <select class="form-select" id="voice-style">
+            <option value="clear and concise">Clear and concise</option>
+            <option value="professional and polished">Professional and polished</option>
+            <option value="easy to listen to aloud">Easy to listen to aloud</option>
+            <option value="structured with short sections">Structured with short sections</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Your Spoken or Typed Content *</label>
+        <textarea class="form-textarea" id="voice-input-text" placeholder="Tap the mic to dictate, or type here manually..." style="min-height:160px;"></textarea>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Extra Instructions</label>
+        <textarea class="form-textarea" id="voice-notes" placeholder="Example: keep it short, make it sound professional, organize it into bullet points, make it client-ready." style="min-height:90px;"></textarea>
+      </div>
+
+      <div style="display:flex;gap:0.75rem;flex-wrap:wrap;">
+        <button class="btn btn-primary" id="voice-dictate-btn" type="button" onclick="toggleVoicePageDictation()">🎙️ Dictate</button>
+        <button class="btn btn-outline btn-sm" id="voice-run-btn" type="button" onclick="runVoiceAssistant()">⚡ Run Voice AI</button>
+        <button class="btn btn-ghost btn-sm" type="button" onclick="playVoiceOutput()">🔊 Read Output</button>
+        <button class="btn btn-ghost btn-sm" type="button" onclick="stopSpeaking()">⏹ Stop Audio</button>
+      </div>
+    </div>
+
+    <div id="voice-result" style="display:none; margin-top:2rem;">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;flex-wrap:wrap;gap:0.75rem;">
+        <div>
+          <h3 style="font-family:var(--font-display);color:var(--gold-primary);">Voice Output</h3>
+          <p style="font-size:0.8rem;color:var(--text-muted);margin:0;">Fast, cleaned, and speakable AI output</p>
+        </div>
+        <div style="display:flex;gap:8px;">
+          <button class="btn btn-ghost btn-sm" onclick="copyText(document.getElementById('voice-result-content').textContent)">📋 Copy</button>
+        </div>
+      </div>
+
+      <div class="result-box">
+        <div class="result-content typing-cursor" id="voice-result-content"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" style="background:var(--bg-panel);border-top:1px solid rgba(255,255,255,0.04);">
+  <div class="section-inner">
+    <div class="section-header">
+      <span class="section-label">// Good Uses</span>
+      <h2>What Voice AI Is Great For</h2>
+      <p>Designed for faster idea capture and easier spoken interaction.</p>
+    </div>
+
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon">📝</div>
+        <div class="feature-title">Capture Fast Notes</div>
+        <p class="feature-desc">Speak naturally, then have the AI clean and organize your thinking.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">📬</div>
+        <div class="feature-title">Draft Messages from Speech</div>
+        <p class="feature-desc">Turn rough spoken ideas into cleaner emails, updates, and client-ready text.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🗺️</div>
+        <div class="feature-title">Talk Through Plans</div>
+        <p class="feature-desc">Dictate raw business ideas and let the AI structure them into actionable steps.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="footer-inner">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <div class="footer-brand-name">👑 THE SMART BOSS AI</div>
+        <p class="footer-brand-desc">
+          Use Voice AI when you want speed. Speak first, then refine, summarize, or convert the
+          output into a business plan, message, document, or resume.
+        </p>
+      </div>
+
+      <div class="footer-links">
+        <div class="footer-col">
+          <div class="footer-col-title">AI Tools</div>
+          <ul>
+            <li><a href="business.html">Business AI</a></li>
+            <li><a href="voice.html">Voice AI</a></li>
+            <li><a href="documents.html">Document AI</a></li>
+            <li><a href="resume.html">Resume Builder</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <div class="footer-col-title">Planning</div>
+          <ul>
+            <li><a href="planner.html">Launch Planner</a></li>
+            <li><a href="pricing.html">Pricing Strategist</a></li>
+            <li><a href="resources.html">Business Toolkit</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <p class="footer-copy">© 2026 <span>THE SMART BOSS AI</span>. Voice-first capture and faster responses.</p>
+    </div>
+  </div>
+</footer>
+
+<div id="toast-container" class="toast-container"></div>
+
+<script src="main.js"></script>
+<script>
+let voicePageSession = null;
+let voicePageListening = false;
+let lastVoiceOutput = "";
+
+document.getElementById("voice-input-text").addEventListener("input", function() {
+  autoResize(this);
+});
+
+function updateVoiceDictationButton() {
+  const btn = document.getElementById("voice-dictate-btn");
+  btn.textContent = voicePageListening ? "⏹ Stop Dictation" : "🎙️ Dictate";
+}
+
+function toggleVoicePageDictation() {
+  const textarea = document.getElementById("voice-input-text");
+
+  if (voicePageListening && voicePageSession) {
+    voicePageSession.stop();
+    return;
+  }
+
+  try {
+    voicePageSession = createDictationSession({
+      textarea,
+      onStart: () => {
+        voicePageListening = true;
+        updateVoiceDictationButton();
+        showToast("Voice dictation started", "info");
+      },
+      onStop: () => {
+        voicePageListening = false;
+        updateVoiceDictationButton();
+      },
+      onError: (error) => {
+        voicePageListening = false;
+        updateVoiceDictationButton();
+        showToast(`Voice input error: ${error}`, "error");
+      },
+    });
+    voicePageSession.start();
+  } catch (error) {
+    showToast(error.message, "error");
+  }
+}
+
+async function runVoiceAssistant() {
+  const task = document.getElementById("voice-task").value;
+  const style = document.getElementById("voice-style").value;
+  const inputText = document.getElementById("voice-input-text").value.trim();
+  const notes = document.getElementById("voice-notes").value.trim();
+
+  if (!task || !inputText) {
+    showToast("Please choose a task and add spoken or typed content", "error");
+    return;
+  }
+
+  const btn = document.getElementById("voice-run-btn");
+  const result = document.getElementById("voice-result");
+  const content = document.getElementById("voice-result-content");
+
+  btn.disabled = true;
+  btn.innerHTML = '<div class="spinner"></div> Running...';
+  result.style.display = "block";
+  content.className = "result-content typing-cursor";
+  content.innerHTML = "";
+
+  try {
+    const finalText = await streamSmartBossResponse({
+      message: `Voice task: ${task}
+Output style: ${style}
+Extra instructions: ${notes || "none"}
+
+Spoken or typed input:
+${inputText}`,
+      mode: "voice",
+      onToken(fullText) {
+        content.innerHTML = parseMarkdown(fullText);
+      },
+    });
+
+    lastVoiceOutput = finalText;
+    content.className = "result-content";
+    content.innerHTML = parseMarkdown(finalText);
+    result.scrollIntoView({ behavior: "smooth", block: "start" });
+    showToast("Voice output ready", "success");
+  } catch (error) {
+    content.className = "result-content";
+    content.textContent = `Error: ${error.message}`;
+    showToast("Could not run Voice AI", "error");
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = "⚡ Run Voice AI";
+  }
+}
+
+function playVoiceOutput() {
+  try {
+    speakText(lastVoiceOutput);
+  } catch (error) {
+    showToast(error.message, "error");
+  }
+}
+</script>
+</body>
+</html>

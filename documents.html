@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document AI — THE SMART BOSS AI</title>
+  <meta name="description" content="Upload PDF, DOC, DOCX, and text files to review, fix, rewrite, summarize, and improve them professionally with AI.">
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>👑</text></svg>">
+</head>
+<body>
+
+<nav class="nav">
+  <a href="index.html" class="nav-brand">
+    <div class="nav-logo">👑</div>
+    <div class="nav-name">THE SMART BOSS<span>AI Platform</span></div>
+  </a>
+  <ul class="nav-links" id="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="business.html">Business AI</a></li>
+    <li><a href="ideas.html">Idea Engine</a></li>
+    <li><a href="resources.html">Toolkit</a></li>
+    <li><a href="documents.html">Docs AI</a></li>
+    <li><a href="resume.html">Resume</a></li>
+    <li><a href="voice.html">Voice AI</a></li>
+  </ul>
+  <button class="nav-menu-btn" id="nav-menu-btn">☰</button>
+</nav>
+
+<div class="page-header">
+  <div class="page-header-content">
+    <span class="section-label">// Document AI</span>
+    <h1 style="font-family:var(--font-display);color:var(--text-primary);margin:0.5rem 0 1rem;">
+      Read, Fix, and Upgrade <span class="shimmer-text">Documents</span>
+    </h1>
+    <p style="color:var(--text-muted);font-size:0.95rem;">
+      Upload PDF, DOC, DOCX, TXT, or MD files and let Smart Boss AI review,
+      rewrite, summarize, or professionalize the content.
+    </p>
+  </div>
+</div>
+
+<section class="section" style="padding-top:0;">
+  <div class="section-inner" style="max-width:960px;">
+    <div class="prompt-form">
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:1.5rem;padding-bottom:1rem;border-bottom:1px solid rgba(255,255,255,0.05);">
+        <span style="font-size:1.6rem;">📄</span>
+        <div>
+          <div style="font-family:var(--font-display);font-size:1.2rem;color:var(--text-primary);font-weight:600;">Document Fixer</div>
+          <div style="font-size:0.8rem;color:var(--text-muted);">Best for contracts, proposals, reports, rough drafts, letters, bios, and resumes</div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Upload File *</label>
+        <input type="file" class="form-input" id="document-file" accept=".pdf,.doc,.docx,.txt,.md,.rtf">
+        <p style="font-size:0.78rem;color:var(--text-muted);margin-top:0.5rem;">
+          PDF and DOCX work best. Legacy DOC files are supported on a best-effort basis and may need conversion to DOCX for cleaner extraction.
+        </p>
+      </div>
+
+      <div class="form-grid">
+        <div class="form-group">
+          <label class="form-label">What Should AI Do? *</label>
+          <select class="form-select" id="document-task">
+            <option value="">Select task...</option>
+            <option value="review and fix the document professionally">Review and fix it</option>
+            <option value="rewrite the document to sound more professional and polished">Professional rewrite</option>
+            <option value="summarize the document and extract the key points">Summarize it</option>
+            <option value="improve grammar, clarity, and structure without changing the meaning">Fix grammar and clarity</option>
+            <option value="turn the document into a cleaner business-ready version">Make it business-ready</option>
+            <option value="convert the content into a professional resume if relevant">Turn into a resume</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Tone or Output Style</label>
+          <select class="form-select" id="document-tone">
+            <option value="professional and clear">Professional and clear</option>
+            <option value="executive and concise">Executive and concise</option>
+            <option value="formal and polished">Formal and polished</option>
+            <option value="friendly but professional">Friendly but professional</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Extra Instructions</label>
+        <textarea class="form-textarea" id="document-notes" placeholder="Example: keep it concise, focus on grammar, make it ATS-friendly, improve weak wording, keep the original meaning." style="min-height:90px;"></textarea>
+      </div>
+
+      <div id="document-file-info" style="display:none;margin-bottom:1rem;padding:1rem 1.25rem;background:var(--bg-deep);border:1px solid var(--gold-border);border-radius:var(--radius-md);">
+        <div style="font-size:0.78rem;font-weight:600;color:var(--gold-primary);letter-spacing:0.12em;text-transform:uppercase;font-family:var(--font-mono);margin-bottom:0.4rem;">Loaded File</div>
+        <div id="document-file-meta" style="font-size:0.85rem;color:var(--text-secondary);"></div>
+      </div>
+
+      <div style="display:flex;gap:0.75rem;flex-wrap:wrap;">
+        <button class="btn btn-primary" id="document-run-btn" onclick="runDocumentAssistant()">📄 Process Document</button>
+        <button class="btn btn-outline btn-sm" onclick="loadDocumentExample()">📋 Example Prompt</button>
+        <a href="resume.html" class="btn btn-ghost btn-sm">🧾 Resume Builder</a>
+      </div>
+    </div>
+
+    <div id="document-result" style="display:none; margin-top:2rem;">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;flex-wrap:wrap;gap:0.75rem;">
+        <div>
+          <h3 style="font-family:var(--font-display);color:var(--gold-primary);">Document Output</h3>
+          <p style="font-size:0.8rem;color:var(--text-muted);margin:0;">Review, rewrite, summary, or upgraded version</p>
+        </div>
+        <div style="display:flex;gap:8px;">
+          <button class="btn btn-ghost btn-sm" onclick="copyText(document.getElementById('document-result-content').textContent)">📋 Copy</button>
+        </div>
+      </div>
+
+      <div class="result-box">
+        <div class="result-content typing-cursor" id="document-result-content"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" style="background:var(--bg-panel);border-top:1px solid rgba(255,255,255,0.04);">
+  <div class="section-inner">
+    <div class="section-header">
+      <span class="section-label">// What It Can Do</span>
+      <h2>Useful Document Jobs</h2>
+      <p>Use Smart Boss AI to clean up rough writing and turn it into business-grade output.</p>
+    </div>
+
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon">🛠️</div>
+        <div class="feature-title">Fix Grammar and Clarity</div>
+        <p class="feature-desc">Good for proposals, letters, reports, and documents that sound rough or repetitive.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🧠</div>
+        <div class="feature-title">Summarize Long Files</div>
+        <p class="feature-desc">Pull out key points, action items, risks, and executive-level takeaways quickly.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🧾</div>
+        <div class="feature-title">Turn Notes into Resume Content</div>
+        <p class="feature-desc">Convert messy work history or profile notes into cleaner professional resume language.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="footer-inner">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <div class="footer-brand-name">👑 THE SMART BOSS AI</div>
+        <p class="footer-brand-desc">
+          Use Document AI for cleanup and rewriting, then move into Resume Builder or Business AI
+          when you want role-specific or business-specific output.
+        </p>
+      </div>
+
+      <div class="footer-links">
+        <div class="footer-col">
+          <div class="footer-col-title">Core</div>
+          <ul>
+            <li><a href="business.html">Business AI</a></li>
+            <li><a href="ideas.html">Idea Engine</a></li>
+            <li><a href="documents.html">Document AI</a></li>
+            <li><a href="resume.html">Resume Builder</a></li>
+            <li><a href="voice.html">Voice AI</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <div class="footer-col-title">Toolkit</div>
+          <ul>
+            <li><a href="resources.html">Business Toolkit</a></li>
+            <li><a href="planner.html">Launch Planner</a></li>
+            <li><a href="pricing.html">Pricing Strategist</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <p class="footer-copy">© 2026 <span>THE SMART BOSS AI</span>. Better documents, cleaner output.</p>
+    </div>
+  </div>
+</footer>
+
+<div id="toast-container" class="toast-container"></div>
+
+<script src="main.js"></script>
+<script>
+function updateDocumentFileInfo(file) {
+  const infoBox = document.getElementById("document-file-info");
+  const meta = document.getElementById("document-file-meta");
+
+  if (!file) {
+    infoBox.style.display = "none";
+    meta.textContent = "";
+    return;
+  }
+
+  const sizeKb = Math.max(1, Math.round(file.size / 1024));
+  meta.textContent = `${file.name} · ${sizeKb} KB`;
+  infoBox.style.display = "block";
+}
+
+document.getElementById("document-file").addEventListener("change", (event) => {
+  updateDocumentFileInfo(event.target.files?.[0] || null);
+});
+
+async function runDocumentAssistant() {
+  const file = document.getElementById("document-file").files?.[0];
+  const task = document.getElementById("document-task").value;
+  const tone = document.getElementById("document-tone").value;
+  const notes = document.getElementById("document-notes").value.trim();
+
+  if (!file || !task) {
+    showToast("Please choose a file and a task", "error");
+    return;
+  }
+
+  const btn = document.getElementById("document-run-btn");
+  const result = document.getElementById("document-result");
+  const content = document.getElementById("document-result-content");
+
+  btn.disabled = true;
+  btn.innerHTML = '<div class="spinner"></div> Reading File...';
+  result.style.display = "block";
+  content.className = "result-content typing-cursor";
+  content.innerHTML = "Preparing your file...";
+
+  try {
+    const extractedText = await extractTextFromFile(file);
+    const trimmedText = truncateDocumentText(extractedText);
+
+    if (!trimmedText) {
+      throw new Error("Could not extract readable text from this file.");
+    }
+
+    if (file.name.toLowerCase().endsWith(".doc")) {
+      showToast("Legacy DOC extraction is best-effort. DOCX gives cleaner results.", "info");
+    }
+
+    btn.innerHTML = '<div class="spinner"></div> Improving Document...';
+
+    const message = `You are working on an uploaded document.
+
+Document name: ${file.name}
+Requested task: ${task}
+Desired tone: ${tone}
+Extra instructions: ${notes || "none"}
+
+Please:
+1. Briefly diagnose the document quality
+2. Point out the biggest issues
+3. Provide the improved output in a clean ready-to-use version
+
+Document text:
+${trimmedText}`;
+
+    const finalText = await streamSmartBossResponse({
+      message,
+      mode: "documents",
+      onToken(fullText) {
+        content.innerHTML = parseMarkdown(fullText);
+      },
+    });
+
+    content.className = "result-content";
+    content.innerHTML = parseMarkdown(finalText);
+    result.scrollIntoView({ behavior: "smooth", block: "start" });
+    showToast("Document processed successfully", "success");
+  } catch (error) {
+    content.className = "result-content";
+    content.textContent = `Error: ${error.message}`;
+    showToast("Could not process document", "error");
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = "📄 Process Document";
+  }
+}
+
+function loadDocumentExample() {
+  document.getElementById("document-task").value = "rewrite the document to sound more professional and polished";
+  document.getElementById("document-tone").value = "executive and concise";
+  document.getElementById("document-notes").value = "Keep the meaning, remove weak wording, tighten structure, and improve professionalism.";
+  showToast("Example instructions loaded. Upload your file next.", "info");
+}
+</script>
+</body>
+</html>

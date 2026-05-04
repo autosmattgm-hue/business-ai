@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Resume Builder — THE SMART BOSS AI</title>
+  <meta name="description" content="Create or improve an ATS-friendly resume with target role alignment, stronger bullets, and professional wording.">
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>👑</text></svg>">
+</head>
+<body>
+
+<nav class="nav">
+  <a href="index.html" class="nav-brand">
+    <div class="nav-logo">👑</div>
+    <div class="nav-name">THE SMART BOSS<span>AI Platform</span></div>
+  </a>
+  <ul class="nav-links" id="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="business.html">Business AI</a></li>
+    <li><a href="ideas.html">Idea Engine</a></li>
+    <li><a href="resources.html">Toolkit</a></li>
+    <li><a href="documents.html">Docs AI</a></li>
+    <li><a href="resume.html">Resume</a></li>
+    <li><a href="voice.html">Voice AI</a></li>
+  </ul>
+  <button class="nav-menu-btn" id="nav-menu-btn">☰</button>
+</nav>
+
+<div class="page-header">
+  <div class="page-header-content">
+    <span class="section-label">// Resume Builder</span>
+    <h1 style="font-family:var(--font-display);color:var(--text-primary);margin:0.5rem 0 1rem;">
+      Create a <span class="shimmer-text">Professional Resume</span>
+    </h1>
+    <p style="color:var(--text-muted);font-size:0.95rem;">
+      Build or improve an ATS-friendly resume with stronger summaries, clearer positioning,
+      and better experience bullets.
+    </p>
+  </div>
+</div>
+
+<section class="section" style="padding-top:0;">
+  <div class="section-inner" style="max-width:980px;">
+    <div class="prompt-form">
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:1.5rem;padding-bottom:1rem;border-bottom:1px solid rgba(255,255,255,0.05);">
+        <span style="font-size:1.6rem;">🧾</span>
+        <div>
+          <div style="font-family:var(--font-display);font-size:1.2rem;color:var(--text-primary);font-weight:600;">Resume Builder</div>
+          <div style="font-size:0.8rem;color:var(--text-muted);">Good for new resumes, rewrites, and ATS-focused improvements</div>
+        </div>
+      </div>
+
+      <div class="form-grid">
+        <div class="form-group">
+          <label class="form-label">Full Name *</label>
+          <input type="text" class="form-input" id="resume-name" placeholder="Your full name">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Target Role *</label>
+          <input type="text" class="form-input" id="resume-role" placeholder="e.g. Administrative Assistant, Frontend Developer">
+        </div>
+      </div>
+
+      <div class="form-grid">
+        <div class="form-group">
+          <label class="form-label">Experience Level *</label>
+          <select class="form-select" id="resume-level">
+            <option value="">Select level...</option>
+            <option value="entry-level">Entry-level</option>
+            <option value="junior-level">Junior-level</option>
+            <option value="mid-level">Mid-level</option>
+            <option value="senior-level">Senior-level</option>
+            <option value="career switcher">Career switcher</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Resume Goal</label>
+          <select class="form-select" id="resume-goal">
+            <option value="create a professional ATS-friendly resume">Build a new resume</option>
+            <option value="rewrite and improve my existing resume">Improve an existing resume</option>
+            <option value="tailor my resume to a target role">Tailor for a job</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Optional Existing Resume Upload</label>
+        <input type="file" class="form-input" id="resume-file" accept=".pdf,.doc,.docx,.txt,.md,.rtf">
+        <p style="font-size:0.78rem;color:var(--text-muted);margin-top:0.5rem;">
+          Upload your current resume if you want AI to improve it. You can also leave this empty and fill the form below.
+        </p>
+      </div>
+
+      <div id="resume-file-info" style="display:none;margin-bottom:1rem;padding:1rem 1.25rem;background:var(--bg-deep);border:1px solid var(--gold-border);border-radius:var(--radius-md);">
+        <div style="font-size:0.78rem;font-weight:600;color:var(--gold-primary);letter-spacing:0.12em;text-transform:uppercase;font-family:var(--font-mono);margin-bottom:0.4rem;">Existing Resume</div>
+        <div id="resume-file-meta" style="font-size:0.85rem;color:var(--text-secondary);"></div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Professional Summary or Background</label>
+        <textarea class="form-textarea" id="resume-background" placeholder="Describe your background, strengths, years of experience, or the type of work you have done." style="min-height:90px;"></textarea>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Work Experience Highlights</label>
+        <textarea class="form-textarea" id="resume-experience" placeholder="List your jobs, responsibilities, achievements, and measurable results if you have them." style="min-height:110px;"></textarea>
+      </div>
+
+      <div class="form-grid">
+        <div class="form-group">
+          <label class="form-label">Skills</label>
+          <textarea class="form-textarea" id="resume-skills" placeholder="e.g. customer service, Excel, React, project coordination, sales" style="min-height:90px;"></textarea>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Education / Certifications</label>
+          <textarea class="form-textarea" id="resume-education" placeholder="Add degrees, certifications, and relevant training." style="min-height:90px;"></textarea>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Extra Instructions</label>
+        <textarea class="form-textarea" id="resume-notes" placeholder="Example: make it concise, use stronger action verbs, target remote jobs, focus on leadership, keep it beginner-friendly." style="min-height:90px;"></textarea>
+      </div>
+
+      <div style="display:flex;gap:0.75rem;flex-wrap:wrap;">
+        <button class="btn btn-primary" id="resume-generate-btn" onclick="generateResume()">🧾 Build Resume</button>
+        <button class="btn btn-outline btn-sm" onclick="fillResumeExample()">📋 Example</button>
+        <a href="documents.html" class="btn btn-ghost btn-sm">📄 Document AI</a>
+      </div>
+    </div>
+
+    <div id="resume-result" style="display:none; margin-top:2rem;">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;flex-wrap:wrap;gap:0.75rem;">
+        <div>
+          <h3 style="font-family:var(--font-display);color:var(--gold-primary);">Resume Output</h3>
+          <p style="font-size:0.8rem;color:var(--text-muted);margin:0;">ATS-focused structure, summary, and stronger wording</p>
+        </div>
+        <div style="display:flex;gap:8px;">
+          <button class="btn btn-ghost btn-sm" onclick="copyText(document.getElementById('resume-result-content').textContent)">📋 Copy</button>
+        </div>
+      </div>
+
+      <div class="result-box">
+        <div class="result-content typing-cursor" id="resume-result-content"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" style="background:var(--bg-panel);border-top:1px solid rgba(255,255,255,0.04);">
+  <div class="section-inner">
+    <div class="section-header">
+      <span class="section-label">// Resume Upgrades</span>
+      <h2>What This Page Helps With</h2>
+      <p>Smart Boss AI improves both the content and the positioning of your resume.</p>
+    </div>
+
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon">🎯</div>
+        <div class="feature-title">Target Role Alignment</div>
+        <p class="feature-desc">Reframes your experience so it matches the job you are actually applying for.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">⚙️</div>
+        <div class="feature-title">ATS-Friendly Structure</div>
+        <p class="feature-desc">Creates cleaner sections, clearer keywords, and stronger phrasing for applicant tracking systems.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🚀</div>
+        <div class="feature-title">Better Experience Bullets</div>
+        <p class="feature-desc">Turns weak job descriptions into sharper achievement-driven resume bullets.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="footer-inner">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <div class="footer-brand-name">👑 THE SMART BOSS AI</div>
+        <p class="footer-brand-desc">
+          Build the resume here, fix messy files in Document AI, and use the business tools when
+          you need personal branding, career strategy, or business positioning help.
+        </p>
+      </div>
+
+      <div class="footer-links">
+        <div class="footer-col">
+          <div class="footer-col-title">Career Tools</div>
+          <ul>
+            <li><a href="documents.html">Document AI</a></li>
+            <li><a href="resume.html">Resume Builder</a></li>
+            <li><a href="voice.html">Voice AI</a></li>
+            <li><a href="presentation.html">Pitch Coach</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <div class="footer-col-title">Business Tools</div>
+          <ul>
+            <li><a href="business.html">Business AI</a></li>
+            <li><a href="resources.html">Business Toolkit</a></li>
+            <li><a href="prompt.html">Web Prompts</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <p class="footer-copy">© 2026 <span>THE SMART BOSS AI</span>. Better resumes, stronger positioning.</p>
+    </div>
+  </div>
+</footer>
+
+<div id="toast-container" class="toast-container"></div>
+
+<script src="main.js"></script>
+<script>
+function updateResumeFileInfo(file) {
+  const infoBox = document.getElementById("resume-file-info");
+  const meta = document.getElementById("resume-file-meta");
+
+  if (!file) {
+    infoBox.style.display = "none";
+    meta.textContent = "";
+    return;
+  }
+
+  const sizeKb = Math.max(1, Math.round(file.size / 1024));
+  meta.textContent = `${file.name} · ${sizeKb} KB`;
+  infoBox.style.display = "block";
+}
+
+document.getElementById("resume-file").addEventListener("change", (event) => {
+  updateResumeFileInfo(event.target.files?.[0] || null);
+});
+
+async function generateResume() {
+  const file = document.getElementById("resume-file").files?.[0];
+  const name = document.getElementById("resume-name").value.trim();
+  const role = document.getElementById("resume-role").value.trim();
+  const level = document.getElementById("resume-level").value;
+  const goal = document.getElementById("resume-goal").value;
+  const background = document.getElementById("resume-background").value.trim();
+  const experience = document.getElementById("resume-experience").value.trim();
+  const skills = document.getElementById("resume-skills").value.trim();
+  const education = document.getElementById("resume-education").value.trim();
+  const notes = document.getElementById("resume-notes").value.trim();
+
+  if (!name || !role || !level) {
+    showToast("Please fill in your name, target role, and experience level", "error");
+    return;
+  }
+
+  const btn = document.getElementById("resume-generate-btn");
+  const result = document.getElementById("resume-result");
+  const content = document.getElementById("resume-result-content");
+
+  btn.disabled = true;
+  btn.innerHTML = '<div class="spinner"></div> Building Resume...';
+  result.style.display = "block";
+  content.className = "result-content typing-cursor";
+  content.innerHTML = "";
+
+  try {
+    let existingResumeText = "";
+
+    if (file) {
+      btn.innerHTML = '<div class="spinner"></div> Reading Existing Resume...';
+      existingResumeText = truncateDocumentText(await extractTextFromFile(file));
+    }
+
+    const message = `Create or improve a professional resume with the following details:
+
+Name: ${name}
+Target role: ${role}
+Experience level: ${level}
+Goal: ${goal}
+Background summary: ${background || "not provided"}
+Experience highlights: ${experience || "not provided"}
+Skills: ${skills || "not provided"}
+Education or certifications: ${education || "not provided"}
+Extra instructions: ${notes || "none"}
+Existing resume text: ${existingResumeText || "none provided"}
+
+Please return:
+1. A short positioning diagnosis
+2. A professional summary
+3. An ATS-friendly resume draft with clean sections
+4. Stronger experience bullets where appropriate
+5. Optional final improvements or tailoring advice`;
+
+    const finalText = await streamSmartBossResponse({
+      message,
+      mode: "resume",
+      onToken(fullText) {
+        content.innerHTML = parseMarkdown(fullText);
+      },
+    });
+
+    content.className = "result-content";
+    content.innerHTML = parseMarkdown(finalText);
+    result.scrollIntoView({ behavior: "smooth", block: "start" });
+    showToast("Resume ready", "success");
+  } catch (error) {
+    content.className = "result-content";
+    content.textContent = `Error: ${error.message}`;
+    showToast("Could not build resume", "error");
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = "🧾 Build Resume";
+  }
+}
+
+function fillResumeExample() {
+  document.getElementById("resume-name").value = "Jordan Smith";
+  document.getElementById("resume-role").value = "Administrative Assistant";
+  document.getElementById("resume-level").value = "entry-level";
+  document.getElementById("resume-goal").value = "create a professional ATS-friendly resume";
+  document.getElementById("resume-background").value = "Reliable and organized professional with customer service, scheduling, and office support experience.";
+  document.getElementById("resume-experience").value = "Handled front desk support, answered customer questions, managed appointments, updated spreadsheets, and helped with filing and communication.";
+  document.getElementById("resume-skills").value = "Microsoft Office, communication, scheduling, customer service, data entry, organization";
+  document.getElementById("resume-education").value = "High school diploma, short admin and office software training";
+  document.getElementById("resume-notes").value = "Make it clean, professional, beginner-friendly, and stronger than a generic resume.";
+  showToast("Example loaded", "info");
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,7 @@
+Set-Location : A positional parameter cannot be found that accepts argument 'boss'.
+At line:1 char:17
++ $env:PORT=3060; Set-Location C:\Users\JOHN\Desktop\smart boss; node s ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : InvalidArgument: (:) [Set-Location], ParameterBindingException
+    + FullyQualifiedErrorId : PositionalParameterNotFound,Microsoft.PowerShell.Commands.SetLocationCommand
+ 

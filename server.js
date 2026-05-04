@@ -1,11 +1,16 @@
 const http = require("http");
 const fs = require("fs");
 const path = require("path");
+const { loadLocalEnv } = require("./lib/load-env");
 const {
+  MODEL,
+  FALLBACK_MODELS,
   sanitizeModelText,
   validateChatRequest,
   requestChatCompletion,
 } = require("./lib/chat-service");
+
+loadLocalEnv(__dirname);
 
 const DEFAULT_PORT = Number(process.env.PORT) || 3010;
 const PUBLIC_DIR = fs.existsSync(path.join(__dirname, "public"))
@@ -19,6 +24,9 @@ const PAGE_ROUTES = {
   "/planner": "planner.html",
   "/pricing": "pricing.html",
   "/resources": "resources.html",
+  "/documents": "documents.html",
+  "/resume": "resume.html",
+  "/voice": "voice.html",
   "/presentation": "presentation.html",
   "/prompt": "prompt.html",
 };
@@ -47,6 +55,16 @@ function sendJson(res, statusCode, data) {
   setCorsHeaders(res);
   res.writeHead(statusCode, { "Content-Type": "application/json; charset=utf-8" });
   res.end(JSON.stringify(data));
+}
+
+function handleHealth(res) {
+  sendJson(res, 200, {
+    ok: true,
+    service: "smart-boss-ai",
+    model: MODEL,
+    fallbackModels: FALLBACK_MODELS,
+    hasApiKey: Boolean(process.env.NVIDIA_API_KEY),
+  });
 }
 
 function getSafeFilePath(urlPath) {
@@ -190,6 +208,11 @@ const server = http.createServer(async (req, res) => {
   }
 
   const urlPath = req.url.split("?")[0];
+
+  if (req.method === "GET" && urlPath === "/api/health") {
+    handleHealth(res);
+    return;
+  }
 
   if (req.method === "POST" && urlPath === "/api/chat") {
     await handleChat(req, res);

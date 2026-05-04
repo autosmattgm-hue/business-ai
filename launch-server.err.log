@@ -24,3 +24,4 @@ Server error: TypeError: fetch failed
     code: 'UND_ERR_HEADERS_TIMEOUT'
   }
 }
+NVIDIA API error: 
