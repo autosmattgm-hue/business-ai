@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Business AI Chat — THE SMART BOSS AI</title>
+  <meta name="description" content="Chat with THE SMART BOSS AI about business ideas, launch plans, pricing, websites, tools, and growth strategy.">
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>👑</text></svg>">
+</head>
+<body data-mode="business">
+
+<nav class="nav">
+  <a href="/" class="nav-brand">
+    <div class="nav-logo">👑</div>
+    <div class="nav-name">
+      THE SMART BOSS
+      <span>AI Platform</span>
+    </div>
+  </a>
+
+  <ul class="nav-links" id="nav-links">
+    <li><a href="/">Home</a></li>
+    <li><a href="/business">Business AI</a></li>
+    <li><a href="/ideas">Idea Engine</a></li>
+    <li><a href="/resources">Toolkit</a></li>
+    <li><a href="/presentation">Pitch Coach</a></li>
+    <li><a href="/prompt">Web Prompts</a></li>
+  </ul>
+
+  <div style="display:flex;gap:8px;align-items:center;">
+    <button class="btn btn-ghost btn-sm" id="sidebar-toggle" title="Toggle Sidebar">☰</button>
+    <button class="nav-menu-btn" id="nav-menu-btn">☰</button>
+  </div>
+</nav>
+
+<div class="chat-layout">
+  <aside class="chat-sidebar" id="chat-sidebar">
+    <div class="chat-sidebar-title">AI Modes</div>
+
+    <div style="display:flex;flex-direction:column;gap:6px;">
+      <button class="sidebar-mode-btn active" data-mode="business">
+        <span class="sidebar-mode-icon">🤖</span>
+        <div class="sidebar-mode-info">
+          <div class="sidebar-mode-name">Business Advisor</div>
+          <div class="sidebar-mode-desc">Strategy, offers, growth</div>
+        </div>
+      </button>
+
+      <button class="sidebar-mode-btn" data-mode="ideas">
+        <span class="sidebar-mode-icon">💡</span>
+        <div class="sidebar-mode-info">
+          <div class="sidebar-mode-name">Idea Generator</div>
+          <div class="sidebar-mode-desc">Business concepts and angles</div>
+        </div>
+      </button>
+
+      <button class="sidebar-mode-btn" data-mode="planner">
+        <span class="sidebar-mode-icon">🗺️</span>
+        <div class="sidebar-mode-info">
+          <div class="sidebar-mode-name">Launch Planner</div>
+          <div class="sidebar-mode-desc">30, 60, 90-day execution</div>
+        </div>
+      </button>
+
+      <button class="sidebar-mode-btn" data-mode="pricing">
+        <span class="sidebar-mode-icon">💸</span>
+        <div class="sidebar-mode-info">
+          <div class="sidebar-mode-name">Pricing Strategist</div>
+          <div class="sidebar-mode-desc">Monetization and packaging</div>
+        </div>
+      </button>
+
+      <button class="sidebar-mode-btn" data-mode="resources">
+        <span class="sidebar-mode-icon">🧰</span>
+        <div class="sidebar-mode-info">
+          <div class="sidebar-mode-name">Tool Finder</div>
+          <div class="sidebar-mode-desc">Websites, apps, platforms</div>
+        </div>
+      </button>
+
+      <button class="sidebar-mode-btn" data-mode="presentation">
+        <span class="sidebar-mode-icon">🎤</span>
+        <div class="sidebar-mode-info">
+          <div class="sidebar-mode-name">Pitch Coach</div>
+          <div class="sidebar-mode-desc">Present clearly and win trust</div>
+        </div>
+      </button>
+
+      <button class="sidebar-mode-btn" data-mode="prompt">
+        <span class="sidebar-mode-icon">🌐</span>
+        <div class="sidebar-mode-info">
+          <div class="sidebar-mode-name">Web Prompt</div>
+          <div class="sidebar-mode-desc">Website briefs and prompts</div>
+        </div>
+      </button>
+    </div>
+
+    <div style="border-top:1px solid rgba(255,255,255,0.05);padding-top:1rem;">
+      <button class="btn btn-outline btn-sm" id="new-chat-btn" style="width:100%;">
+        + New Chat
+      </button>
+    </div>
+
+    <div style="flex:1;min-height:0;">
+      <div class="chat-sidebar-title" style="margin-top:1rem;">Recent</div>
+      <div class="chat-history-list" id="chat-history-list"></div>
+    </div>
+
+    <div style="border-top:1px solid rgba(255,255,255,0.05);padding-top:1rem;display:flex;flex-direction:column;gap:6px;">
+      <a href="/planner" class="sidebar-mode-btn">
+        <span class="sidebar-mode-icon">🔗</span>
+        <div class="sidebar-mode-info">
+          <div class="sidebar-mode-name" style="font-size:0.78rem;">Launch Planner Page</div>
+        </div>
+      </a>
+      <a href="/pricing" class="sidebar-mode-btn">
+        <span class="sidebar-mode-icon">🔗</span>
+        <div class="sidebar-mode-info">
+          <div class="sidebar-mode-name" style="font-size:0.78rem;">Pricing Strategist Page</div>
+        </div>
+      </a>
+      <a href="/resources" class="sidebar-mode-btn">
+        <span class="sidebar-mode-icon">🔗</span>
+        <div class="sidebar-mode-info">
+          <div class="sidebar-mode-name" style="font-size:0.78rem;">Business Toolkit Page</div>
+        </div>
+      </a>
+    </div>
+  </aside>
+
+  <main class="chat-main">
+    <div class="chat-header">
+      <div class="chat-header-info">
+        <h2 id="chat-mode-title">👑 Business AI Advisor</h2>
+        <p id="chat-mode-desc">Ask about strategy, pricing, websites, launch plans, tools, growth, and market opportunities</p>
+      </div>
+      <div style="display:flex;gap:8px;">
+        <button class="btn btn-ghost btn-sm" onclick="window.chatInstance && window.chatInstance.clearMessages()">Clear</button>
+        <a href="/resources" class="btn btn-ghost btn-sm">🧰</a>
+        <a href="/" class="btn btn-ghost btn-sm">🏠</a>
+      </div>
+    </div>
+
+    <div class="chat-messages" id="chat-messages">
+      <div class="chat-welcome" id="chat-welcome">
+        <div class="chat-welcome-icon">👑</div>
+        <h2>THE SMART BOSS AI</h2>
+        <p>Your AI business partner is ready. Ask for ideas, launch plans, pricing help, website builder recommendations, or deep strategy.</p>
+
+        <div class="chat-suggestions">
+          <button class="suggestion-chip" data-prompt="Give me 5 profitable business ideas I can start with under $500">💰 Low-budget business ideas</button>
+          <button class="suggestion-chip" data-prompt="Build me a 90-day launch plan for a service business starting from scratch">🗺️ 90-day launch plan</button>
+          <button class="suggestion-chip" data-prompt="Recommend the best websites and tools to build an online business, compare the options, and tell me which one is best for a beginner">🌐 Best business websites</button>
+          <button class="suggestion-chip" data-prompt="Give me 3 website builder options for a coaching business with pricing, pros, cons, and the best choice">🧭 Website builder options</button>
+          <button class="suggestion-chip" data-prompt="Help me price my service package with one best price and two alternatives">💸 Price my offer</button>
+          <button class="suggestion-chip" data-prompt="What are the most profitable service businesses right now in 2026?">📈 Most profitable services</button>
+          <button class="suggestion-chip" data-prompt="How do I validate my business idea before investing money?">✅ Validate my idea</button>
+          <button class="suggestion-chip" data-prompt="What business can I start in Africa with high growth potential?">🌍 Business in Africa</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="chat-input-area">
+      <div class="chat-input-wrapper">
+        <textarea
+          id="chat-input"
+          class="chat-textarea"
+          placeholder="Ask THE SMART BOSS AI anything about business..."
+          rows="1"
+          maxlength="2000"
+        ></textarea>
+        <button class="chat-send-btn" id="send-btn" title="Send (Enter)">➤</button>
+      </div>
+      <div class="chat-input-footer">
+        <span class="chat-input-hint">Enter to send · Shift+Enter for new line</span>
+        <span class="char-count" id="char-count">0/2000</span>
+      </div>
+    </div>
+  </main>
+</div>
+
+<div id="toast-container" class="toast-container"></div>
+
+<script src="main.js"></script>
+<script>
+const modeMeta = {
+  business: { title: "👑 Business AI Advisor", desc: "Ask about strategy, pricing, websites, tools, launch plans, and growth opportunities" },
+  ideas: { title: "💡 Idea Engine", desc: "Get profitable, detailed business ideas tailored to your context" },
+  planner: { title: "🗺️ Launch Planner", desc: "Create practical 30, 60, or 90 day launch plans and priorities" },
+  pricing: { title: "💸 Pricing Strategist", desc: "Design smarter pricing, packages, and monetization options" },
+  resources: { title: "🧰 Tool Finder", desc: "Compare websites, apps, platforms, and software options clearly" },
+  presentation: { title: "🎤 Pitch Coach", desc: "Master how to present and pitch your project or idea" },
+  prompt: { title: "🌐 Website Prompt Generator", desc: "Get a detailed website prompt plus smart platform recommendations" },
+};
+
+document.querySelectorAll(".sidebar-mode-btn[data-mode]").forEach((btn) => {
+  btn.addEventListener("click", () => {
+    const meta = modeMeta[btn.dataset.mode];
+    if (meta) {
+      document.getElementById("chat-mode-title").textContent = meta.title;
+      document.getElementById("chat-mode-desc").textContent = meta.desc;
+    }
+  });
+});
+</script>
+</body>
+</html>

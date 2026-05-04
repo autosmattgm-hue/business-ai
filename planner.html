@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Launch Planner — THE SMART BOSS AI</title>
+  <meta name="description" content="Build a 30, 60, or 90 day launch plan for your business with milestones, priorities, tools, and execution guidance.">
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>👑</text></svg>">
+</head>
+<body>
+
+<nav class="nav">
+  <a href="/" class="nav-brand">
+    <div class="nav-logo">👑</div>
+    <div class="nav-name">THE SMART BOSS<span>AI Platform</span></div>
+  </a>
+  <ul class="nav-links" id="nav-links">
+    <li><a href="/">Home</a></li>
+    <li><a href="/business">Business AI</a></li>
+    <li><a href="/ideas">Idea Engine</a></li>
+    <li><a href="/resources">Toolkit</a></li>
+    <li><a href="/presentation">Pitch Coach</a></li>
+    <li><a href="/prompt">Web Prompts</a></li>
+  </ul>
+  <button class="nav-menu-btn" id="nav-menu-btn">☰</button>
+</nav>
+
+<div class="page-header">
+  <div class="page-header-content">
+    <span class="section-label">// Launch Planner</span>
+    <h1 style="font-family:var(--font-display);color:var(--text-primary);margin:0.5rem 0 1rem;">
+      Build a <span class="shimmer-text">90-Day Launch Plan</span>
+    </h1>
+    <p style="color:var(--text-muted);font-size:0.95rem;">
+      Turn a business idea into a practical execution roadmap with weekly milestones,
+      priorities, risk control, and the best next steps.
+    </p>
+  </div>
+</div>
+
+<section class="section" style="padding-top:0;">
+  <div class="section-inner" style="max-width:940px;">
+    <div class="prompt-form">
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:1.5rem;padding-bottom:1rem;border-bottom:1px solid rgba(255,255,255,0.05);">
+        <span style="font-size:1.6rem;">🗺️</span>
+        <div>
+          <div style="font-family:var(--font-display);font-size:1.2rem;color:var(--text-primary);font-weight:600;">Launch Roadmap Builder</div>
+          <div style="font-size:0.8rem;color:var(--text-muted);">Get a realistic plan based on your stage, time, and budget</div>
+        </div>
+      </div>
+
+      <div class="form-grid">
+        <div class="form-group">
+          <label class="form-label">Business / Project Name *</label>
+          <input type="text" class="form-input" id="plan-name" placeholder="e.g. GoldenBite Catering, Creator Growth Studio">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Planning Window *</label>
+          <select class="form-select" id="plan-window">
+            <option value="">Select timeline...</option>
+            <option value="30-day launch plan">30 days</option>
+            <option value="60-day launch plan">60 days</option>
+            <option value="90-day launch plan">90 days</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-grid">
+        <div class="form-group">
+          <label class="form-label">Current Stage *</label>
+          <select class="form-select" id="plan-stage">
+            <option value="">Select stage...</option>
+            <option value="idea stage with no customers yet">Idea stage</option>
+            <option value="early launch with a rough offer">Early launch</option>
+            <option value="already selling but needs structure">Already selling</option>
+            <option value="relaunching or repositioning an existing business">Relaunching</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Budget *</label>
+          <select class="form-select" id="plan-budget">
+            <option value="">Select budget...</option>
+            <option value="under $100">Under $100</option>
+            <option value="$100 to $500">$100 to $500</option>
+            <option value="$500 to $2,000">$500 to $2,000</option>
+            <option value="$2,000 to $10,000">$2,000 to $10,000</option>
+            <option value="$10,000+">$10,000+</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-grid">
+        <div class="form-group">
+          <label class="form-label">Target Customer</label>
+          <input type="text" class="form-input" id="plan-customer" placeholder="e.g. local families, small businesses, remote creators">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Weekly Time Available</label>
+          <input type="text" class="form-input" id="plan-time" placeholder="e.g. 10 hours per week, full time, evenings only">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Main Goal</label>
+        <textarea class="form-textarea" id="plan-goal" placeholder="What do you want this plan to help you achieve in the next 30, 60, or 90 days?" style="min-height:80px;"></textarea>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Current Obstacles</label>
+        <textarea class="form-textarea" id="plan-obstacles" placeholder="e.g. no audience yet, don't know how to price, need first customers, unsure which website/tool to use" style="min-height:80px;"></textarea>
+      </div>
+
+      <div style="display:flex;gap:0.75rem;flex-wrap:wrap;">
+        <button class="btn btn-primary" id="plan-generate-btn" onclick="generateLaunchPlan()">🗺️ Build My Plan</button>
+        <button class="btn btn-outline btn-sm" onclick="fillPlanExample()">📋 Example</button>
+      </div>
+    </div>
+
+    <div id="plan-result" style="display:none; margin-top:2rem;">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;flex-wrap:wrap;gap:0.75rem;">
+        <div>
+          <h3 style="font-family:var(--font-display);color:var(--gold-primary);">Your Launch Roadmap</h3>
+          <p style="font-size:0.8rem;color:var(--text-muted);margin:0;">Built for execution, traction, and focus</p>
+        </div>
+        <div style="display:flex;gap:8px;">
+          <button class="btn btn-ghost btn-sm" onclick="copyText(document.getElementById('plan-result-content').textContent)">📋 Copy</button>
+          <a href="/pricing" class="btn btn-outline btn-sm">💸 Price Next</a>
+        </div>
+      </div>
+
+      <div class="result-box">
+        <div class="result-content typing-cursor" id="plan-result-content"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" style="background:var(--bg-panel);border-top:1px solid rgba(255,255,255,0.04);">
+  <div class="section-inner">
+    <div class="section-header">
+      <span class="section-label">// Quick Starts</span>
+      <h2>Fast Plan Templates</h2>
+      <p>Use a preset and generate a launch roadmap in seconds.</p>
+    </div>
+
+    <div class="features-grid">
+      <button class="feature-card" style="text-align:left;border:none;" onclick="loadPlanPreset('side-hustle')">
+        <div class="feature-icon">🌙</div>
+        <div class="feature-title">Side Hustle</div>
+        <p class="feature-desc">Limited hours, low budget, fast validation.</p>
+        <div class="feature-arrow">Use Preset →</div>
+      </button>
+
+      <button class="feature-card" style="text-align:left;border:none;" onclick="loadPlanPreset('service')">
+        <div class="feature-icon">🛠️</div>
+        <div class="feature-title">Service Business</div>
+        <p class="feature-desc">Get first clients, define offer, build trust assets.</p>
+        <div class="feature-arrow">Use Preset →</div>
+      </button>
+
+      <button class="feature-card" style="text-align:left;border:none;" onclick="loadPlanPreset('digital')">
+        <div class="feature-icon">💻</div>
+        <div class="feature-title">Digital Product</div>
+        <p class="feature-desc">Validate demand, build audience, launch efficiently.</p>
+        <div class="feature-arrow">Use Preset →</div>
+      </button>
+    </div>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="footer-inner">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <div class="footer-brand-name">👑 THE SMART BOSS AI</div>
+        <p class="footer-brand-desc">
+          Use launch planning, pricing, and tooling advice together so your business decisions
+          stay connected from idea to execution.
+        </p>
+      </div>
+
+      <div class="footer-links">
+        <div class="footer-col">
+          <div class="footer-col-title">Core</div>
+          <ul>
+            <li><a href="/business">Business AI</a></li>
+            <li><a href="/ideas">Idea Engine</a></li>
+            <li><a href="/presentation">Pitch Coach</a></li>
+            <li><a href="/prompt">Web Prompts</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <div class="footer-col-title">Toolkit</div>
+          <ul>
+            <li><a href="/resources">Business Toolkit</a></li>
+            <li><a href="/planner">Launch Planner</a></li>
+            <li><a href="/pricing">Pricing Strategist</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <p class="footer-copy">© 2026 <span>THE SMART BOSS AI</span>. Built for faster execution.</p>
+    </div>
+  </div>
+</footer>
+
+<div id="toast-container" class="toast-container"></div>
+<script src="main.js"></script>
+<script>
+async function generateLaunchPlan() {
+  const name = document.getElementById("plan-name").value.trim();
+  const windowValue = document.getElementById("plan-window").value;
+  const stage = document.getElementById("plan-stage").value;
+  const budget = document.getElementById("plan-budget").value;
+  const customer = document.getElementById("plan-customer").value.trim();
+  const time = document.getElementById("plan-time").value.trim();
+  const goal = document.getElementById("plan-goal").value.trim();
+  const obstacles = document.getElementById("plan-obstacles").value.trim();
+
+  if (!name || !windowValue || !stage || !budget) {
+    showToast("Please fill in the required planning fields", "error");
+    return;
+  }
+
+  const message = `Create a practical ${windowValue} for:
+• Business: ${name}
+• Stage: ${stage}
+• Budget: ${budget}
+• Target customer: ${customer || "not specified"}
+• Time available: ${time || "not specified"}
+• Main goal: ${goal || "build traction and launch correctly"}
+• Obstacles: ${obstacles || "none shared"}
+
+Give me:
+1. A short strategic focus
+2. Weekly or phase-based milestones
+3. The most important actions first
+4. Recommended tools or websites if useful
+5. Main risks and how to reduce them
+6. Success metrics to track
+7. The best next 3 actions to start today`;
+
+  const btn = document.getElementById("plan-generate-btn");
+  const result = document.getElementById("plan-result");
+  const content = document.getElementById("plan-result-content");
+
+  btn.disabled = true;
+  btn.innerHTML = '<div class="spinner"></div> Building Plan...';
+  result.style.display = "block";
+  content.className = "result-content typing-cursor";
+  content.innerHTML = "";
+
+  try {
+    const finalText = await streamSmartBossResponse({
+      message,
+      mode: "planner",
+      onToken(fullText) {
+        content.innerHTML = parseMarkdown(fullText);
+      },
+    });
+
+    content.className = "result-content";
+    content.innerHTML = parseMarkdown(finalText);
+    result.scrollIntoView({ behavior: "smooth", block: "start" });
+    showToast("Launch plan ready", "success");
+  } catch (error) {
+    content.className = "result-content";
+    content.textContent = `Error: ${error.message}`;
+    showToast("Could not build plan", "error");
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = "🗺️ Build My Plan";
+  }
+}
+
+function fillPlanExample() {
+  document.getElementById("plan-name").value = "GoldenBite Catering";
+  document.getElementById("plan-window").value = "90-day launch plan";
+  document.getElementById("plan-stage").value = "early launch with a rough offer";
+  document.getElementById("plan-budget").value = "$500 to $2,000";
+  document.getElementById("plan-customer").value = "busy families and small events in my city";
+  document.getElementById("plan-time").value = "20 hours per week";
+  document.getElementById("plan-goal").value = "get first 15 paying customers and create a referral engine";
+  document.getElementById("plan-obstacles").value = "small audience, unclear weekly priorities, no website yet";
+  showToast("Example loaded", "info");
+}
+
+function loadPlanPreset(type) {
+  const presets = {
+    "side-hustle": {
+      name: "Weekend Service Studio",
+      window: "60-day launch plan",
+      stage: "idea stage with no customers yet",
+      budget: "$100 to $500",
+      customer: "local small businesses",
+      time: "10 hours per week",
+      goal: "validate an offer and get first 3 clients",
+      obstacles: "limited time and no past clients"
+    },
+    service: {
+      name: "Growth Support Agency",
+      window: "90-day launch plan",
+      stage: "early launch with a rough offer",
+      budget: "$500 to $2,000",
+      customer: "founders and local businesses",
+      time: "part time moving to full time",
+      goal: "package services, build proof, close first 5 clients",
+      obstacles: "positioning and lead generation"
+    },
+    digital: {
+      name: "Creator Sales Toolkit",
+      window: "90-day launch plan",
+      stage: "idea stage with no customers yet",
+      budget: "under $100",
+      customer: "creators and solo founders",
+      time: "15 hours per week",
+      goal: "validate demand and launch the first digital offer",
+      obstacles: "unclear audience and no email list"
+    }
+  };
+
+  const preset = presets[type];
+  if (!preset) return;
+
+  document.getElementById("plan-name").value = preset.name;
+  document.getElementById("plan-window").value = preset.window;
+  document.getElementById("plan-stage").value = preset.stage;
+  document.getElementById("plan-budget").value = preset.budget;
+  document.getElementById("plan-customer").value = preset.customer;
+  document.getElementById("plan-time").value = preset.time;
+  document.getElementById("plan-goal").value = preset.goal;
+  document.getElementById("plan-obstacles").value = preset.obstacles;
+
+  window.scrollTo({ top: 0, behavior: "smooth" });
+  setTimeout(generateLaunchPlan, 300);
+}
+</script>
+</body>
+</html>

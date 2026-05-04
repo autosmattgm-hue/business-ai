@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pitch Coach — THE SMART BOSS AI</title>
+  <meta name="description" content="Use THE SMART BOSS AI to structure pitches, improve delivery, and build stronger presentations.">
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>👑</text></svg>">
+</head>
+<body data-mode="presentation">
+
+<!-- ── NAVIGATION ── -->
+<nav class="nav">
+  <a href="/" class="nav-brand">
+    <div class="nav-logo">👑</div>
+    <div class="nav-name">THE SMART BOSS<span>AI Platform</span></div>
+  </a>
+  <ul class="nav-links" id="nav-links">
+    <li><a href="/">Home</a></li>
+    <li><a href="/business">Business AI</a></li>
+    <li><a href="/ideas">Idea Engine</a></li>
+    <li><a href="/resources">Toolkit</a></li>
+    <li><a href="/presentation">Pitch Coach</a></li>
+    <li><a href="/prompt">Web Prompts</a></li>
+  </ul>
+  <button class="nav-menu-btn" id="nav-menu-btn">☰</button>
+</nav>
+
+<!-- ── PAGE HEADER ── -->
+<div class="page-header">
+  <div class="page-header-content">
+    <span class="section-label">// Pitch Coach</span>
+    <h1 style="font-family:var(--font-display);color:var(--text-primary);margin:0.5rem 0 1rem;">
+      Present Like a <span class="shimmer-text">Boss</span>
+    </h1>
+    <p style="color:var(--text-muted);font-size:0.95rem;">
+      AI-powered presentation coaching. Learn how to structure your pitch, craft your narrative, 
+      impress investors, and win any room.
+    </p>
+  </div>
+</div>
+
+<!-- ── COACH TABS ── -->
+<section class="section" style="padding-top:0;">
+  <div class="section-inner" style="max-width:960px;">
+
+    <!-- TABS -->
+    <div style="display:flex;gap:8px;margin-bottom:2rem;flex-wrap:wrap;">
+      <button class="btn btn-primary" id="tab-chat" onclick="switchTab('chat')">💬 AI Pitch Coach</button>
+      <button class="btn btn-ghost" id="tab-builder" onclick="switchTab('builder')">🛠️ Pitch Builder</button>
+      <button class="btn btn-ghost" id="tab-tips" onclick="switchTab('tips')">📚 Pro Tips</button>
+    </div>
+
+    <!-- TAB: AI CHAT -->
+    <div id="tab-chat-content">
+      <div style="background:var(--bg-card);border:1px solid rgba(255,255,255,0.06);border-radius:var(--radius-xl);overflow:hidden;">
+        <!-- Chat Header -->
+        <div style="padding:1.25rem 1.5rem;border-bottom:1px solid rgba(255,255,255,0.05);display:flex;align-items:center;justify-content:space-between;gap:1rem;">
+          <div>
+            <div style="font-family:var(--font-display);font-size:1.1rem;color:var(--gold-primary);font-weight:600;">🎤 AI Pitch Coach</div>
+            <div style="font-size:0.78rem;color:var(--text-muted);">Ask anything about presentations and pitching</div>
+          </div>
+          <button class="btn btn-ghost btn-sm" onclick="clearPitchChat()">Clear</button>
+        </div>
+
+        <!-- Messages -->
+        <div id="pitch-messages" style="height:420px;overflow-y:auto;padding:1.5rem;display:flex;flex-direction:column;gap:1.25rem;">
+          <div class="message ai">
+            <div class="message-avatar">👑</div>
+            <div class="message-bubble">
+              <div style="color:var(--gold-primary);font-weight:600;margin-bottom:0.5rem;font-family:var(--font-display);">Welcome, Future Champion Presenter 🎤</div>
+              <p>I'm your AI Pitch Coach. I'll help you:</p>
+              <ul>
+                <li><strong>Structure</strong> your pitch for maximum impact</li>
+                <li><strong>Craft</strong> compelling opening hooks</li>
+                <li><strong>Design</strong> winning slide frameworks</li>
+                <li><strong>Handle</strong> tough investor questions</li>
+                <li><strong>Nail</strong> your delivery and body language</li>
+              </ul>
+              <p style="margin-top:0.75rem;">What are you presenting and to whom? Tell me about your project!</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Suggestions -->
+        <div id="pitch-suggestions" style="padding:0 1.5rem 1rem;">
+          <div style="display:flex;gap:8px;flex-wrap:wrap;">
+            <button class="suggestion-chip" data-prompt="I need to pitch my startup to investors. Help me structure my 5-minute pitch." style="font-size:0.78rem;padding:7px 12px;">Startup investor pitch</button>
+            <button class="suggestion-chip" data-prompt="How do I create a compelling opening hook for my business presentation?" style="font-size:0.78rem;padding:7px 12px;">Opening hook tips</button>
+            <button class="suggestion-chip" data-prompt="What's the best slide structure for a business proposal?" style="font-size:0.78rem;padding:7px 12px;">Slide structure guide</button>
+            <button class="suggestion-chip" data-prompt="I'm terrified of public speaking. How do I build confidence before a big pitch?" style="font-size:0.78rem;padding:7px 12px;">Build confidence</button>
+          </div>
+        </div>
+
+        <!-- Input -->
+        <div style="padding:1rem 1.5rem;border-top:1px solid rgba(255,255,255,0.05);">
+          <div class="chat-input-wrapper">
+            <textarea id="pitch-input" class="chat-textarea" placeholder="Describe your project, audience, or ask a question..." rows="1"></textarea>
+            <button class="chat-send-btn" id="pitch-send-btn" onclick="sendPitch()">➤</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB: PITCH BUILDER -->
+    <div id="tab-builder-content" style="display:none;">
+      <div class="prompt-form">
+        <div style="font-family:var(--font-display);font-size:1.3rem;color:var(--text-primary);margin-bottom:1.5rem;font-weight:600;">
+          🛠️ Pitch Structure Builder
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Your Project / Business Name *</label>
+          <input type="text" class="form-input" id="pitch-name" placeholder="e.g. FreshBox — Farm-to-Door Delivery">
+        </div>
+
+        <div class="form-grid">
+          <div class="form-group">
+            <label class="form-label">Audience / Who You're Pitching To *</label>
+            <select class="form-select" id="pitch-audience">
+              <option value="">Select audience...</option>
+              <option value="angel investors">Angel Investors</option>
+              <option value="venture capitalists">Venture Capitalists (VCs)</option>
+              <option value="bank / loan officer">Bank / Loan Officer</option>
+              <option value="potential business partners">Business Partners</option>
+              <option value="corporate clients">Corporate Clients</option>
+              <option value="a school or competition panel">School / Competition Panel</option>
+              <option value="grant committee">Grant Committee</option>
+              <option value="general customers">General Customers</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Pitch Duration</label>
+            <select class="form-select" id="pitch-duration">
+              <option value="1-minute elevator pitch">1-minute elevator pitch</option>
+              <option value="3-minute pitch" selected>3-minute pitch</option>
+              <option value="5-minute pitch">5-minute pitch</option>
+              <option value="10-minute pitch">10-minute pitch</option>
+              <option value="30-minute detailed presentation">30-minute presentation</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Problem You Solve</label>
+          <textarea class="form-textarea" id="pitch-problem" placeholder="What problem does your business/project solve? Who has this problem?" style="min-height:80px;"></textarea>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Your Solution / Unique Value</label>
+          <textarea class="form-textarea" id="pitch-solution" placeholder="How do you solve it? What makes you unique or better than alternatives?" style="min-height:80px;"></textarea>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Your Ask / Goal</label>
+          <input type="text" class="form-input" id="pitch-ask" placeholder="e.g. $50,000 investment, partnership, approval, a sale...">
+        </div>
+
+        <button class="btn btn-primary" onclick="buildPitch()" id="build-pitch-btn">
+          🎤 Build My Pitch
+        </button>
+      </div>
+
+      <!-- Pitch Result -->
+      <div id="pitch-result" style="display:none; margin-top:2rem;">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;flex-wrap:wrap;gap:1rem;">
+          <h3 style="font-family:var(--font-display);color:var(--gold-primary);">Your Custom Pitch</h3>
+          <button class="btn btn-ghost btn-sm" onclick="copyText(document.getElementById('pitch-result-content').textContent)">📋 Copy</button>
+        </div>
+        <div class="result-box">
+          <div class="result-content" id="pitch-result-content"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB: PRO TIPS ── -->
+    <div id="tab-tips-content" style="display:none;">
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1.25rem;">
+
+        <div class="idea-card">
+          <div class="idea-card-header">
+            <div style="font-size:1.8rem;">🎯</div>
+            <span class="idea-tag">Structure</span>
+          </div>
+          <div style="font-family:var(--font-display);font-size:1.1rem;color:var(--text-primary);margin-bottom:0.5rem;">The PSMTA Framework</div>
+          <p style="font-size:0.85rem;color:var(--text-muted);">
+            <strong style="color:var(--gold-primary);">P</strong>roblem → 
+            <strong style="color:var(--gold-primary);">S</strong>olution → 
+            <strong style="color:var(--gold-primary);">M</strong>arket → 
+            <strong style="color:var(--gold-primary);">T</strong>raction → 
+            <strong style="color:var(--gold-primary);">A</strong>sk. 
+            The proven pitch structure used in the world's top accelerators.
+          </p>
+        </div>
+
+        <div class="idea-card">
+          <div class="idea-card-header">
+            <div style="font-size:1.8rem;">🎬</div>
+            <span class="idea-tag">Opening</span>
+          </div>
+          <div style="font-family:var(--font-display);font-size:1.1rem;color:var(--text-primary);margin-bottom:0.5rem;">Start with a Story</div>
+          <p style="font-size:0.85rem;color:var(--text-muted);">
+            Open with a vivid 30-second story about a real person facing the problem you solve. 
+            Stories are 22x more memorable than statistics alone.
+          </p>
+        </div>
+
+        <div class="idea-card">
+          <div class="idea-card-header">
+            <div style="font-size:1.8rem;">📊</div>
+            <span class="idea-tag">Slides</span>
+          </div>
+          <div style="font-family:var(--font-display);font-size:1.1rem;color:var(--text-primary);margin-bottom:0.5rem;">One Idea Per Slide</div>
+          <p style="font-size:0.85rem;color:var(--text-muted);">
+            Each slide should have ONE message. Big visuals, minimal text. 
+            If you can't say it in a headline, you haven't thought it through.
+          </p>
+        </div>
+
+        <div class="idea-card">
+          <div class="idea-card-header">
+            <div style="font-size:1.8rem;">👁️</div>
+            <span class="idea-tag">Delivery</span>
+          </div>
+          <div style="font-family:var(--font-display);font-size:1.1rem;color:var(--text-primary);margin-bottom:0.5rem;">The 7-38-55 Rule</div>
+          <p style="font-size:0.85rem;color:var(--text-muted);">
+            7% words, 38% tone of voice, 55% body language. 
+            Practise your vocal energy and eye contact as much as your content.
+          </p>
+        </div>
+
+        <div class="idea-card">
+          <div class="idea-card-header">
+            <div style="font-size:1.8rem;">🔢</div>
+            <span class="idea-tag">Numbers</span>
+          </div>
+          <div style="font-family:var(--font-display);font-size:1.1rem;color:var(--text-primary);margin-bottom:0.5rem;">Make Numbers Tangible</div>
+          <p style="font-size:0.85rem;color:var(--text-muted);">
+            Instead of "$1M market" say "1 in every 5 households in our city." 
+            Translate abstract figures into human-scale realities.
+          </p>
+        </div>
+
+        <div class="idea-card">
+          <div class="idea-card-header">
+            <div style="font-size:1.8rem;">❓</div>
+            <span class="idea-tag">Q&amp;A</span>
+          </div>
+          <div style="font-family:var(--font-display);font-size:1.1rem;color:var(--text-primary);margin-bottom:0.5rem;">Anticipate Hard Questions</div>
+          <p style="font-size:0.85rem;color:var(--text-muted);">
+            Prepare 10 tough questions investors might ask. Practice saying 
+            "That's a great challenge — here's how we think about it..." confidently.
+          </p>
+        </div>
+
+      </div>
+
+      <div style="margin-top:2rem;text-align:center;">
+        <p style="color:var(--text-muted);font-size:0.9rem;margin-bottom:1rem;">
+          Want personalised coaching on your specific pitch?
+        </p>
+        <button class="btn btn-primary" onclick="switchTab('chat')">
+          💬 Talk to AI Pitch Coach
+        </button>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ── FOOTER ── -->
+<footer class="footer">
+  <div class="footer-inner">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <div class="footer-brand-name">👑 THE SMART BOSS AI</div>
+        <p class="footer-brand-desc">
+          Strong pitches work best when your business model, launch plan, pricing, and website
+          story are aligned.
+        </p>
+      </div>
+
+      <div class="footer-links">
+        <div class="footer-col">
+          <div class="footer-col-title">Core</div>
+          <ul>
+            <li><a href="/business">Business AI</a></li>
+            <li><a href="/ideas">Idea Engine</a></li>
+            <li><a href="/presentation">Pitch Coach</a></li>
+            <li><a href="/prompt">Web Prompts</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <div class="footer-col-title">Toolkit</div>
+          <ul>
+            <li><a href="/resources">Business Toolkit</a></li>
+            <li><a href="/planner">Launch Planner</a></li>
+            <li><a href="/pricing">Pricing Strategist</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <p class="footer-copy">© 2026 <span>THE SMART BOSS AI</span>. Powered by Google Gemma 4 via NVIDIA.</p>
+    </div>
+  </div>
+</footer>
+
+<div id="toast-container" class="toast-container"></div>
+<script src="main.js"></script>
+<script>
+// ── TAB SWITCHING ──
+function switchTab(tab) {
+  ["chat","builder","tips"].forEach(t => {
+    document.getElementById(`tab-${t}-content`).style.display = t===tab?"block":"none";
+    const btn = document.getElementById(`tab-${t}`);
+    btn.className = t===tab ? "btn btn-primary" : "btn btn-ghost";
+  });
+}
+
+// ── PITCH CHAT ──
+let pitchHistory = [];
+let pitchStreaming = false;
+
+document.getElementById("pitch-input").addEventListener("keydown", (e) => {
+  if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); sendPitch(); }
+});
+document.getElementById("pitch-input").addEventListener("input", function() {
+  autoResize(this);
+});
+
+document.querySelectorAll(".suggestion-chip").forEach(c => {
+  c.addEventListener("click", () => {
+    document.getElementById("pitch-input").value = c.dataset.prompt;
+    document.getElementById("pitch-suggestions").style.display = "none";
+    sendPitch();
+  });
+});
+
+async function sendPitch() {
+  const input = document.getElementById("pitch-input");
+  const text  = input.value.trim();
+  if (!text || pitchStreaming) return;
+
+  input.value = "";
+  autoResize(input);
+  document.getElementById("pitch-suggestions").style.display = "none";
+
+  const msgs = document.getElementById("pitch-messages");
+
+  // User msg
+  const uDiv = document.createElement("div");
+  uDiv.className = "message user";
+  uDiv.innerHTML = `<div class="message-avatar">👤</div><div class="message-bubble" style="background:linear-gradient(135deg,var(--gold-dim),var(--gold-primary));color:#0A0A0E;border-radius:var(--radius-lg) 4px var(--radius-lg) var(--radius-lg);">${text}</div>`;
+  msgs.appendChild(uDiv);
+
+  // AI placeholder
+  const aDiv = document.createElement("div");
+  aDiv.className = "message ai";
+  aDiv.innerHTML = `<div class="message-avatar">👑</div><div class="message-bubble typing-cursor" id="pitch-ai-bubble"></div>`;
+  msgs.appendChild(aDiv);
+  msgs.scrollTop = msgs.scrollHeight;
+
+  pitchHistory.push({ role: "user", content: text });
+  pitchStreaming = true;
+  document.getElementById("pitch-send-btn").disabled = true;
+
+  let full = "";
+  const bubble = document.getElementById("pitch-ai-bubble");
+
+  try {
+    const res = await fetch("/api/chat", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ message: text, mode: "presentation", history: pitchHistory.slice(-8) })
+    });
+
+    const reader = res.body.getReader();
+    const decoder = new TextDecoder();
+    let buffer = "";
+
+    while(true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      buffer += decoder.decode(value, { stream: true });
+      const lines = buffer.split("\n"); buffer = lines.pop();
+      for (const line of lines) {
+        if (!line.startsWith("data: ") || line === "data: [DONE]") continue;
+        try {
+          const json = JSON.parse(line.slice(6));
+          if (json.token) { full += json.token; bubble.innerHTML = parseMarkdown(full); msgs.scrollTop = msgs.scrollHeight; }
+        } catch(_) {}
+      }
+    }
+    bubble.className = "message-bubble";
+    pitchHistory.push({ role: "assistant", content: full });
+  } catch(err) {
+    bubble.textContent = "Connection error. Please ensure server is running.";
+  } finally {
+    pitchStreaming = false;
+    document.getElementById("pitch-send-btn").disabled = false;
+  }
+}
+
+function clearPitchChat() {
+  pitchHistory = [];
+  document.getElementById("pitch-messages").innerHTML = "";
+  document.getElementById("pitch-suggestions").style.display = "block";
+}
+
+// ── PITCH BUILDER ──
+async function buildPitch() {
+  const name     = document.getElementById("pitch-name").value.trim();
+  const audience = document.getElementById("pitch-audience").value;
+  const duration = document.getElementById("pitch-duration").value;
+  const problem  = document.getElementById("pitch-problem").value.trim();
+  const solution = document.getElementById("pitch-solution").value.trim();
+  const ask      = document.getElementById("pitch-ask").value.trim();
+
+  if (!name || !audience) { showToast("Fill in project name and audience", "error"); return; }
+
+  const message = `Build a complete, professional ${duration} pitch for:
+- Project/Business: ${name}
+- Audience: ${audience}
+- Problem Solved: ${problem || "to be defined"}
+- Solution/Value: ${solution || "to be defined"}
+- The Ask: ${ask || "to be determined"}
+
+Include: opening hook, problem statement, solution pitch, market opportunity, traction/credibility, the ask, and a strong close. Also give 3 delivery tips specific to pitching to ${audience}.`;
+
+  const btn = document.getElementById("build-pitch-btn");
+  btn.disabled = true;
+  btn.innerHTML = '<div class="spinner"></div> Building Pitch...';
+
+  document.getElementById("pitch-result").style.display = "block";
+  const content = document.getElementById("pitch-result-content");
+  content.textContent = "";
+  content.className = "result-content typing-cursor";
+
+  let full = "";
+  try {
+    const res = await fetch("/api/chat", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ message, mode: "presentation", history: [] })
+    });
+    const reader = res.body.getReader();
+    const decoder = new TextDecoder();
+    let buffer = "";
+    while(true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      buffer += decoder.decode(value, { stream: true });
+      const lines = buffer.split("\n"); buffer = lines.pop();
+      for (const line of lines) {
+        if (!line.startsWith("data: ") || line === "data: [DONE]") continue;
+        try {
+          const json = JSON.parse(line.slice(6));
+          if (json.token) { full += json.token; content.innerHTML = parseMarkdown(full); }
+        } catch(_) {}
+      }
+    }
+    content.className = "result-content";
+    showToast("Pitch built! 🎤", "success");
+    document.getElementById("pitch-result").scrollIntoView({ behavior:"smooth" });
+  } catch(err) {
+    content.textContent = "Error. Check server connection.";
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = "🎤 Build My Pitch";
+  }
+}
+</script>
+</body>
+</html>

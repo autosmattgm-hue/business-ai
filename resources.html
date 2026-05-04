@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Business Toolkit — THE SMART BOSS AI</title>
+  <meta name="description" content="Discover recommended websites, business tools, builders, CRMs, payment platforms, and launch software for your business.">
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>👑</text></svg>">
+</head>
+<body>
+
+<nav class="nav">
+  <a href="/" class="nav-brand">
+    <div class="nav-logo">👑</div>
+    <div class="nav-name">THE SMART BOSS<span>AI Platform</span></div>
+  </a>
+  <ul class="nav-links" id="nav-links">
+    <li><a href="/">Home</a></li>
+    <li><a href="/business">Business AI</a></li>
+    <li><a href="/ideas">Idea Engine</a></li>
+    <li><a href="/resources">Toolkit</a></li>
+    <li><a href="/presentation">Pitch Coach</a></li>
+    <li><a href="/prompt">Web Prompts</a></li>
+  </ul>
+  <button class="nav-menu-btn" id="nav-menu-btn">☰</button>
+</nav>
+
+<div class="page-header">
+  <div class="page-header-content">
+    <span class="section-label">// Business Toolkit</span>
+    <h1 style="font-family:var(--font-display);color:var(--text-primary);margin:0.5rem 0 1rem;">
+      Find the Right <span class="shimmer-text">Websites and Tools</span>
+    </h1>
+    <p style="color:var(--text-muted);font-size:0.95rem;">
+      Get AI recommendations for website builders, payment platforms, CRMs, booking tools,
+      email tools, and other software based on your business stage and budget.
+    </p>
+  </div>
+</div>
+
+<section class="section" style="padding-top:0;">
+  <div class="section-inner" style="max-width:980px;">
+    <div class="prompt-form">
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:1.5rem;padding-bottom:1rem;border-bottom:1px solid rgba(255,255,255,0.05);">
+        <span style="font-size:1.6rem;">🧰</span>
+        <div>
+          <div style="font-family:var(--font-display);font-size:1.2rem;color:var(--text-primary);font-weight:600;">Tool Finder</div>
+          <div style="font-size:0.8rem;color:var(--text-muted);">Get the best option plus two alternatives and tradeoffs</div>
+        </div>
+      </div>
+
+      <div class="form-grid">
+        <div class="form-group">
+          <label class="form-label">Business Type *</label>
+          <input type="text" class="form-input" id="tool-business" placeholder="e.g. coaching, restaurant, e-commerce, agency">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Current Stage *</label>
+          <select class="form-select" id="tool-stage">
+            <option value="">Select stage...</option>
+            <option value="starting from scratch">Starting from scratch</option>
+            <option value="early launch">Early launch</option>
+            <option value="already operating and optimizing">Already operating</option>
+            <option value="scaling to more customers">Scaling</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-grid">
+        <div class="form-group">
+          <label class="form-label">Budget *</label>
+          <select class="form-select" id="tool-budget">
+            <option value="">Select budget...</option>
+            <option value="very low budget">Very low budget</option>
+            <option value="budget-conscious but can pay for essentials">Budget-conscious</option>
+            <option value="mid-range budget">Mid-range</option>
+            <option value="premium budget for strong tools">Premium</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Skill Level *</label>
+          <select class="form-select" id="tool-skill">
+            <option value="">Select skill...</option>
+            <option value="beginner with no-code preference">Beginner</option>
+            <option value="comfortable with basic setup">Intermediate</option>
+            <option value="advanced and flexible">Advanced</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">What Do You Need Help Choosing? *</label>
+        <input type="text" class="form-input" id="tool-need" placeholder="e.g. website builder, CRM, scheduling app, email software, payment platform">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Must-Have Features</label>
+        <textarea class="form-textarea" id="tool-features" placeholder="e.g. booking, payment links, inventory, automation, custom domain, mobile friendly" style="min-height:80px;"></textarea>
+      </div>
+
+      <div style="display:flex;gap:0.75rem;flex-wrap:wrap;">
+        <button class="btn btn-primary" id="tool-generate-btn" onclick="generateToolkitAdvice()">🧰 Recommend My Stack</button>
+        <button class="btn btn-outline btn-sm" onclick="fillToolkitExample()">📋 Example</button>
+      </div>
+    </div>
+
+    <div id="tool-result" style="display:none; margin-top:2rem;">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;flex-wrap:wrap;gap:0.75rem;">
+        <div>
+          <h3 style="font-family:var(--font-display);color:var(--gold-primary);">Recommended Stack</h3>
+          <p style="font-size:0.8rem;color:var(--text-muted);margin:0;">Best choice, alternatives, pros, cons, and next steps</p>
+        </div>
+        <div style="display:flex;gap:8px;">
+          <button class="btn btn-ghost btn-sm" onclick="copyText(document.getElementById('tool-result-content').textContent)">📋 Copy</button>
+          <a href="/prompt" class="btn btn-outline btn-sm">🌐 Build Website Prompt</a>
+        </div>
+      </div>
+
+      <div class="result-box">
+        <div class="result-content typing-cursor" id="tool-result-content"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" style="background:var(--bg-panel);border-top:1px solid rgba(255,255,255,0.04);border-bottom:1px solid rgba(255,255,255,0.04);">
+  <div class="section-inner">
+    <div class="section-header">
+      <span class="section-label">// Popular Searches</span>
+      <h2>Fast Tool Categories</h2>
+      <p>Click a category to prefill the tool finder and get tailored recommendations.</p>
+    </div>
+
+    <div class="features-grid">
+      <button class="feature-card" style="text-align:left;border:none;" onclick="loadToolkitPreset('website')">
+        <div class="feature-icon">🌐</div>
+        <div class="feature-title">Website Builder</div>
+        <p class="feature-desc">Best builders for speed, conversions, and ease of use.</p>
+        <div class="feature-arrow">Use Preset →</div>
+      </button>
+
+      <button class="feature-card" style="text-align:left;border:none;" onclick="loadToolkitPreset('payments')">
+        <div class="feature-icon">💳</div>
+        <div class="feature-title">Payments</div>
+        <p class="feature-desc">Choose payment tools for online selling and client checkout.</p>
+        <div class="feature-arrow">Use Preset →</div>
+      </button>
+
+      <button class="feature-card" style="text-align:left;border:none;" onclick="loadToolkitPreset('crm')">
+        <div class="feature-icon">📇</div>
+        <div class="feature-title">CRM & Leads</div>
+        <p class="feature-desc">Track leads, follow up better, and organize your sales flow.</p>
+        <div class="feature-arrow">Use Preset →</div>
+      </button>
+
+      <button class="feature-card" style="text-align:left;border:none;" onclick="loadToolkitPreset('booking')">
+        <div class="feature-icon">📅</div>
+        <div class="feature-title">Booking Tools</div>
+        <p class="feature-desc">Scheduling, calls, consultations, and calendar automation.</p>
+        <div class="feature-arrow">Use Preset →</div>
+      </button>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="section-inner">
+    <div class="section-header">
+      <span class="section-label">// More Planner Tools</span>
+      <h2>Use the Full Toolkit Together</h2>
+      <p>Move from tool choice to launch and pricing without losing context.</p>
+    </div>
+
+    <div class="features-grid">
+      <a href="/planner" class="feature-card">
+        <div class="feature-icon">🗺️</div>
+        <div class="feature-title">Launch Planner</div>
+        <p class="feature-desc">Create a phased execution plan after choosing your stack.</p>
+        <div class="feature-arrow">Plan Launch →</div>
+      </a>
+
+      <a href="/pricing" class="feature-card">
+        <div class="feature-icon">💸</div>
+        <div class="feature-title">Pricing Strategist</div>
+        <p class="feature-desc">Price your offer well after selecting the tools you need.</p>
+        <div class="feature-arrow">Set Pricing →</div>
+      </a>
+
+      <a href="/business" class="feature-card">
+        <div class="feature-icon">🤖</div>
+        <div class="feature-title">Business AI Chat</div>
+        <p class="feature-desc">Ask follow-up questions and compare new business options.</p>
+        <div class="feature-arrow">Continue in Chat →</div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="footer-inner">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <div class="footer-brand-name">👑 THE SMART BOSS AI</div>
+        <p class="footer-brand-desc">
+          Choose the right platform stack before you spend time or money on the wrong tools.
+        </p>
+      </div>
+
+      <div class="footer-links">
+        <div class="footer-col">
+          <div class="footer-col-title">Core</div>
+          <ul>
+            <li><a href="/business">Business AI</a></li>
+            <li><a href="/ideas">Idea Engine</a></li>
+            <li><a href="/presentation">Pitch Coach</a></li>
+            <li><a href="/prompt">Web Prompts</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <div class="footer-col-title">Toolkit</div>
+          <ul>
+            <li><a href="/resources">Business Toolkit</a></li>
+            <li><a href="/planner">Launch Planner</a></li>
+            <li><a href="/pricing">Pricing Strategist</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <p class="footer-copy">© 2026 <span>THE SMART BOSS AI</span>. Built for better software choices.</p>
+    </div>
+  </div>
+</footer>
+
+<div id="toast-container" class="toast-container"></div>
+<script src="main.js"></script>
+<script>
+async function generateToolkitAdvice() {
+  const business = document.getElementById("tool-business").value.trim();
+  const stage = document.getElementById("tool-stage").value;
+  const budget = document.getElementById("tool-budget").value;
+  const skill = document.getElementById("tool-skill").value;
+  const need = document.getElementById("tool-need").value.trim();
+  const features = document.getElementById("tool-features").value.trim();
+
+  if (!business || !stage || !budget || !skill || !need) {
+    showToast("Please fill in the required toolkit fields", "error");
+    return;
+  }
+
+  const message = `Recommend the best websites or tools for:
+• Business type: ${business}
+• Stage: ${stage}
+• Budget: ${budget}
+• Skill level: ${skill}
+• Need: ${need}
+• Must-have features: ${features || "none listed"}
+
+Give me:
+1. The best recommendation
+2. Two alternatives
+3. Price level for each
+4. Main strengths
+5. Main drawbacks
+6. Which option is best for a beginner
+7. Which option is best for scale
+8. The next step I should take today`;
+
+  const btn = document.getElementById("tool-generate-btn");
+  const result = document.getElementById("tool-result");
+  const content = document.getElementById("tool-result-content");
+
+  btn.disabled = true;
+  btn.innerHTML = '<div class="spinner"></div> Recommending...';
+  result.style.display = "block";
+  content.className = "result-content typing-cursor";
+  content.innerHTML = "";
+
+  try {
+    const finalText = await streamSmartBossResponse({
+      message,
+      mode: "resources",
+      onToken(fullText) {
+        content.innerHTML = parseMarkdown(fullText);
+      },
+    });
+
+    content.className = "result-content";
+    content.innerHTML = parseMarkdown(finalText);
+    result.scrollIntoView({ behavior: "smooth", block: "start" });
+    showToast("Tool recommendations ready", "success");
+  } catch (error) {
+    content.className = "result-content";
+    content.textContent = `Error: ${error.message}`;
+    showToast("Could not load recommendations", "error");
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = "🧰 Recommend My Stack";
+  }
+}
+
+function fillToolkitExample() {
+  document.getElementById("tool-business").value = "coaching business";
+  document.getElementById("tool-stage").value = "starting from scratch";
+  document.getElementById("tool-budget").value = "budget-conscious but can pay for essentials";
+  document.getElementById("tool-skill").value = "beginner with no-code preference";
+  document.getElementById("tool-need").value = "website builder and booking system";
+  document.getElementById("tool-features").value = "landing page, payment collection, calendar booking, testimonials, mobile friendly";
+  showToast("Example loaded", "info");
+}
+
+function loadToolkitPreset(type) {
+  const presets = {
+    website: {
+      business: "service business",
+      stage: "starting from scratch",
+      budget: "budget-conscious but can pay for essentials",
+      skill: "beginner with no-code preference",
+      need: "website builder",
+      features: "lead capture, mobile friendly, easy editing, custom domain, basic SEO"
+    },
+    payments: {
+      business: "online business",
+      stage: "early launch",
+      budget: "mid-range budget",
+      skill: "comfortable with basic setup",
+      need: "payment platform",
+      features: "payment links, subscriptions, invoices, easy checkout, trusted by buyers"
+    },
+    crm: {
+      business: "agency",
+      stage: "already operating and optimizing",
+      budget: "mid-range budget",
+      skill: "comfortable with basic setup",
+      need: "CRM and lead management software",
+      features: "pipeline tracking, follow-up automation, forms, simple reporting"
+    },
+    booking: {
+      business: "coaching business",
+      stage: "early launch",
+      budget: "budget-conscious but can pay for essentials",
+      skill: "beginner with no-code preference",
+      need: "scheduling and booking software",
+      features: "calendar sync, reminders, payment collection, timezone handling"
+    }
+  };
+
+  const preset = presets[type];
+  if (!preset) return;
+
+  document.getElementById("tool-business").value = preset.business;
+  document.getElementById("tool-stage").value = preset.stage;
+  document.getElementById("tool-budget").value = preset.budget;
+  document.getElementById("tool-skill").value = preset.skill;
+  document.getElementById("tool-need").value = preset.need;
+  document.getElementById("tool-features").value = preset.features;
+
+  window.scrollTo({ top: 0, behavior: "smooth" });
+  setTimeout(generateToolkitAdvice, 300);
+}
+</script>
+</body>
+</html>

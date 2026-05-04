@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Website Prompt Generator — THE SMART BOSS AI</title>
+  <meta name="description" content="Generate website prompts, platform suggestions, and launch-ready briefs for your business website.">
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>👑</text></svg>">
+</head>
+<body>
+
+<!-- ── NAVIGATION ── -->
+<nav class="nav">
+  <a href="/" class="nav-brand">
+    <div class="nav-logo">👑</div>
+    <div class="nav-name">THE SMART BOSS<span>AI Platform</span></div>
+  </a>
+  <ul class="nav-links" id="nav-links">
+    <li><a href="/">Home</a></li>
+    <li><a href="/business">Business AI</a></li>
+    <li><a href="/ideas">Idea Engine</a></li>
+    <li><a href="/resources">Toolkit</a></li>
+    <li><a href="/presentation">Pitch Coach</a></li>
+    <li><a href="/prompt">Web Prompts</a></li>
+  </ul>
+  <button class="nav-menu-btn" id="nav-menu-btn">☰</button>
+</nav>
+
+<!-- ── PAGE HEADER ── -->
+<div class="page-header">
+  <div class="page-header-content">
+    <span class="section-label">// Website Prompt Generator</span>
+    <h1 style="font-family:var(--font-display);color:var(--text-primary);margin:0.5rem 0 1rem;">
+      Design Your <span class="shimmer-text">Dream Website</span>
+    </h1>
+    <p style="color:var(--text-muted);font-size:0.95rem;">
+      Describe your business and get a comprehensive, professional website design prompt 
+      plus platform recommendations ready to hand to any AI builder, designer, or developer.
+    </p>
+  </div>
+</div>
+
+<!-- ── MAIN CONTENT ── -->
+<section class="section" style="padding-top:0;">
+  <div class="section-inner" style="max-width:900px;">
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:2rem;align-items:start;" id="prompt-layout">
+
+      <!-- FORM -->
+      <div class="prompt-form" id="prompt-form-box" style="background:var(--bg-card);border:1px solid rgba(255,255,255,0.06);border-radius:var(--radius-xl);padding:2rem;">
+        <div style="font-family:var(--font-display);font-size:1.2rem;color:var(--text-primary);margin-bottom:1.5rem;font-weight:600;display:flex;align-items:center;gap:8px;">
+          🌐 Website Details
+        </div>
+
+        <form id="prompt-form" onsubmit="return false;">
+          <div class="form-group">
+            <label class="form-label">Business / Project Name *</label>
+            <input type="text" class="form-input" id="business-type" placeholder="e.g. Sunshine Catering, TechFlow SaaS...">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Website Type *</label>
+            <select class="form-select" id="website-type">
+              <option value="">Select type...</option>
+              <option value="landing page">Landing Page</option>
+              <option value="e-commerce store">E-Commerce Store</option>
+              <option value="business portfolio">Business Portfolio</option>
+              <option value="restaurant / food service">Restaurant / Food Service</option>
+              <option value="SaaS application">SaaS Application</option>
+              <option value="blog / content site">Blog / Content Site</option>
+              <option value="service business site">Service Business Site</option>
+              <option value="marketplace">Marketplace</option>
+              <option value="non-profit">Non-Profit / NGO</option>
+              <option value="event / booking site">Event / Booking Site</option>
+              <option value="educational platform">Educational Platform</option>
+              <option value="personal brand">Personal Brand / Freelancer</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Target Audience</label>
+            <input type="text" class="form-input" id="audience" placeholder="e.g. young professionals, small businesses, parents...">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Main Goals</label>
+            <input type="text" class="form-input" id="goals" placeholder="e.g. generate leads, sell products, book appointments...">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Style / Vibe Preference</label>
+            <select class="form-select" id="style-pref">
+              <option value="modern and professional">Modern & Professional</option>
+              <option value="luxury and premium">Luxury & Premium</option>
+              <option value="minimal and clean">Minimal & Clean</option>
+              <option value="bold and energetic">Bold & Energetic</option>
+              <option value="warm and friendly">Warm & Friendly</option>
+              <option value="tech and futuristic">Tech & Futuristic</option>
+              <option value="natural and organic">Natural & Organic</option>
+              <option value="playful and creative">Playful & Creative</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Key Features / Pages Needed</label>
+            <textarea class="form-textarea" id="features" placeholder="e.g. homepage, about us, services, gallery, contact form, booking system, customer reviews, blog..." style="min-height:80px;"></textarea>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Color Preferences (optional)</label>
+            <input type="text" class="form-input" id="colors" placeholder="e.g. dark blue and gold, green and white, earthy tones...">
+          </div>
+
+          <div style="display:flex;gap:0.75rem;flex-wrap:wrap;">
+            <button type="submit" class="btn btn-primary" id="generate-btn" onclick="generatePrompt()">
+              ✨ Generate Website Prompt
+            </button>
+            <button type="button" class="btn btn-outline btn-sm" onclick="fillExample()">
+              📋 Example
+            </button>
+            <button type="button" class="btn btn-ghost btn-sm" onclick="clearForm()">
+              🗑️ Clear
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <!-- RESULT -->
+      <div>
+        <!-- Empty state -->
+        <div id="prompt-empty-state" style="background:var(--bg-card);border:1px dashed rgba(201,168,76,0.2);border-radius:var(--radius-xl);padding:3rem 2rem;text-align:center;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1rem;min-height:300px;">
+          <div style="font-size:3rem;">🌐</div>
+          <div style="font-family:var(--font-display);font-size:1.2rem;color:var(--text-secondary);">Your prompt will appear here</div>
+          <p style="font-size:0.82rem;color:var(--text-muted);max-width:250px;">Fill in your business details and click Generate to get a comprehensive website design prompt</p>
+        </div>
+
+        <!-- Generated Result -->
+        <div id="result-box" style="display:none;">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;flex-wrap:wrap;gap:0.75rem;">
+            <div>
+              <div style="font-family:var(--font-display);font-size:1.15rem;color:var(--gold-primary);font-weight:600;">Generated Prompt</div>
+              <div style="font-size:0.75rem;color:var(--text-muted);">Ready to use with any AI builder, designer, or website platform</div>
+            </div>
+            <div style="display:flex;gap:8px;">
+              <button class="btn btn-primary btn-sm" id="copy-prompt-btn" onclick="copyText(document.getElementById('result-content').textContent)">📋 Copy</button>
+              <button class="btn btn-ghost btn-sm" onclick="generatePrompt()">🔄 Redo</button>
+            </div>
+          </div>
+
+          <div style="background:var(--bg-deep);border:1px solid var(--gold-border);border-radius:var(--radius-lg);padding:1.5rem;max-height:520px;overflow-y:auto;">
+            <div class="result-content" id="result-content" style="font-size:0.88rem;line-height:1.8;color:var(--text-primary);white-space:pre-wrap;font-family:var(--font-mono);"></div>
+          </div>
+
+          <!-- Where to use it -->
+          <div style="margin-top:1rem;padding:1rem 1.25rem;background:var(--bg-card);border:1px solid var(--gold-border);border-radius:var(--radius-md);">
+            <div style="font-size:0.78rem;font-weight:600;color:var(--gold-primary);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:0.5rem;font-family:var(--font-mono);">Where to Use This Prompt</div>
+            <div style="display:flex;gap:8px;flex-wrap:wrap;">
+              <span style="font-size:0.75rem;padding:4px 10px;background:rgba(255,255,255,0.05);border-radius:100px;color:var(--text-muted);">🤖 Claude / ChatGPT</span>
+              <span style="font-size:0.75rem;padding:4px 10px;background:rgba(255,255,255,0.05);border-radius:100px;color:var(--text-muted);">⚡ Bolt.new</span>
+              <span style="font-size:0.75rem;padding:4px 10px;background:rgba(255,255,255,0.05);border-radius:100px;color:var(--text-muted);">🌊 Webflow AI</span>
+              <span style="font-size:0.75rem;padding:4px 10px;background:rgba(255,255,255,0.05);border-radius:100px;color:var(--text-muted);">🎨 Framer</span>
+              <span style="font-size:0.75rem;padding:4px 10px;background:rgba(255,255,255,0.05);border-radius:100px;color:var(--text-muted);">💼 Freelancer Brief</span>
+            </div>
+          </div>
+
+          <div style="margin-top:1rem;padding:1rem 1.25rem;background:var(--bg-card);border:1px solid var(--gold-border);border-radius:var(--radius-md);">
+            <div style="font-size:0.78rem;font-weight:600;color:var(--gold-primary);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:0.5rem;font-family:var(--font-mono);">Next Step</div>
+            <p style="font-size:0.82rem;color:var(--text-secondary);margin:0;">
+              Need help choosing the best builder, CRM, or payment stack too?
+              Open the <a href="/resources">Business Toolkit</a> for platform recommendations.
+            </p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- EXAMPLES GALLERY -->
+    <div style="margin-top:4rem;">
+      <div style="text-align:center;margin-bottom:2rem;">
+        <span class="section-label">// Quick Generate</span>
+        <h2 style="font-family:var(--font-display);">Popular Website Types</h2>
+        <p style="color:var(--text-muted);font-size:0.88rem;">Click to instantly generate a prompt for these common business websites</p>
+      </div>
+
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:1rem;">
+        <button class="feature-card" style="text-align:left;cursor:pointer;border:none;background:var(--bg-card);" onclick="quickPrompt('restaurant')">
+          <div style="font-size:1.5rem;margin-bottom:0.5rem;">🍽️</div>
+          <div style="font-family:var(--font-display);font-size:0.95rem;color:var(--text-primary);">Restaurant</div>
+          <div style="font-size:0.78rem;color:var(--text-muted);">Menu, booking, delivery</div>
+        </button>
+        <button class="feature-card" style="text-align:left;cursor:pointer;border:none;background:var(--bg-card);" onclick="quickPrompt('fashion')">
+          <div style="font-size:1.5rem;margin-bottom:0.5rem;">👗</div>
+          <div style="font-family:var(--font-display);font-size:0.95rem;color:var(--text-primary);">Fashion Store</div>
+          <div style="font-size:0.78rem;color:var(--text-muted);">E-commerce clothing brand</div>
+        </button>
+        <button class="feature-card" style="text-align:left;cursor:pointer;border:none;background:var(--bg-card);" onclick="quickPrompt('tech startup')">
+          <div style="font-size:1.5rem;margin-bottom:0.5rem;">🚀</div>
+          <div style="font-family:var(--font-display);font-size:0.95rem;color:var(--text-primary);">Tech Startup</div>
+          <div style="font-size:0.78rem;color:var(--text-muted);">SaaS landing page</div>
+        </button>
+        <button class="feature-card" style="text-align:left;cursor:pointer;border:none;background:var(--bg-card);" onclick="quickPrompt('freelancer portfolio')">
+          <div style="font-size:1.5rem;margin-bottom:0.5rem;">💼</div>
+          <div style="font-family:var(--font-display);font-size:0.95rem;color:var(--text-primary);">Freelancer</div>
+          <div style="font-size:0.78rem;color:var(--text-muted);">Portfolio & services</div>
+        </button>
+        <button class="feature-card" style="text-align:left;cursor:pointer;border:none;background:var(--bg-card);" onclick="quickPrompt('real estate agency')">
+          <div style="font-size:1.5rem;margin-bottom:0.5rem;">🏠</div>
+          <div style="font-family:var(--font-display);font-size:0.95rem;color:var(--text-primary);">Real Estate</div>
+          <div style="font-size:0.78rem;color:var(--text-muted);">Property listings site</div>
+        </button>
+        <button class="feature-card" style="text-align:left;cursor:pointer;border:none;background:var(--bg-card);" onclick="quickPrompt('health & wellness coach')">
+          <div style="font-size:1.5rem;margin-bottom:0.5rem;">💪</div>
+          <div style="font-family:var(--font-display);font-size:0.95rem;color:var(--text-primary);">Fitness Coach</div>
+          <div style="font-size:0.78rem;color:var(--text-muted);">Coaching & programs</div>
+        </button>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ── FOOTER ── -->
+<footer class="footer">
+  <div class="footer-inner">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <div class="footer-brand-name">👑 THE SMART BOSS AI</div>
+        <p class="footer-brand-desc">
+          Turn ideas into website plans, then choose the right tools, launch path, and pricing
+          with the rest of the Smart Boss toolkit.
+        </p>
+      </div>
+
+      <div class="footer-links">
+        <div class="footer-col">
+          <div class="footer-col-title">Core</div>
+          <ul>
+            <li><a href="/business">Business AI</a></li>
+            <li><a href="/ideas">Idea Engine</a></li>
+            <li><a href="/presentation">Pitch Coach</a></li>
+            <li><a href="/prompt">Web Prompts</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <div class="footer-col-title">Toolkit</div>
+          <ul>
+            <li><a href="/resources">Business Toolkit</a></li>
+            <li><a href="/planner">Launch Planner</a></li>
+            <li><a href="/pricing">Pricing Strategist</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <p class="footer-copy">© 2026 <span>THE SMART BOSS AI</span>. Powered by Google Gemma 4 via NVIDIA.</p>
+    </div>
+  </div>
+</footer>
+
+<div id="toast-container" class="toast-container"></div>
+<script src="main.js"></script>
+<script>
+async function generatePrompt() {
+  const businessType = document.getElementById("business-type").value.trim();
+  const websiteType  = document.getElementById("website-type").value;
+  const audience     = document.getElementById("audience").value.trim();
+  const goals        = document.getElementById("goals").value.trim();
+  const style        = document.getElementById("style-pref").value;
+  const features     = document.getElementById("features").value.trim();
+  const colors       = document.getElementById("colors").value.trim();
+
+  if (!businessType || !websiteType) {
+    showToast("Please enter your business name and select a website type", "error");
+    return;
+  }
+
+  const message = `Generate a comprehensive, professional website design and development prompt for:
+- Business/Project Name: ${businessType}
+- Website Type: ${websiteType}
+- Target Audience: ${audience || "General audience"}
+- Main Goals / Purpose: ${goals || "Build professional online presence"}
+- Style / Aesthetic: ${style}
+- Key Features / Pages: ${features || "Standard pages for this business type"}
+- Color Preferences: ${colors || "Appropriate for the business type and style"}
+
+Create a detailed, ready-to-use prompt that includes: purpose statement, brand identity, color palette with hex codes, typography recommendations, layout structure for each page/section, UI components needed, tone of voice, call-to-actions, SEO considerations, mobile responsiveness requirements, and any special features. Make it detailed enough for a designer or AI tool to build the complete site.`;
+
+  const btn = document.getElementById("generate-btn");
+  btn.disabled = true;
+  btn.innerHTML = '<div class="spinner"></div> Generating...';
+
+  document.getElementById("prompt-empty-state").style.display = "none";
+  document.getElementById("result-box").style.display = "block";
+
+  const content = document.getElementById("result-content");
+  content.textContent = "";
+  content.className = "result-content typing-cursor";
+  content.style.fontFamily = "var(--font-mono)";
+  content.style.fontSize = "0.85rem";
+
+  let full = "";
+
+  try {
+    const res = await fetch("/api/chat", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ message, mode: "prompt", history: [] })
+    });
+
+    const reader = res.body.getReader();
+    const decoder = new TextDecoder();
+    let buffer = "";
+
+    while(true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      buffer += decoder.decode(value, { stream: true });
+      const lines = buffer.split("\n"); buffer = lines.pop();
+      for (const line of lines) {
+        if (!line.startsWith("data: ") || line === "data: [DONE]") continue;
+        try {
+          const json = JSON.parse(line.slice(6));
+          if (json.token) { full += json.token; content.textContent = full; }
+        } catch(_) {}
+      }
+    }
+    content.className = "result-content";
+    document.getElementById("result-box").scrollIntoView({ behavior: "smooth" });
+    showToast("Prompt generated! Ready to copy. 🌐", "success");
+  } catch(err) {
+    content.textContent = "Error: Could not connect to AI service. Ensure the server is running.";
+    showToast("Generation failed", "error");
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = "✨ Generate Website Prompt";
+  }
+}
+
+function quickPrompt(type) {
+  const presets = {
+    restaurant:           { biz: "My Restaurant Business", type: "restaurant / food service", goals: "attract customers, take reservations online", style: "warm and friendly" },
+    fashion:              { biz: "My Fashion Brand",        type: "e-commerce store",           goals: "sell clothing online, grow brand",            style: "luxury and premium" },
+    "tech startup":       { biz: "My Tech Startup",         type: "SaaS application",           goals: "user signups, demo bookings",                  style: "tech and futuristic" },
+    "freelancer portfolio":{ biz: "My Freelance Portfolio", type: "personal brand",             goals: "get clients, showcase work",                   style: "minimal and clean" },
+    "real estate agency": { biz: "My Real Estate Agency",   type: "service business site",      goals: "show properties, get buyer leads",             style: "modern and professional" },
+    "health & wellness coach": { biz: "My Wellness Coaching Business", type: "service business site", goals: "book consultations, sell programs",       style: "natural and organic" },
+  };
+  const p = presets[type];
+  if (!p) return;
+  document.getElementById("business-type").value = p.biz;
+  document.getElementById("website-type").value  = p.type;
+  document.getElementById("goals").value         = p.goals;
+  document.getElementById("style-pref").value    = p.style;
+  window.scrollTo({ top: 0, behavior: "smooth" });
+  setTimeout(generatePrompt, 300);
+}
+
+function fillExample() {
+  document.getElementById("business-type").value = "GoldenBite Catering Services";
+  document.getElementById("website-type").value  = "service business site";
+  document.getElementById("audience").value      = "corporate clients, event planners, and families";
+  document.getElementById("goals").value         = "get catering inquiries, showcase menus, build trust";
+  document.getElementById("style-pref").value    = "luxury and premium";
+  document.getElementById("features").value      = "Homepage, About Us, Menu Gallery, Services, Testimonials, Contact Form, WhatsApp button";
+  document.getElementById("colors").value        = "deep black and gold, with cream accents";
+  showToast("Example loaded! Click Generate.", "info");
+}
+
+function clearForm() {
+  ["business-type","website-type","audience","goals","features","colors"].forEach(id => {
+    const el = document.getElementById(id);
+    if (el.tagName === "SELECT") el.selectedIndex = 0;
+    else el.value = "";
+  });
+  document.getElementById("style-pref").value = "modern and professional";
+  document.getElementById("result-box").style.display = "none";
+  document.getElementById("prompt-empty-state").style.display = "flex";
+}
+
+// Responsive: stack on mobile
+function checkLayout() {
+  const layout = document.getElementById("prompt-layout");
+  if (layout) layout.style.gridTemplateColumns = window.innerWidth < 768 ? "1fr" : "1fr 1fr";
+}
+window.addEventListener("resize", checkLayout);
+checkLayout();
+</script>
+</body>
+</html>

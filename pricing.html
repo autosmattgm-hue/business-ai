@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pricing Strategist — THE SMART BOSS AI</title>
+  <meta name="description" content="Use AI to create smarter pricing, package structures, upsells, and offer positioning for your business.">
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>👑</text></svg>">
+</head>
+<body>
+
+<nav class="nav">
+  <a href="/" class="nav-brand">
+    <div class="nav-logo">👑</div>
+    <div class="nav-name">THE SMART BOSS<span>AI Platform</span></div>
+  </a>
+  <ul class="nav-links" id="nav-links">
+    <li><a href="/">Home</a></li>
+    <li><a href="/business">Business AI</a></li>
+    <li><a href="/ideas">Idea Engine</a></li>
+    <li><a href="/resources">Toolkit</a></li>
+    <li><a href="/presentation">Pitch Coach</a></li>
+    <li><a href="/prompt">Web Prompts</a></li>
+  </ul>
+  <button class="nav-menu-btn" id="nav-menu-btn">☰</button>
+</nav>
+
+<div class="page-header">
+  <div class="page-header-content">
+    <span class="section-label">// Pricing Strategist</span>
+    <h1 style="font-family:var(--font-display);color:var(--text-primary);margin:0.5rem 0 1rem;">
+      Price for <span class="shimmer-text">Profit and Positioning</span>
+    </h1>
+    <p style="color:var(--text-muted);font-size:0.95rem;">
+      Get pricing recommendations, package ideas, buyer psychology guidance,
+      and upsell opportunities built around your offer.
+    </p>
+  </div>
+</div>
+
+<section class="section" style="padding-top:0;">
+  <div class="section-inner" style="max-width:940px;">
+    <div class="prompt-form">
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:1.5rem;padding-bottom:1rem;border-bottom:1px solid rgba(255,255,255,0.05);">
+        <span style="font-size:1.6rem;">💸</span>
+        <div>
+          <div style="font-family:var(--font-display);font-size:1.2rem;color:var(--text-primary);font-weight:600;">Pricing Strategy Builder</div>
+          <div style="font-size:0.8rem;color:var(--text-muted);">Find the best price and two alternatives for your market</div>
+        </div>
+      </div>
+
+      <div class="form-grid">
+        <div class="form-group">
+          <label class="form-label">Business / Offer Name *</label>
+          <input type="text" class="form-input" id="price-name" placeholder="e.g. Growth Audit, Premium Catering Package">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Offer Type *</label>
+          <select class="form-select" id="price-type">
+            <option value="">Select offer type...</option>
+            <option value="service package">Service package</option>
+            <option value="one-time digital product">Digital product</option>
+            <option value="subscription or membership">Subscription</option>
+            <option value="physical product">Physical product</option>
+            <option value="coaching or consulting offer">Coaching or consulting</option>
+            <option value="agency retainer">Agency retainer</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-grid">
+        <div class="form-group">
+          <label class="form-label">Target Buyer *</label>
+          <input type="text" class="form-input" id="price-buyer" placeholder="e.g. creators, local families, startup founders">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Pricing Goal *</label>
+          <select class="form-select" id="price-goal">
+            <option value="">Select goal...</option>
+            <option value="maximize conversions and get early customers">Higher conversion</option>
+            <option value="position as premium and increase average order value">Premium positioning</option>
+            <option value="balance volume and margin">Balance volume and margin</option>
+            <option value="increase recurring revenue">Recurring revenue</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-grid">
+        <div class="form-group">
+          <label class="form-label">Current Price or Expected Range</label>
+          <input type="text" class="form-input" id="price-current" placeholder="e.g. $49, not priced yet, around $500">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Estimated Delivery Cost or Time</label>
+          <input type="text" class="form-input" id="price-cost" placeholder="e.g. 3 hours of work, $12 cost per unit">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Main Competitor or Market Context</label>
+        <textarea class="form-textarea" id="price-market" placeholder="Share anything useful about competitors, the market, or customer expectations." style="min-height:80px;"></textarea>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Extra Notes</label>
+        <textarea class="form-textarea" id="price-notes" placeholder="e.g. I want a good starter price, I want to upsell premium buyers, I am entering a crowded market" style="min-height:80px;"></textarea>
+      </div>
+
+      <div style="display:flex;gap:0.75rem;flex-wrap:wrap;">
+        <button class="btn btn-primary" id="price-generate-btn" onclick="generatePricing()">💸 Build Pricing</button>
+        <button class="btn btn-outline btn-sm" onclick="fillPricingExample()">📋 Example</button>
+      </div>
+    </div>
+
+    <div id="price-result" style="display:none; margin-top:2rem;">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;flex-wrap:wrap;gap:0.75rem;">
+        <div>
+          <h3 style="font-family:var(--font-display);color:var(--gold-primary);">Your Pricing Strategy</h3>
+          <p style="font-size:0.8rem;color:var(--text-muted);margin:0;">Best price, alternatives, and upsell logic</p>
+        </div>
+        <div style="display:flex;gap:8px;">
+          <button class="btn btn-ghost btn-sm" onclick="copyText(document.getElementById('price-result-content').textContent)">📋 Copy</button>
+          <a href="/resources" class="btn btn-outline btn-sm">🧰 Find Tools</a>
+        </div>
+      </div>
+
+      <div class="result-box">
+        <div class="result-content typing-cursor" id="price-result-content"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" style="background:var(--bg-panel);border-top:1px solid rgba(255,255,255,0.04);">
+  <div class="section-inner">
+    <div class="section-header">
+      <span class="section-label">// Pricing Angles</span>
+      <h2>Use a Faster Starting Point</h2>
+      <p>Load a preset that matches your business model and refine from there.</p>
+    </div>
+
+    <div class="features-grid">
+      <button class="feature-card" style="text-align:left;border:none;" onclick="loadPricingPreset('service')">
+        <div class="feature-icon">🤝</div>
+        <div class="feature-title">Service Package</div>
+        <p class="feature-desc">Offer tiers, anchor pricing, and upsells.</p>
+        <div class="feature-arrow">Use Preset →</div>
+      </button>
+
+      <button class="feature-card" style="text-align:left;border:none;" onclick="loadPricingPreset('digital')">
+        <div class="feature-icon">📦</div>
+        <div class="feature-title">Digital Product</div>
+        <p class="feature-desc">Entry price, perceived value, and scale-friendly pricing.</p>
+        <div class="feature-arrow">Use Preset →</div>
+      </button>
+
+      <button class="feature-card" style="text-align:left;border:none;" onclick="loadPricingPreset('subscription')">
+        <div class="feature-icon">🔁</div>
+        <div class="feature-title">Subscription</div>
+        <p class="feature-desc">Monthly tiers, retention logic, and premium plans.</p>
+        <div class="feature-arrow">Use Preset →</div>
+      </button>
+    </div>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="footer-inner">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <div class="footer-brand-name">👑 THE SMART BOSS AI</div>
+        <p class="footer-brand-desc">
+          Strong pricing works better when it connects to your business model, positioning,
+          offer design, and growth tools.
+        </p>
+      </div>
+
+      <div class="footer-links">
+        <div class="footer-col">
+          <div class="footer-col-title">Core</div>
+          <ul>
+            <li><a href="/business">Business AI</a></li>
+            <li><a href="/ideas">Idea Engine</a></li>
+            <li><a href="/presentation">Pitch Coach</a></li>
+            <li><a href="/prompt">Web Prompts</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <div class="footer-col-title">Toolkit</div>
+          <ul>
+            <li><a href="/resources">Business Toolkit</a></li>
+            <li><a href="/planner">Launch Planner</a></li>
+            <li><a href="/pricing">Pricing Strategist</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <p class="footer-copy">© 2026 <span>THE SMART BOSS AI</span>. Built for stronger monetization.</p>
+    </div>
+  </div>
+</footer>
+
+<div id="toast-container" class="toast-container"></div>
+<script src="main.js"></script>
+<script>
+async function generatePricing() {
+  const name = document.getElementById("price-name").value.trim();
+  const type = document.getElementById("price-type").value;
+  const buyer = document.getElementById("price-buyer").value.trim();
+  const goal = document.getElementById("price-goal").value;
+  const current = document.getElementById("price-current").value.trim();
+  const cost = document.getElementById("price-cost").value.trim();
+  const market = document.getElementById("price-market").value.trim();
+  const notes = document.getElementById("price-notes").value.trim();
+
+  if (!name || !type || !buyer || !goal) {
+    showToast("Please fill in the required pricing fields", "error");
+    return;
+  }
+
+  const message = `Create a pricing strategy for:
+• Offer: ${name}
+• Offer type: ${type}
+• Target buyer: ${buyer}
+• Goal: ${goal}
+• Current price or range: ${current || "not priced yet"}
+• Delivery cost or time: ${cost || "not shared"}
+• Competitor or market context: ${market || "not shared"}
+• Extra notes: ${notes || "none"}
+
+Give me:
+1. The best pricing recommendation
+2. Two pricing alternatives
+3. Package or tier ideas if relevant
+4. Buyer perception for each option
+5. Main risk of underpricing or overpricing
+6. Upsell or cross-sell suggestions
+7. A simple pricing test plan`;
+
+  const btn = document.getElementById("price-generate-btn");
+  const result = document.getElementById("price-result");
+  const content = document.getElementById("price-result-content");
+
+  btn.disabled = true;
+  btn.innerHTML = '<div class="spinner"></div> Building Pricing...';
+  result.style.display = "block";
+  content.className = "result-content typing-cursor";
+  content.innerHTML = "";
+
+  try {
+    const finalText = await streamSmartBossResponse({
+      message,
+      mode: "pricing",
+      onToken(fullText) {
+        content.innerHTML = parseMarkdown(fullText);
+      },
+    });
+
+    content.className = "result-content";
+    content.innerHTML = parseMarkdown(finalText);
+    result.scrollIntoView({ behavior: "smooth", block: "start" });
+    showToast("Pricing strategy ready", "success");
+  } catch (error) {
+    content.className = "result-content";
+    content.textContent = `Error: ${error.message}`;
+    showToast("Could not build pricing", "error");
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = "💸 Build Pricing";
+  }
+}
+
+function fillPricingExample() {
+  document.getElementById("price-name").value = "Premium Social Media Management";
+  document.getElementById("price-type").value = "service package";
+  document.getElementById("price-buyer").value = "local business owners and creators";
+  document.getElementById("price-goal").value = "balance volume and margin";
+  document.getElementById("price-current").value = "not priced yet";
+  document.getElementById("price-cost").value = "around 12 hours of work per month";
+  document.getElementById("price-market").value = "many freelancers compete on low price, but clients complain about inconsistency";
+  document.getElementById("price-notes").value = "I want a premium feel without pricing myself out of the market";
+  showToast("Example loaded", "info");
+}
+
+function loadPricingPreset(type) {
+  const presets = {
+    service: {
+      name: "Monthly Content Service",
+      offerType: "service package",
+      buyer: "small businesses",
+      goal: "balance volume and margin",
+      current: "not priced yet",
+      cost: "10 hours of delivery per month",
+      market: "buyers compare multiple freelancers and want clear results",
+      notes: "I want tiered packages and a good upsell path"
+    },
+    digital: {
+      name: "Creator Templates Bundle",
+      offerType: "one-time digital product",
+      buyer: "content creators and solo founders",
+      goal: "maximize conversions and get early customers",
+      current: "$29 idea",
+      cost: "low marginal cost after creation",
+      market: "many cheap templates exist, but quality is uneven",
+      notes: "I want a strong starter price with optional premium upgrade"
+    },
+    subscription: {
+      name: "Founder Support Membership",
+      offerType: "subscription or membership",
+      buyer: "early-stage founders",
+      goal: "increase recurring revenue",
+      current: "not priced yet",
+      cost: "weekly support and monthly calls",
+      market: "buyers want ongoing value and community, not just content",
+      notes: "I want pricing tiers that retain members longer"
+    }
+  };
+
+  const preset = presets[type];
+  if (!preset) return;
+
+  document.getElementById("price-name").value = preset.name;
+  document.getElementById("price-type").value = preset.offerType;
+  document.getElementById("price-buyer").value = preset.buyer;
+  document.getElementById("price-goal").value = preset.goal;
+  document.getElementById("price-current").value = preset.current;
+  document.getElementById("price-cost").value = preset.cost;
+  document.getElementById("price-market").value = preset.market;
+  document.getElementById("price-notes").value = preset.notes;
+
+  window.scrollTo({ top: 0, behavior: "smooth" });
+  setTimeout(generatePricing, 300);
+}
+</script>
+</body>
+</html>

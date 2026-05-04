@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Business Idea Engine — THE SMART BOSS AI</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>👑</text></svg>">
+</head>
+<body data-mode="ideas">
+
+<!-- ── NAVIGATION ── -->
+<nav class="nav">
+  <a href="/" class="nav-brand">
+    <div class="nav-logo">👑</div>
+    <div class="nav-name">THE SMART BOSS<span>AI Platform</span></div>
+  </a>
+  <ul class="nav-links" id="nav-links">
+    <li><a href="/">Home</a></li>
+    <li><a href="/business">Business AI</a></li>
+    <li><a href="/ideas">Idea Engine</a></li>
+    <li><a href="/presentation">Pitch Coach</a></li>
+    <li><a href="/prompt">Web Prompts</a></li>
+  </ul>
+  <button class="nav-menu-btn" id="nav-menu-btn">☰</button>
+</nav>
+
+<!-- ── PAGE HEADER ── -->
+<div class="page-header">
+  <div class="page-header-content">
+    <span class="section-label">// Idea Engine</span>
+    <h1 style="font-family:var(--font-display);color:var(--text-primary);margin:0.5rem 0 1rem;">
+      <span class="shimmer-text">Profitable Ideas</span><br>
+      <span style="font-weight:300;font-size:0.65em;color:var(--text-secondary);">Tailored to You</span>
+    </h1>
+    <p style="color:var(--text-muted);font-size:0.95rem;">
+      Tell us about yourself and get 5–10 detailed, actionable business ideas with 
+      revenue estimates, startup costs, and first steps.
+    </p>
+  </div>
+</div>
+
+<!-- ── IDEA GENERATOR FORM ── -->
+<section class="section" style="padding-top:0;">
+  <div class="section-inner" style="max-width:860px;">
+
+    <!-- INPUT FORM -->
+    <div class="prompt-form" id="idea-form-container">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:1.5rem;padding-bottom:1rem;border-bottom:1px solid rgba(255,255,255,0.05);">
+        <span style="font-size:1.5rem;">💡</span>
+        <div>
+          <div style="font-family:var(--font-display);font-size:1.2rem;color:var(--text-primary);font-weight:600;">Idea Generator</div>
+          <div style="font-size:0.78rem;color:var(--text-muted);">Fill in your details for personalized business ideas</div>
+        </div>
+      </div>
+
+      <div class="form-grid">
+        <div class="form-group">
+          <label class="form-label">Your Budget Range *</label>
+          <select class="form-select" id="idea-budget">
+            <option value="">Select budget...</option>
+            <option value="under $100">Under $100</option>
+            <option value="$100–$500">$100 – $500</option>
+            <option value="$500–$2,000">$500 – $2,000</option>
+            <option value="$2,000–$10,000">$2,000 – $10,000</option>
+            <option value="$10,000+">$10,000+</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Your Location / Country *</label>
+          <input type="text" class="form-input" id="idea-location" placeholder="e.g. Gambia, Nigeria, UK, USA...">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Your Skills / Background</label>
+          <input type="text" class="form-input" id="idea-skills" placeholder="e.g. marketing, cooking, tech, design...">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Preferred Industry</label>
+          <select class="form-select" id="idea-industry">
+            <option value="any industry">Any Industry</option>
+            <option value="tech/digital">Tech / Digital</option>
+            <option value="food & beverage">Food & Beverage</option>
+            <option value="fashion & retail">Fashion & Retail</option>
+            <option value="health & wellness">Health & Wellness</option>
+            <option value="education">Education</option>
+            <option value="services">Professional Services</option>
+            <option value="agriculture">Agriculture</option>
+            <option value="real estate">Real Estate</option>
+            <option value="entertainment">Entertainment & Media</option>
+            <option value="e-commerce">E-Commerce</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Additional Context (optional)</label>
+        <textarea class="form-textarea" id="idea-context" placeholder="e.g. I have free time on weekends, I want to work from home, I want something that can scale globally..." style="min-height:80px;"></textarea>
+      </div>
+
+      <div style="display:flex;gap:1rem;flex-wrap:wrap;">
+        <button class="btn btn-primary" id="idea-generate-btn" onclick="generateIdeas()">
+          ✨ Generate My Ideas
+        </button>
+        <button class="btn btn-outline btn-sm" onclick="fillExample()">
+          📋 Fill Example
+        </button>
+      </div>
+    </div>
+
+    <!-- RESULT AREA -->
+    <div id="idea-result" style="display:none; margin-top:2rem;">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem;flex-wrap:wrap;gap:1rem;">
+        <div>
+          <h3 style="font-family:var(--font-display);color:var(--gold-primary);">Your Business Ideas</h3>
+          <p style="font-size:0.82rem;color:var(--text-muted);margin:0;">AI-generated, tailored specifically to your profile</p>
+        </div>
+        <div style="display:flex;gap:8px;">
+          <button class="btn btn-ghost btn-sm" onclick="copyText(document.getElementById('ideas-content').textContent)">📋 Copy All</button>
+          <button class="btn btn-outline btn-sm" onclick="generateIdeas()">🔄 Regenerate</button>
+        </div>
+      </div>
+
+      <div class="result-box">
+        <div class="result-content typing-cursor" id="ideas-content"></div>
+      </div>
+
+      <div style="margin-top:1.5rem;padding:1.25rem;background:var(--bg-card);border:1px solid var(--gold-border);border-radius:var(--radius-md);">
+        <p style="font-size:0.85rem;color:var(--text-secondary);margin:0;">
+          💬 <strong style="color:var(--gold-primary);">Want to explore one of these ideas further?</strong>
+          Go to <a href="/business">Business AI Chat</a> and ask THE SMART BOSS AI to deep-dive into any idea!
+        </p>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ── CATEGORIES BROWSE ── -->
+<section class="section" style="background:var(--bg-panel);border-top:1px solid rgba(255,255,255,0.04);">
+  <div class="section-inner">
+    <div class="section-header">
+      <span class="section-label">// Quick Start</span>
+      <h2>Popular Business Categories</h2>
+      <p>Click any category to instantly get ideas in that space.</p>
+    </div>
+
+    <div class="features-grid">
+      <div class="feature-card" onclick="quickIdeas('digital & online business in 2025')">
+        <div class="feature-icon">💻</div>
+        <div class="feature-title">Digital Business</div>
+        <p class="feature-desc">Online courses, SaaS, affiliate marketing, content creation, digital products.</p>
+        <div class="feature-arrow">Get Ideas →</div>
+      </div>
+
+      <div class="feature-card" onclick="quickIdeas('service-based business that requires low startup cost')">
+        <div class="feature-icon">🛠️</div>
+        <div class="feature-title">Service Business</div>
+        <p class="feature-desc">Freelancing, consulting, cleaning, delivery, tutoring, personal services.</p>
+        <div class="feature-arrow">Get Ideas →</div>
+      </div>
+
+      <div class="feature-card" onclick="quickIdeas('food and beverage business ideas with high profit margins')">
+        <div class="feature-icon">🍽️</div>
+        <div class="feature-title">Food & Beverage</div>
+        <p class="feature-desc">Food trucks, home catering, packaged foods, restaurant concepts, delivery.</p>
+        <div class="feature-arrow">Get Ideas →</div>
+      </div>
+
+      <div class="feature-card" onclick="quickIdeas('African market business opportunities with high growth potential in 2025')">
+        <div class="feature-icon">🌍</div>
+        <div class="feature-title">African Markets</div>
+        <p class="feature-desc">High-growth opportunities across African markets — fintech, agri, logistics & more.</p>
+        <div class="feature-arrow">Get Ideas →</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── FOOTER ── -->
+<footer class="footer">
+  <div class="footer-inner">
+    <div class="footer-bottom">
+      <p class="footer-copy">© 2025 <span>THE SMART BOSS AI</span>. Powered by Google Gemma 4 via NVIDIA.</p>
+      <div style="display:flex;gap:1rem;">
+        <a href="/" style="font-size:0.8rem;color:var(--text-muted);">Home</a>
+        <a href="/business" style="font-size:0.8rem;color:var(--text-muted);">Chat</a>
+        <a href="/presentation" style="font-size:0.8rem;color:var(--text-muted);">Pitch Coach</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<div id="toast-container" class="toast-container"></div>
+
+<script src="main.js"></script>
+<script>
+async function generateIdeas() {
+  const budget   = document.getElementById("idea-budget").value;
+  const location = document.getElementById("idea-location").value.trim();
+  const skills   = document.getElementById("idea-skills").value.trim();
+  const industry = document.getElementById("idea-industry").value;
+  const context  = document.getElementById("idea-context").value.trim();
+
+  if (!budget || !location) {
+    showToast("Please select a budget and enter your location", "error");
+    return;
+  }
+
+  const message = `Generate 5 detailed, profitable business ideas for someone with:
+- Budget: ${budget}
+- Location: ${location}
+- Skills/Background: ${skills || "general skills"}
+- Preferred Industry: ${industry}
+- Additional Context: ${context || "none"}
+
+For each idea provide: name, concept, target market, revenue model, startup cost, potential monthly revenue, and first 3 action steps.`;
+
+  const btn = document.getElementById("idea-generate-btn");
+  btn.disabled = true;
+  btn.innerHTML = '<div class="spinner"></div> Generating Ideas...';
+
+  document.getElementById("idea-result").style.display = "block";
+  const content = document.getElementById("ideas-content");
+  content.textContent = "";
+  content.className = "result-content typing-cursor";
+
+  document.getElementById("idea-result").scrollIntoView({ behavior: "smooth", block: "start" });
+
+  let fullText = "";
+
+  try {
+    const res = await fetch("/api/chat", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ message, mode: "ideas", history: [] })
+    });
+
+    const reader = res.body.getReader();
+    const decoder = new TextDecoder();
+    let buffer = "";
+
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      buffer += decoder.decode(value, { stream: true });
+      const lines = buffer.split("\n");
+      buffer = lines.pop();
+      for (const line of lines) {
+        if (!line.startsWith("data: ") || line === "data: [DONE]") continue;
+        try {
+          const json = JSON.parse(line.slice(6));
+          if (json.token) {
+            fullText += json.token;
+            content.innerHTML = parseMarkdown(fullText);
+          }
+        } catch(_) {}
+      }
+    }
+    content.className = "result-content";
+    showToast("Ideas generated! 🎉", "success");
+  } catch(err) {
+    content.textContent = "Error: Could not connect to AI service. Make sure the server is running.";
+    showToast("Generation failed", "error");
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = "✨ Generate My Ideas";
+  }
+}
+
+function quickIdeas(topic) {
+  document.getElementById("idea-budget").value = "$100–$500";
+  document.getElementById("idea-location").value = "Global / Any";
+  document.getElementById("idea-context").value = topic;
+  document.getElementById("idea-form-container").scrollIntoView({ behavior: "smooth" });
+  setTimeout(generateIdeas, 400);
+}
+
+function fillExample() {
+  document.getElementById("idea-budget").value = "$500–$2,000";
+  document.getElementById("idea-location").value = "Gambia";
+  document.getElementById("idea-skills").value = "social media, communication, basic tech";
+  document.getElementById("idea-industry").value = "tech/digital";
+  document.getElementById("idea-context").value = "I want to work from home, I am young with energy and free time.";
+  showToast("Example filled! Click Generate.", "info");
+}
+</script>
+</body>
+</html>
