@@ -534,6 +534,7 @@ class SmartBossChat {
   async send(overrideMessage = null) {
     const text = overrideMessage || (this.inputEl?.value.trim() || "");
     if (!text || this.isStreaming) return;
+    const priorHistory = this.history.slice(-6);
 
     // Hide welcome, clear input
     if (this.welcomeEl) this.welcomeEl.style.display = "none";
@@ -544,7 +545,6 @@ class SmartBossChat {
 
     // Add user message
     this.addMessage("user", text);
-    this.history.push({ role: "user", content: text });
 
     // Add AI placeholder
     const aiBubble = this.addMessage("ai", "", true);
@@ -555,13 +555,14 @@ class SmartBossChat {
       const cleanResponse = await streamSmartBossResponse({
         message: text,
         mode: this.mode,
-        history: this.history.slice(-6),
+        history: priorHistory,
         onToken: (fullText) => {
           this.updateBubble(aiBubble, fullText, true);
         },
       });
 
       this.updateBubble(aiBubble, cleanResponse, false);
+      this.history.push({ role: "user", content: text });
       this.history.push({ role: "assistant", content: cleanResponse });
       this.lastAssistantText = cleanResponse;
       this.addToHistory(text);

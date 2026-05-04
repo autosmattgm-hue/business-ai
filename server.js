@@ -120,6 +120,15 @@ async function handleChat(req, res) {
     return;
   }
 
+  if (body && typeof body === "object" && !Array.isArray(body)) {
+    body = {
+      ...body,
+      mode: body.mode || "business",
+      history: Array.isArray(body.history) ? body.history : [],
+      message: typeof body.message === "string" ? body.message.trim() : body.message,
+    };
+  }
+
   const validationError = validateChatRequest(body);
   if (validationError) {
     sendJson(res, 400, { error: validationError });

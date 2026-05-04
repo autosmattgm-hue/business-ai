@@ -12,6 +12,16 @@ loadLocalEnv(process.cwd());
 
 async function readJsonBody(req) {
   if (req.body && typeof req.body === "object") {
+    if (Buffer.isBuffer(req.body)) {
+      const rawBufferBody = req.body.toString("utf8").trim();
+      return rawBufferBody ? JSON.parse(rawBufferBody) : {};
+    }
+
+    if (req.body instanceof Uint8Array) {
+      const rawTypedArrayBody = Buffer.from(req.body).toString("utf8").trim();
+      return rawTypedArrayBody ? JSON.parse(rawTypedArrayBody) : {};
+    }
+
     return req.body;
   }
 
@@ -60,6 +70,15 @@ export default async function handler(req, res) {
     res.setHeader("Content-Type", "application/json; charset=utf-8");
     res.end(JSON.stringify({ error: "Invalid JSON body", detail: error.message }));
     return;
+  }
+
+  if (body && typeof body === "object" && !Array.isArray(body)) {
+    body = {
+      ...body,
+      mode: body.mode || "business",
+      history: Array.isArray(body.history) ? body.history : [],
+      message: typeof body.message === "string" ? body.message.trim() : body.message,
+    };
   }
 
   const validationError = validateChatRequest(body);

@@ -1,1 +1,0 @@
-NVIDIA API error: {"object":"error","message":"Conversation roles must alternate user/assistant/user/assistant/...","type":"BadRequestError","param":null,"code":400}
