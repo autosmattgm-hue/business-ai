@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Email Writer AI — THE SMART BOSS AI</title>
+  <meta name="description" content="Write professional emails, follow-ups, reminders, client replies, and workplace messages with Email Writer AI.">
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>👑</text></svg>">
+</head>
+<body>
+
+<nav class="nav">
+  <a href="index.html" class="nav-brand">
+    <div class="nav-logo">👑</div>
+    <div class="nav-name">THE SMART BOSS<span>AI Platform</span></div>
+  </a>
+  <ul class="nav-links" id="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="business.html">Business AI</a></li>
+    <li><a href="email.html">Email AI</a></li>
+    <li><a href="office.html">Office AI</a></li>
+    <li><a href="documents.html">Docs AI</a></li>
+    <li><a href="resume.html">Resume</a></li>
+  </ul>
+  <button class="nav-menu-btn" id="nav-menu-btn">☰</button>
+</nav>
+
+<div class="page-header">
+  <div class="page-header-content">
+    <span class="section-label">// Email Writer AI</span>
+    <h1 style="font-family:var(--font-display);color:var(--text-primary);margin:0.5rem 0 1rem;">
+      Write Better <span class="shimmer-text">Professional Emails</span>
+    </h1>
+    <p style="color:var(--text-muted);font-size:0.95rem;">
+      Create polished workplace emails, client follow-ups, reminders, requests,
+      apologies, introductions, and recruiter messages that are ready to send.
+    </p>
+  </div>
+</div>
+
+<section class="section" style="padding-top:0;">
+  <div class="section-inner" style="max-width:980px;">
+    <div class="prompt-form">
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:1.5rem;padding-bottom:1rem;border-bottom:1px solid rgba(255,255,255,0.05);">
+        <span style="font-size:1.6rem;">📧</span>
+        <div>
+          <div style="font-family:var(--font-display);font-size:1.2rem;color:var(--text-primary);font-weight:600;">Email Builder</div>
+          <div style="font-size:0.8rem;color:var(--text-muted);">Best for office, banking, customer, client, and job-related communication</div>
+        </div>
+      </div>
+
+      <div class="form-grid">
+        <div class="form-group">
+          <label class="form-label">Email Type *</label>
+          <select class="form-select" id="email-type">
+            <option value="">Select email type...</option>
+            <option value="professional follow-up email">Follow-up email</option>
+            <option value="client update email">Client update</option>
+            <option value="job application or recruiter email">Recruiter or job email</option>
+            <option value="office request or approval email">Office request or approval</option>
+            <option value="customer service response email">Customer response</option>
+            <option value="apology or issue-resolution email">Apology or issue resolution</option>
+            <option value="meeting summary or action-point email">Meeting summary</option>
+            <option value="payment, invoice, or reminder email">Payment or reminder</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Tone *</label>
+          <select class="form-select" id="email-tone">
+            <option value="">Select tone...</option>
+            <option value="professional and clear">Professional and clear</option>
+            <option value="warm but professional">Warm but professional</option>
+            <option value="formal and polished">Formal and polished</option>
+            <option value="firm but respectful">Firm but respectful</option>
+            <option value="confident and concise">Confident and concise</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-grid">
+        <div class="form-group">
+          <label class="form-label">Who Is It For? *</label>
+          <input type="text" class="form-input" id="email-recipient" placeholder="e.g. branch manager, client, recruiter, customer">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Your Relationship</label>
+          <input type="text" class="form-input" id="email-relationship" placeholder="e.g. employee to manager, vendor to client, applicant to recruiter">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Main Goal *</label>
+        <input type="text" class="form-input" id="email-goal" placeholder="e.g. ask for approval, follow up on payment, summarize meeting actions">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Important Details *</label>
+        <textarea class="form-textarea" id="email-details" placeholder="Add the facts, dates, context, request, or message points the email must include." style="min-height:100px;"></textarea>
+      </div>
+
+      <div class="form-grid">
+        <div class="form-group">
+          <label class="form-label">Call To Action</label>
+          <input type="text" class="form-input" id="email-cta" placeholder="e.g. reply by Friday, approve the request, confirm the meeting time">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Output Title</label>
+          <input type="text" class="form-input" id="email-title" placeholder="Example: Payment Follow-Up Email">
+        </div>
+      </div>
+
+      <div style="display:flex;gap:0.75rem;flex-wrap:wrap;">
+        <button class="btn btn-primary" id="email-generate-btn" type="button" onclick="generateEmailDraft()">📧 Build Email</button>
+        <button class="btn btn-outline btn-sm" type="button" onclick="fillEmailExample()">📋 Example</button>
+        <a href="office.html" class="btn btn-ghost btn-sm">🏢 Open Office AI</a>
+      </div>
+    </div>
+
+    <div id="email-result" style="display:none; margin-top:2rem;">
+      <div class="print-hidden" style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;flex-wrap:wrap;gap:0.75rem;">
+        <div>
+          <h3 style="font-family:var(--font-display);color:var(--gold-primary);">Email Output</h3>
+          <p style="font-size:0.8rem;color:var(--text-muted);margin:0;">Subject lines, ready-to-send email, and short follow-up</p>
+        </div>
+        <div class="resume-actions">
+          <button class="btn btn-ghost btn-sm" type="button" onclick="copyText(document.getElementById('email-raw-content').textContent)">📋 Copy Text</button>
+          <button class="btn btn-outline btn-sm" type="button" onclick="downloadEmailImage()">🖼️ Download Image</button>
+          <button class="btn btn-outline btn-sm" type="button" onclick="downloadEmailText()">📝 Download Text</button>
+          <button class="btn btn-outline btn-sm" type="button" onclick="downloadEmailHtml()">🌐 Download HTML</button>
+          <button class="btn btn-outline btn-sm" type="button" onclick="toggleEditableElement('email-paper', this)">Edit Output</button>
+          <button class="btn btn-primary btn-sm" type="button" onclick="downloadEmailPdf()">📄 Download PDF</button>
+        </div>
+      </div>
+
+      <div class="resume-paper-shell">
+        <div class="resume-paper resume-paper-white" id="email-paper">
+          <div class="resume-paper-placeholder">
+            Your email draft will appear here after generation.
+          </div>
+        </div>
+      </div>
+
+      <div class="resume-insights-grid print-hidden" id="email-insights" style="display:none;">
+        <div class="resume-insight-card">
+          <h4>Subject Line Options</h4>
+          <div class="result-content" id="email-subject-content"></div>
+        </div>
+        <div class="resume-insight-card">
+          <h4>Short Follow-Up</h4>
+          <div class="result-content" id="email-followup-content"></div>
+        </div>
+        <div class="resume-insight-card">
+          <h4>Writing Notes</h4>
+          <div class="result-content" id="email-notes-content"></div>
+        </div>
+        <div class="resume-insight-card">
+          <h4>Best Next Step</h4>
+          <div class="result-content" id="email-next-content"></div>
+        </div>
+      </div>
+
+      <div class="result-box print-hidden" id="email-raw-box">
+        <div class="result-box-header">
+          <div class="result-box-label">Raw AI Output</div>
+        </div>
+        <div class="result-content" id="email-raw-content"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" style="background:var(--bg-panel);border-top:1px solid rgba(255,255,255,0.04);">
+  <div class="section-inner">
+    <div class="section-header">
+      <span class="section-label">// Workplace Use</span>
+      <h2>Built for Real Office Communication</h2>
+      <p>Use it for bank updates, branch communication, client replies, recruiter outreach, and daily office follow-up.</p>
+    </div>
+
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon">🏦</div>
+        <div class="feature-title">Bank and Branch Emails</div>
+        <p class="feature-desc">Write professional updates, escalation notes, customer follow-ups, and internal branch communication.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🤝</div>
+        <div class="feature-title">Client and Customer Replies</div>
+        <p class="feature-desc">Respond clearly, protect trust, and keep the next action obvious.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">💼</div>
+        <div class="feature-title">Job and Recruiter Messages</div>
+        <p class="feature-desc">Send cleaner application emails, interview follow-ups, and networking messages.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="footer-inner">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <div class="footer-brand-name">👑 THE SMART BOSS AI</div>
+        <p class="footer-brand-desc">
+          Email Writer AI helps you sound more professional, more organized, and easier to respond to.
+        </p>
+      </div>
+
+      <div class="footer-links">
+        <div class="footer-col">
+          <div class="footer-col-title">Office</div>
+          <ul>
+            <li><a href="email.html">Email Writer AI</a></li>
+            <li><a href="office.html">Office Work AI</a></li>
+            <li><a href="documents.html">Document AI</a></li>
+            <li><a href="cv.html">CV Creator</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <div class="footer-col-title">Support</div>
+          <ul>
+            <li><a href="business.html">Business AI</a></li>
+            <li><a href="resume.html">Resume Builder</a></li>
+            <li><a href="voice.html">Voice AI</a></li>
+            <li><a href="settings.html">Settings</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <p class="footer-copy">© 2026 <span>THE SMART BOSS AI</span>. Built for clearer office communication.</p>
+    </div>
+  </div>
+</footer>
+
+<div id="toast-container" class="toast-container"></div>
+
+<script src="main.js"></script>
+<script>
+let latestEmailBuild = null;
+
+function escapeHtml(value) {
+  return String(value || "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
+
+function normalizeEmailHeading(line) {
+  return String(line || "")
+    .toLowerCase()
+    .replace(/^[\d.\-\s]+/, "")
+    .replace(/[:]+$/, "")
+    .replace(/[^a-z\s/-]+/g, "")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+function parseEmailSections(rawText) {
+  const sections = {
+    subject: [],
+    email: [],
+    followup: [],
+    notes: [],
+    next: [],
+  };
+
+  const headingMap = {
+    subject: ["subject line options", "subject lines"],
+    email: ["ready-to-send email", "ready to send email", "email draft"],
+    followup: ["short follow-up", "short follow up", "follow-up"],
+    notes: ["writing notes", "notes"],
+    next: ["best next step", "next step"],
+  };
+
+  let current = "email";
+  const lines = sanitizeAiText(rawText).replace(/\r/g, "").split("\n");
+
+  for (const rawLine of lines) {
+    const line = rawLine.trim();
+    if (!line) {
+      if (sections[current]?.length && sections[current][sections[current].length - 1] !== "") {
+        sections[current].push("");
+      }
+      continue;
+    }
+
+    const normalized = normalizeEmailHeading(line);
+    const match = Object.entries(headingMap).find(([, labels]) => labels.includes(normalized));
+
+    if (match) {
+      current = match[0];
+      continue;
+    }
+
+    sections[current].push(line);
+  }
+
+  return Object.fromEntries(
+    Object.entries(sections).map(([key, value]) => [
+      key,
+      value.join("\n").replace(/\n{3,}/g, "\n\n").trim(),
+    ]),
+  );
+}
+
+function formatEmailBodyHtml(text) {
+  const blocks = String(text || "")
+    .split(/\n{2,}/)
+    .map((block) => block.trim())
+    .filter(Boolean);
+
+  if (!blocks.length) {
+    return "<p>No email draft was generated yet.</p>";
+  }
+
+  return blocks
+    .map((block) => `<p>${block.split("\n").map((line) => escapeHtml(line)).join("<br>")}</p>`)
+    .join("");
+}
+
+function renderEmailPaper(data) {
+  return `
+    <div class="document-paper-meta">
+      <div>
+        <div class="document-paper-title">${escapeHtml(data.title)}</div>
+        <div class="document-paper-subtitle">${escapeHtml(data.emailType)} · ${escapeHtml(data.tone)}</div>
+      </div>
+      <div class="document-paper-subtitle">${escapeHtml(data.recipient)}</div>
+    </div>
+    <div class="document-paper-body">${formatEmailBodyHtml(data.emailText)}</div>
+  `;
+}
+
+function renderEmailOutput(data) {
+  latestEmailBuild = data;
+  document.getElementById("email-paper").innerHTML = renderEmailPaper(data);
+  document.getElementById("email-subject-content").textContent = data.subject || "No extra subject lines were returned in this draft.";
+  document.getElementById("email-followup-content").textContent = data.followup || "No short follow-up was generated in this draft.";
+  document.getElementById("email-notes-content").textContent = data.notes || "The AI focused mainly on the finished email draft.";
+  document.getElementById("email-next-content").textContent = data.next || "Review the draft, personalize any names or dates, and send it.";
+  document.getElementById("email-raw-content").textContent = data.rawText;
+  document.getElementById("email-insights").style.display = "grid";
+  document.getElementById("email-raw-box").style.display = "block";
+}
+
+async function downloadEmailPdf() {
+  if (!latestEmailBuild) {
+    showToast("Build an email first", "error");
+    return;
+  }
+
+  try {
+    await downloadElementPdf({
+      element: document.getElementById("email-paper"),
+      filename: `${slugifyDownloadName(latestEmailBuild.title, "email-draft")}.pdf`,
+    });
+    showToast("PDF downloaded", "success");
+  } catch (error) {
+    showToast(error.message || "Could not export PDF", "error");
+  }
+}
+
+async function downloadEmailImage() {
+  if (!latestEmailBuild) {
+    showToast("Build an email first", "error");
+    return;
+  }
+
+  try {
+    await downloadElementImage({
+      element: document.getElementById("email-paper"),
+      filename: `${slugifyDownloadName(latestEmailBuild.title, "email-draft")}.png`,
+    });
+    showToast("Image downloaded", "success");
+  } catch (error) {
+    showToast(error.message || "Could not export image", "error");
+  }
+}
+
+function downloadEmailText() {
+  if (!latestEmailBuild) {
+    showToast("Build an email first", "error");
+    return;
+  }
+
+  downloadTextFile(
+    `${slugifyDownloadName(latestEmailBuild.title, "email-draft")}.txt`,
+    latestEmailBuild.rawText,
+  );
+  showToast("Text file downloaded", "success");
+}
+
+function downloadEmailHtml() {
+  if (!latestEmailBuild) {
+    showToast("Build an email first", "error");
+    return;
+  }
+
+  downloadHtmlFile(
+    `${slugifyDownloadName(latestEmailBuild.title, "email-draft")}.html`,
+    latestEmailBuild.title,
+    document.getElementById("email-paper").innerHTML,
+  );
+  showToast("HTML file downloaded", "success");
+}
+
+async function generateEmailDraft() {
+  const emailType = document.getElementById("email-type").value;
+  const tone = document.getElementById("email-tone").value;
+  const recipient = document.getElementById("email-recipient").value.trim();
+  const relationship = document.getElementById("email-relationship").value.trim();
+  const goal = document.getElementById("email-goal").value.trim();
+  const details = document.getElementById("email-details").value.trim();
+  const cta = document.getElementById("email-cta").value.trim();
+  const title = document.getElementById("email-title").value.trim();
+
+  if (!emailType || !tone || !recipient || !goal || !details) {
+    showToast("Please fill in the email type, tone, recipient, goal, and details", "error");
+    return;
+  }
+
+  const btn = document.getElementById("email-generate-btn");
+  const result = document.getElementById("email-result");
+  const raw = document.getElementById("email-raw-content");
+
+  btn.disabled = true;
+  btn.innerHTML = '<div class="spinner"></div> Building Email...';
+  result.style.display = "block";
+  raw.textContent = "";
+  document.getElementById("email-paper").innerHTML = '<div class="resume-paper-placeholder">Generating your email draft...</div>';
+  document.getElementById("email-insights").style.display = "none";
+  document.getElementById("email-raw-box").style.display = "none";
+
+  try {
+    const message = `Write a professional email using these details:
+
+Email type: ${emailType}
+Tone: ${tone}
+Recipient: ${recipient}
+Relationship: ${relationship || "not provided"}
+Main goal: ${goal}
+Important details: ${details}
+Call to action: ${cta || "not provided"}
+
+Return the answer using these exact plain text headings only:
+Subject Line Options:
+Ready-To-Send Email:
+Short Follow-Up:
+Writing Notes:
+Best Next Step:
+
+Inside Ready-To-Send Email, write a complete polished email the user can send with very little editing.
+Do not use markdown tables.
+Do not use asterisks.`;
+
+    const finalText = await streamSmartBossResponse({
+      message,
+      mode: "email",
+      onToken(fullText) {
+        raw.textContent = sanitizeAiText(fullText);
+      },
+    });
+
+    const sections = parseEmailSections(finalText);
+    renderEmailOutput({
+      title: title || `${recipient} Email Draft`,
+      emailType: document.getElementById("email-type").selectedOptions[0]?.textContent || "Professional email",
+      recipient,
+      tone,
+      subject: sections.subject,
+      emailText: sections.email || sanitizeAiText(finalText),
+      followup: sections.followup,
+      notes: sections.notes,
+      next: sections.next,
+      rawText: sanitizeAiText(finalText),
+    });
+
+    result.scrollIntoView({ behavior: "smooth", block: "start" });
+    showToast("Email draft ready", "success");
+  } catch (error) {
+    raw.textContent = `Error: ${error.message}`;
+    document.getElementById("email-paper").innerHTML = `<div class="resume-paper-placeholder">${escapeHtml(error.message)}</div>`;
+    showToast("Could not build email", "error");
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = "📧 Build Email";
+  }
+}
+
+function fillEmailExample() {
+  document.getElementById("email-type").value = "payment, invoice, or reminder email";
+  document.getElementById("email-tone").value = "firm but respectful";
+  document.getElementById("email-recipient").value = "client with an overdue invoice";
+  document.getElementById("email-relationship").value = "service provider to client";
+  document.getElementById("email-goal").value = "request payment politely and keep the relationship professional";
+  document.getElementById("email-details").value = "Invoice 204 is now 8 days overdue. The original due date was May 1. The service has already been delivered. Mention the amount is $850 and ask if there are any billing issues that need clarification.";
+  document.getElementById("email-cta").value = "confirm payment timing or send payment by Friday";
+  document.getElementById("email-title").value = "Overdue Invoice Follow-Up";
+  showToast("Example loaded", "info");
+}
+</script>
+</body>
+</html>

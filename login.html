@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login — THE SMART BOSS AI</title>
+  <meta name="description" content="Log in to Smart Boss AI to use your saved account, usage limits, promo codes, and premium access.">
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>👑</text></svg>">
+</head>
+<body>
+
+<nav class="nav">
+  <a href="index.html" class="nav-brand">
+    <div class="nav-logo">👑</div>
+    <div class="nav-name">THE SMART BOSS<span>AI Platform</span></div>
+  </a>
+  <ul class="nav-links" id="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="business.html">Business AI</a></li>
+    <li><a href="pricing.html">Pricing</a></li>
+  </ul>
+  <button class="nav-menu-btn" id="nav-menu-btn">☰</button>
+</nav>
+
+<div class="page-header">
+  <div class="page-header-content">
+    <span class="section-label">// Account Access</span>
+    <h1 style="font-family:var(--font-display);color:var(--text-primary);margin:0.5rem 0 1rem;">
+      Log In to <span class="shimmer-text">Smart Boss AI</span>
+    </h1>
+    <p style="color:var(--text-muted);font-size:0.95rem;">
+      Continue with your free, paid, or admin account and keep your AI access active across the platform.
+    </p>
+  </div>
+</div>
+
+<section class="section" style="padding-top:0;">
+  <div class="section-inner" style="max-width:900px;">
+    <div class="form-grid" style="align-items:start;">
+      <div class="prompt-form">
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:1.5rem;padding-bottom:1rem;border-bottom:1px solid rgba(255,255,255,0.05);">
+          <span style="font-size:1.6rem;">🔐</span>
+          <div>
+            <div style="font-family:var(--font-display);font-size:1.2rem;color:var(--text-primary);font-weight:600;">Login</div>
+            <div style="font-size:0.8rem;color:var(--text-muted);">Access your saved plan and AI usage</div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Email *</label>
+          <input type="email" class="form-input" id="login-email" placeholder="you@example.com">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Password *</label>
+          <input type="password" class="form-input" id="login-password" placeholder="Your password">
+        </div>
+
+        <div style="display:flex;gap:0.75rem;flex-wrap:wrap;">
+          <button class="btn btn-primary" id="login-submit-btn" type="button" onclick="handleLogin()">🔓 Log In</button>
+          <a href="register.html" class="btn btn-outline btn-sm">📝 Create Account</a>
+        </div>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:1rem;">
+        <div class="feature-card">
+          <div class="feature-icon">🧠</div>
+          <div class="feature-title">Resume Your AI Tools</div>
+          <p class="feature-desc">Use Business AI, Resume Builder, Document AI, Voice AI, and the rest from one account.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">🎟️</div>
+          <div class="feature-title">Redeem Access Codes</div>
+          <p class="feature-desc">After login, go to Settings to redeem promo, pro, or admin access codes.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div id="toast-container" class="toast-container"></div>
+<script src="main.js"></script>
+<script>
+async function handleLogin() {
+  const email = document.getElementById("login-email").value.trim();
+  const password = document.getElementById("login-password").value;
+  const btn = document.getElementById("login-submit-btn");
+
+  if (!email || !password) {
+    showToast("Please enter your email and password", "error");
+    return;
+  }
+
+  btn.disabled = true;
+  btn.innerHTML = '<div class="spinner"></div> Logging In...';
+
+  try {
+    await loginSmartBossUser({ email, password });
+    showToast("Logged in successfully", "success");
+    window.location.href = "settings.html";
+  } catch (error) {
+    showToast(error.message, "error");
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = "🔓 Log In";
+  }
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  if (getCurrentSmartBossUser()) {
+    window.location.href = "settings.html";
+  }
+});
+</script>
+</body>
+</html>

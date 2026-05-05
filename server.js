@@ -2,6 +2,7 @@ const http = require("http");
 const fs = require("fs");
 const path = require("path");
 const { loadLocalEnv } = require("./lib/load-env");
+const { getPublicAppConfig, getSecretAccessConfig } = require("./lib/app-config");
 const {
   MODEL,
   FALLBACK_MODELS,
@@ -23,12 +24,20 @@ const PAGE_ROUTES = {
   "/ideas": "ideas.html",
   "/planner": "planner.html",
   "/pricing": "pricing.html",
+  "/revenue": "revenue.html",
+  "/audit": "audit.html",
+  "/email": "email.html",
+  "/office": "office.html",
   "/resources": "resources.html",
   "/documents": "documents.html",
   "/resume": "resume.html",
+  "/cv": "cv.html",
   "/voice": "voice.html",
   "/presentation": "presentation.html",
   "/prompt": "prompt.html",
+  "/login": "login.html",
+  "/register": "register.html",
+  "/settings": "settings.html",
 };
 
 const CONTENT_TYPES = {
@@ -65,6 +74,53 @@ function handleHealth(res) {
     fallbackModels: FALLBACK_MODELS,
     hasApiKey: Boolean(process.env.NVIDIA_API_KEY),
   });
+}
+
+function handlePublicConfig(res) {
+  sendJson(res, 200, getPublicAppConfig());
+}
+
+async function handleRedeemCode(req, res) {
+  let body;
+
+  try {
+    body = JSON.parse(await readRequestBody(req));
+  } catch (error) {
+    sendJson(res, 400, { error: "Invalid JSON body", detail: error.message });
+    return;
+  }
+
+  const code = String(body?.code || "").trim().toUpperCase();
+  if (!code) {
+    sendJson(res, 400, { error: "Missing access code" });
+    return;
+  }
+
+  const secrets = getSecretAccessConfig();
+
+  if (code === secrets.adminCode) {
+    sendJson(res, 200, {
+      ok: true,
+      plan: "admin",
+      role: "admin",
+      unlimited: true,
+      message: "Admin unlimited access unlocked.",
+    });
+    return;
+  }
+
+  if (secrets.proCodes.includes(code)) {
+    sendJson(res, 200, {
+      ok: true,
+      plan: "pro",
+      role: "user",
+      unlimited: true,
+      message: "Smart Boss Pro unlocked.",
+    });
+    return;
+  }
+
+  sendJson(res, 400, { error: "Invalid access code" });
 }
 
 function getSafeFilePath(urlPath) {
@@ -223,8 +279,18 @@ const server = http.createServer(async (req, res) => {
     return;
   }
 
+  if (req.method === "GET" && urlPath === "/api/public-config") {
+    handlePublicConfig(res);
+    return;
+  }
+
   if (req.method === "POST" && urlPath === "/api/chat") {
     await handleChat(req, res);
+    return;
+  }
+
+  if (req.method === "POST" && urlPath === "/api/redeem-code") {
+    await handleRedeemCode(req, res);
     return;
   }
 

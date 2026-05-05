@@ -73,6 +73,30 @@
         </div>
       </button>
 
+      <button class="sidebar-mode-btn" data-mode="audit">
+        <span class="sidebar-mode-icon">🧠</span>
+        <div class="sidebar-mode-info">
+          <div class="sidebar-mode-name">Money Audit</div>
+          <div class="sidebar-mode-desc">Revenue leaks and quick wins</div>
+        </div>
+      </button>
+
+      <button class="sidebar-mode-btn" data-mode="email">
+        <span class="sidebar-mode-icon">📧</span>
+        <div class="sidebar-mode-info">
+          <div class="sidebar-mode-name">Email Writer</div>
+          <div class="sidebar-mode-desc">Professional workplace emails</div>
+        </div>
+      </button>
+
+      <button class="sidebar-mode-btn" data-mode="office">
+        <span class="sidebar-mode-icon">🏢</span>
+        <div class="sidebar-mode-info">
+          <div class="sidebar-mode-name">Office Work AI</div>
+          <div class="sidebar-mode-desc">Excel, slides, reports, bank work</div>
+        </div>
+      </button>
+
       <button class="sidebar-mode-btn" data-mode="resources">
         <span class="sidebar-mode-icon">🧰</span>
         <div class="sidebar-mode-info">
@@ -138,6 +162,24 @@
           <div class="sidebar-mode-name" style="font-size:0.78rem;">Pricing Strategist Page</div>
         </div>
       </a>
+      <a href="audit.html" class="sidebar-mode-btn">
+        <span class="sidebar-mode-icon">🔗</span>
+        <div class="sidebar-mode-info">
+          <div class="sidebar-mode-name" style="font-size:0.78rem;">Money Audit AI Page</div>
+        </div>
+      </a>
+      <a href="email.html" class="sidebar-mode-btn">
+        <span class="sidebar-mode-icon">🔗</span>
+        <div class="sidebar-mode-info">
+          <div class="sidebar-mode-name" style="font-size:0.78rem;">Email Writer AI Page</div>
+        </div>
+      </a>
+      <a href="office.html" class="sidebar-mode-btn">
+        <span class="sidebar-mode-icon">🔗</span>
+        <div class="sidebar-mode-info">
+          <div class="sidebar-mode-name" style="font-size:0.78rem;">Office Work AI Page</div>
+        </div>
+      </a>
       <a href="resources.html" class="sidebar-mode-btn">
         <span class="sidebar-mode-icon">🔗</span>
         <div class="sidebar-mode-info">
@@ -192,6 +234,9 @@
           <button class="suggestion-chip" data-prompt="Recommend the best websites and tools to build an online business, compare the options, and tell me which one is best for a beginner">🌐 Best business websites</button>
           <button class="suggestion-chip" data-prompt="Give me 3 website builder options for a coaching business with pricing, pros, cons, and the best choice">🧭 Website builder options</button>
           <button class="suggestion-chip" data-prompt="Help me price my service package with one best price and two alternatives">💸 Price my offer</button>
+          <button class="suggestion-chip" data-prompt="Audit my offer, funnel, and pricing to show the fastest path to more money">🧠 Audit my revenue leaks</button>
+          <button class="suggestion-chip" data-prompt="Write a professional follow-up email to a manager, client, or recruiter using my rough notes">📧 Write my email</button>
+          <button class="suggestion-chip" data-prompt="Help me create an Excel formula, a PowerPoint outline, or an office report from my notes">🏢 Office work help</button>
           <button class="suggestion-chip" data-prompt="Help me rewrite a messy PDF or DOC into a professional version and tell me what to fix">📄 Fix my document</button>
           <button class="suggestion-chip" data-prompt="Create a professional ATS-friendly resume for a target job and improve my work experience bullets">🧾 Build my resume</button>
           <button class="suggestion-chip" data-prompt="What are the most profitable service businesses right now in 2026?">📈 Most profitable services</button>
@@ -230,6 +275,9 @@ const modeMeta = {
   ideas: { title: "💡 Idea Engine", desc: "Get profitable, detailed business ideas tailored to your context" },
   planner: { title: "🗺️ Launch Planner", desc: "Create practical 30, 60, or 90 day launch plans and priorities" },
   pricing: { title: "💸 Pricing Strategist", desc: "Design smarter pricing, packages, and monetization options" },
+  audit: { title: "🧠 Money Audit", desc: "Find revenue leaks, quick wins, offer upgrades, and fast monetization moves" },
+  email: { title: "📧 Email Writer", desc: "Write stronger professional emails, follow-ups, reminders, and office communication" },
+  office: { title: "🏢 Office Work AI", desc: "Create Excel help, slide outlines, reports, bank updates, and office-ready output" },
   resources: { title: "🧰 Tool Finder", desc: "Compare websites, apps, platforms, and software options clearly" },
   documents: { title: "📄 Document Fixer", desc: "Improve uploaded PDF, DOC, DOCX, and text documents professionally" },
   resume: { title: "🧾 Resume Builder", desc: "Create ATS-friendly resumes, summaries, and stronger experience bullets" },

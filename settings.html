@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Settings — THE SMART BOSS AI</title>
+  <meta name="description" content="Manage your Smart Boss AI account, usage, promo codes, and upgrade access from one settings page.">
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>👑</text></svg>">
+</head>
+<body>
+
+<nav class="nav">
+  <a href="index.html" class="nav-brand">
+    <div class="nav-logo">👑</div>
+    <div class="nav-name">THE SMART BOSS<span>AI Platform</span></div>
+  </a>
+  <ul class="nav-links" id="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="business.html">Business AI</a></li>
+    <li><a href="pricing.html">Pricing</a></li>
+  </ul>
+  <button class="nav-menu-btn" id="nav-menu-btn">☰</button>
+</nav>
+
+<div class="page-header">
+  <div class="page-header-content">
+    <span class="section-label">// Account Settings</span>
+    <h1 style="font-family:var(--font-display);color:var(--text-primary);margin:0.5rem 0 1rem;">
+      Manage Your <span class="shimmer-text">Access and Usage</span>
+    </h1>
+    <p style="color:var(--text-muted);font-size:0.95rem;">
+      See your current plan, redeem promo or upgrade codes, and keep track of your daily AI allowance.
+    </p>
+  </div>
+</div>
+
+<section class="section" style="padding-top:0;">
+  <div class="section-inner" style="max-width:1080px;">
+    <div class="form-grid" style="align-items:start;">
+      <div style="display:flex;flex-direction:column;gap:1rem;">
+        <div class="prompt-form">
+          <div style="display:flex;align-items:center;gap:12px;margin-bottom:1.5rem;padding-bottom:1rem;border-bottom:1px solid rgba(255,255,255,0.05);">
+            <span style="font-size:1.6rem;">👤</span>
+            <div>
+              <div style="font-family:var(--font-display);font-size:1.2rem;color:var(--text-primary);font-weight:600;">Account Overview</div>
+              <div style="font-size:0.8rem;color:var(--text-muted);">Your current identity, plan, and AI allowance</div>
+            </div>
+          </div>
+
+          <div id="settings-account-box" style="display:grid;gap:0.9rem;"></div>
+
+          <div style="display:flex;gap:0.75rem;flex-wrap:wrap;margin-top:1rem;">
+            <a href="pricing.html" class="btn btn-outline btn-sm">💳 View Paid Plans</a>
+            <button class="btn btn-ghost btn-sm" type="button" onclick="handleLogout()">🚪 Log Out</button>
+          </div>
+        </div>
+
+        <div class="prompt-form">
+          <div style="display:flex;align-items:center;gap:12px;margin-bottom:1.5rem;padding-bottom:1rem;border-bottom:1px solid rgba(255,255,255,0.05);">
+            <span style="font-size:1.6rem;">🎟️</span>
+            <div>
+              <div style="font-family:var(--font-display);font-size:1.2rem;color:var(--text-primary);font-weight:600;">Redeem a Code</div>
+              <div style="font-size:0.8rem;color:var(--text-muted);">Use promo, pro, or admin access codes here</div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Access Code</label>
+            <input type="text" class="form-input" id="settings-code" placeholder="Enter FREESMART, a pro code, or your admin code">
+          </div>
+
+          <div style="display:flex;gap:0.75rem;flex-wrap:wrap;">
+            <button class="btn btn-primary" id="redeem-code-btn" type="button" onclick="handleCodeRedeem()">⚡ Redeem Code</button>
+            <button class="btn btn-outline btn-sm" type="button" onclick="fillFreeCode()">🎁 Use Free Code</button>
+          </div>
+
+          <div id="settings-code-help" style="margin-top:1rem;font-size:0.82rem;color:var(--text-muted);"></div>
+        </div>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:1rem;">
+        <div class="feature-card">
+          <div class="feature-icon">🎁</div>
+          <div class="feature-title">Free Promo Rule</div>
+          <p class="feature-desc">Use FREESMART in Settings to get 3 extra AI requests. You can redeem it two times per day.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">💼</div>
+          <div class="feature-title">Paid Access</div>
+          <p class="feature-desc">After payment, use your pro access code here to unlock the paid plan on this device.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">👑</div>
+          <div class="feature-title">Admin Access</div>
+          <p class="feature-desc">Admin code access is unlimited across all AI tools and bypasses free limits.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div id="toast-container" class="toast-container"></div>
+<script src="main.js"></script>
+<script>
+let settingsConfig = null;
+
+function formatPlanLabel(plan) {
+  const labels = {
+    free: "Free Starter",
+    pro: "Smart Boss Pro",
+    admin: "Admin Unlimited",
+  };
+  return labels[plan] || "Unknown";
+}
+
+function renderSettingsPage() {
+  const user = getCurrentSmartBossUser();
+  const box = document.getElementById("settings-account-box");
+  const help = document.getElementById("settings-code-help");
+
+  if (!user) {
+    box.innerHTML = '<div style="padding:1rem 1.25rem;background:var(--bg-deep);border:1px solid rgba(255,255,255,0.06);border-radius:var(--radius-md);color:var(--text-secondary);">Please log in to manage your plan and promo codes.</div>';
+    help.textContent = "You need an account before redeeming codes.";
+    return;
+  }
+
+  const usage = getCurrentUsageSnapshot(user);
+  const freeAccess = (settingsConfig && settingsConfig.freeAccess) || {
+    dailyRequests: 2,
+    promoCode: "FREESMART",
+    promoBonusRequests: 3,
+    maxDailyPromoRedeems: 2,
+  };
+
+  const usageText = usage.unlimited
+    ? "Unlimited AI access"
+    : `${usage.remainingToday} of ${usage.totalToday} AI requests left today`;
+
+  box.innerHTML = `
+    <div style="padding:1rem 1.25rem;background:var(--bg-deep);border:1px solid rgba(255,255,255,0.06);border-radius:var(--radius-md);">
+      <div style="font-size:0.72rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.12em;font-family:var(--font-mono);margin-bottom:0.4rem;">Name</div>
+      <div style="font-size:1rem;color:var(--text-primary);font-weight:600;">${user.name}</div>
+    </div>
+    <div style="padding:1rem 1.25rem;background:var(--bg-deep);border:1px solid rgba(255,255,255,0.06);border-radius:var(--radius-md);">
+      <div style="font-size:0.72rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.12em;font-family:var(--font-mono);margin-bottom:0.4rem;">Email</div>
+      <div style="font-size:0.95rem;color:var(--text-primary);">${user.email}</div>
+    </div>
+    <div style="padding:1rem 1.25rem;background:var(--bg-deep);border:1px solid rgba(255,255,255,0.06);border-radius:var(--radius-md);">
+      <div style="font-size:0.72rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.12em;font-family:var(--font-mono);margin-bottom:0.4rem;">Plan</div>
+      <div style="font-size:1rem;color:var(--gold-primary);font-weight:700;">${formatPlanLabel(user.plan)}</div>
+    </div>
+    <div style="padding:1rem 1.25rem;background:var(--bg-deep);border:1px solid rgba(255,255,255,0.06);border-radius:var(--radius-md);">
+      <div style="font-size:0.72rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.12em;font-family:var(--font-mono);margin-bottom:0.4rem;">Today</div>
+      <div style="font-size:0.95rem;color:var(--text-primary);">${usageText}</div>
+      ${usage.unlimited ? "" : `<div style="font-size:0.8rem;color:var(--text-muted);margin-top:0.35rem;">Bonus uses today: ${usage.bonusToday} · Promo redeems today: ${usage.redeemsToday}/${freeAccess.maxDailyPromoRedeems}</div>`}
+    </div>
+  `;
+
+  help.textContent = `Free code ${freeAccess.promoCode} adds ${freeAccess.promoBonusRequests} extra AI requests and can be redeemed ${freeAccess.maxDailyPromoRedeems} times per day.`;
+}
+
+function fillFreeCode() {
+  document.getElementById("settings-code").value = "FREESMART";
+}
+
+async function handleCodeRedeem() {
+  const input = document.getElementById("settings-code");
+  const btn = document.getElementById("redeem-code-btn");
+  const code = input.value.trim();
+
+  if (!code) {
+    showToast("Enter a code first", "error");
+    return;
+  }
+
+  btn.disabled = true;
+  btn.innerHTML = '<div class="spinner"></div> Redeeming...';
+
+  try {
+    const result = await redeemSmartBossAccessCode(code);
+    showToast(result.message || "Code redeemed successfully", "success");
+    input.value = "";
+    renderSettingsPage();
+  } catch (error) {
+    showToast(error.message, "error");
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = "⚡ Redeem Code";
+  }
+}
+
+function handleLogout() {
+  logoutSmartBossUser();
+  showToast("Logged out successfully", "success");
+  window.location.href = "login.html";
+}
+
+document.addEventListener("DOMContentLoaded", async () => {
+  const user = getCurrentSmartBossUser();
+  if (!user) {
+    window.location.href = "login.html";
+    return;
+  }
+
+  settingsConfig = await loadSmartBossPublicConfig();
+  renderSettingsPage();
+});
+</script>
+</body>
+</html>

@@ -28,18 +28,86 @@
 
 <div class="page-header">
   <div class="page-header-content">
-    <span class="section-label">// Pricing Strategist</span>
+    <span class="section-label">// Pricing and Billing</span>
     <h1 style="font-family:var(--font-display);color:var(--text-primary);margin:0.5rem 0 1rem;">
-      Price for <span class="shimmer-text">Profit and Positioning</span>
+      Price for <span class="shimmer-text">Profit and Paid Access</span>
     </h1>
     <p style="color:var(--text-muted);font-size:0.95rem;">
-      Get pricing recommendations, package ideas, buyer psychology guidance,
-      and upsell opportunities built around your offer.
+      Sell access to your AI, promote paid upgrades, and still use the built-in pricing strategist to shape your own offers.
     </p>
   </div>
 </div>
 
 <section class="section" style="padding-top:0;">
+  <div class="section-inner" style="max-width:1160px;margin-bottom:2rem;">
+    <div class="section-header" style="margin-bottom:2.2rem;">
+      <span class="section-label">// Membership Plans</span>
+      <h2>Monetize Access to Smart Boss AI</h2>
+      <p>Users can start free, unlock bonus requests with the daily promo code, and move into paid or admin-level access with stronger money-making tools.</p>
+    </div>
+
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon">🆓</div>
+        <div class="feature-title">Free Starter</div>
+        <p class="feature-desc" id="free-plan-copy">
+          Limited daily AI access with bonus requests available through the FREESMART code in Settings.
+        </p>
+        <div class="feature-arrow">Great for trials and lead generation</div>
+      </div>
+
+      <div class="feature-card" style="border-color:var(--gold-primary);box-shadow:0 0 30px rgba(201,168,76,0.08);">
+        <div class="feature-icon">💳</div>
+        <div class="feature-title">Smart Boss Pro</div>
+        <p class="feature-desc">
+          Paid users get unlimited AI access across Business AI, Revenue AI, Resume Builder, Document AI, Voice AI, and the other premium tools.
+        </p>
+        <div style="display:flex;gap:0.75rem;flex-wrap:wrap;margin-top:1.1rem;">
+          <a href="#" id="buy-monthly-link" class="btn btn-primary btn-sm" target="_blank" rel="noopener noreferrer">Buy Monthly</a>
+          <a href="#" id="buy-yearly-link" class="btn btn-outline btn-sm" target="_blank" rel="noopener noreferrer">Buy Yearly</a>
+          <a href="#" id="buy-lifetime-link" class="btn btn-outline btn-sm" target="_blank" rel="noopener noreferrer">Buy Lifetime</a>
+          <a href="#" id="buy-paypal-link" class="btn btn-ghost btn-sm" target="_blank" rel="noopener noreferrer">PayPal Option</a>
+        </div>
+        <p id="payment-link-status" style="font-size:0.76rem;color:var(--text-muted);margin-top:0.85rem;">
+          Add your payment links in environment variables so these buttons take users to checkout.
+        </p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">👑</div>
+        <div class="feature-title">Admin Unlimited</div>
+        <p class="feature-desc">
+          Internal admin access unlocks unlimited usage across all AI modes. This tier is controlled through the admin code in Settings.
+        </p>
+        <div class="feature-arrow">Best for owner and internal team use</div>
+      </div>
+    </div>
+
+    <div style="margin-top:1.5rem;padding:1rem 1.25rem;background:var(--bg-card);border:1px solid rgba(255,255,255,0.06);border-radius:var(--radius-lg);display:grid;gap:0.55rem;">
+      <div style="font-size:0.82rem;color:var(--gold-primary);font-family:var(--font-mono);letter-spacing:0.08em;text-transform:uppercase;">Payment Flow</div>
+      <div style="font-size:0.88rem;color:var(--text-secondary);">
+        1. User creates an account or logs in.
+      </div>
+      <div style="font-size:0.88rem;color:var(--text-secondary);">
+        2. User pays through your configured payment link.
+      </div>
+      <div style="font-size:0.88rem;color:var(--text-secondary);" id="pricing-code-help">
+        3. After payment, give the user a Pro access code and they redeem it in Settings.
+      </div>
+    </div>
+
+    <div style="margin-top:1rem;padding:1rem 1.25rem;background:linear-gradient(180deg,rgba(201,168,76,0.08),rgba(255,255,255,0.02));border:1px solid var(--gold-border);border-radius:var(--radius-lg);display:grid;gap:0.55rem;">
+      <div style="font-size:0.82rem;color:var(--gold-primary);font-family:var(--font-mono);letter-spacing:0.08em;text-transform:uppercase;">High-Value Upgrade Angle</div>
+      <div style="font-size:0.9rem;color:var(--text-secondary);">
+        Position Pro as the level where users unlock unlimited monetization tools like Revenue AI, premium offer builders, sales assets, and proposal-generation workflows.
+      </div>
+      <div style="display:flex;gap:0.75rem;flex-wrap:wrap;margin-top:0.35rem;">
+        <a href="revenue.html" class="btn btn-primary btn-sm">💰 Open Revenue AI</a>
+        <a href="settings.html" class="btn btn-outline btn-sm">⚙️ Redeem or Upgrade</a>
+      </div>
+    </div>
+  </div>
+
   <div class="section-inner" style="max-width:940px;">
     <div class="prompt-form">
       <div style="display:flex;align-items:center;gap:12px;margin-bottom:1.5rem;padding-bottom:1rem;border-bottom:1px solid rgba(255,255,255,0.05);">
@@ -132,6 +200,39 @@
   </div>
 </section>
 
+<section class="section" style="background:var(--bg-panel);border-top:1px solid rgba(255,255,255,0.04);border-bottom:1px solid rgba(255,255,255,0.04);">
+  <div class="section-inner">
+    <div class="section-header">
+      <span class="section-label">// Premium Value</span>
+      <h2>What Makes Pro Easier to Sell</h2>
+      <p>Give users features that feel tied to revenue, not just general AI usage.</p>
+    </div>
+
+    <div class="features-grid">
+      <a href="revenue.html" class="feature-card">
+        <div class="feature-icon">💰</div>
+        <div class="feature-title">Revenue AI</div>
+        <p class="feature-desc">Offer generators, sales pages, lead magnets, upsell flows, and proposals make paid access feel more valuable.</p>
+        <div class="feature-arrow">See Revenue Tools →</div>
+      </a>
+
+      <a href="documents.html" class="feature-card">
+        <div class="feature-icon">📄</div>
+        <div class="feature-title">Paper and PDF Exports</div>
+        <p class="feature-desc">Printable business documents, resumes, CVs, and polished outputs make the platform feel premium and useful.</p>
+        <div class="feature-arrow">Use Export Tools →</div>
+      </a>
+
+      <a href="voice.html" class="feature-card">
+        <div class="feature-icon">🎙️</div>
+        <div class="feature-title">Voice and Fast Workflow</div>
+        <p class="feature-desc">Voice dictation and faster AI workflows increase stickiness for users who come back daily.</p>
+        <div class="feature-arrow">Try Voice AI →</div>
+      </a>
+    </div>
+  </div>
+</section>
+
 <section class="section" style="background:var(--bg-panel);border-top:1px solid rgba(255,255,255,0.04);">
   <div class="section-inner">
     <div class="section-header">
@@ -161,6 +262,68 @@
         <p class="feature-desc">Monthly tiers, retention logic, and premium plans.</p>
         <div class="feature-arrow">Use Preset →</div>
       </button>
+    </div>
+  </div>
+</section>
+
+<section class="section" style="background:var(--bg-panel);border-top:1px solid rgba(255,255,255,0.04);border-bottom:1px solid rgba(255,255,255,0.04);">
+  <div class="section-inner" style="max-width:980px;">
+    <div class="section-header">
+      <span class="section-label">// Profit Math</span>
+      <h2>Quick Revenue and Profit Calculator</h2>
+      <p>Use simple numbers to see whether your current pricing creates enough revenue and margin to grow.</p>
+    </div>
+
+    <div class="prompt-form" style="max-width:none;">
+      <div class="form-grid">
+        <div class="form-group">
+          <label class="form-label">Offer Price</label>
+          <input type="number" min="0" step="0.01" class="form-input" id="calc-price" placeholder="e.g. 99">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Monthly Leads</label>
+          <input type="number" min="0" step="1" class="form-input" id="calc-leads" placeholder="e.g. 120">
+        </div>
+      </div>
+
+      <div class="form-grid">
+        <div class="form-group">
+          <label class="form-label">Conversion Rate (%)</label>
+          <input type="number" min="0" max="100" step="0.1" class="form-input" id="calc-conversion" placeholder="e.g. 4.5">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Fulfillment Cost Per Sale</label>
+          <input type="number" min="0" step="0.01" class="form-input" id="calc-cost" placeholder="e.g. 20">
+        </div>
+      </div>
+
+      <div style="display:flex;gap:0.75rem;flex-wrap:wrap;margin-bottom:1.25rem;">
+        <button class="btn btn-primary" type="button" onclick="runProfitCalculator()">📈 Calculate Profit</button>
+        <button class="btn btn-outline btn-sm" type="button" onclick="fillProfitExample()">📋 Example</button>
+      </div>
+
+      <div class="features-grid">
+        <div class="feature-card" style="cursor:default;">
+          <div class="feature-title" style="font-size:1.1rem;">Estimated Customers</div>
+          <div id="calc-customers" style="font-family:var(--font-display);font-size:2rem;color:var(--gold-primary);margin-top:0.3rem;">0</div>
+          <p class="feature-desc">Projected new buyers from your monthly lead flow.</p>
+        </div>
+        <div class="feature-card" style="cursor:default;">
+          <div class="feature-title" style="font-size:1.1rem;">Projected Revenue</div>
+          <div id="calc-revenue" style="font-family:var(--font-display);font-size:2rem;color:var(--gold-primary);margin-top:0.3rem;">$0</div>
+          <p class="feature-desc">Estimated gross revenue at the current price and conversion rate.</p>
+        </div>
+        <div class="feature-card" style="cursor:default;">
+          <div class="feature-title" style="font-size:1.1rem;">Projected Profit</div>
+          <div id="calc-profit" style="font-family:var(--font-display);font-size:2rem;color:var(--gold-primary);margin-top:0.3rem;">$0</div>
+          <p class="feature-desc">Estimated profit before overhead after direct fulfillment cost.</p>
+        </div>
+      </div>
+
+      <div style="margin-top:1rem;padding:1rem 1.25rem;background:var(--bg-deep);border:1px solid rgba(255,255,255,0.06);border-radius:var(--radius-lg);">
+        <div style="font-size:0.8rem;color:var(--gold-primary);font-family:var(--font-mono);letter-spacing:0.08em;text-transform:uppercase;margin-bottom:0.45rem;">Calculator Takeaway</div>
+        <div id="calc-summary" style="font-size:0.9rem;color:var(--text-secondary);">Run the calculator to see whether your current price supports healthy revenue and profit.</div>
+      </div>
     </div>
   </div>
 </section>
@@ -206,6 +369,99 @@
 <div id="toast-container" class="toast-container"></div>
 <script src="main.js"></script>
 <script>
+async function initBillingPlans() {
+  const config = await loadSmartBossPublicConfig();
+  const freeAccess = config.freeAccess || {};
+  const freePlanCopy = document.getElementById("free-plan-copy");
+  const status = document.getElementById("payment-link-status");
+  const codeHelp = document.getElementById("pricing-code-help");
+  const linkMap = [
+    { id: "buy-monthly-link", value: config.paymentLinks?.monthly },
+    { id: "buy-yearly-link", value: config.paymentLinks?.yearly },
+    { id: "buy-lifetime-link", value: config.paymentLinks?.lifetime },
+    { id: "buy-paypal-link", value: config.paymentLinks?.paypal },
+  ];
+
+  if (freePlanCopy) {
+    freePlanCopy.textContent = `Users get ${freeAccess.dailyRequests || 2} AI requests per day. The free code ${freeAccess.promoCode || "FREESMART"} adds ${freeAccess.promoBonusRequests || 3} extra requests and can be used ${freeAccess.maxDailyPromoRedeems || 2} times each day.`;
+  }
+
+  let enabledLinks = 0;
+  linkMap.forEach((item) => {
+    const link = document.getElementById(item.id);
+    if (!link) return;
+
+    if (item.value) {
+      link.href = item.value;
+      enabledLinks += 1;
+      return;
+    }
+
+    link.removeAttribute("href");
+    link.setAttribute("aria-disabled", "true");
+    link.style.pointerEvents = "none";
+    link.style.opacity = "0.45";
+  });
+
+  if (status) {
+    status.textContent = enabledLinks
+      ? "Payment links are live. After payment, send the buyer a Pro access code to redeem in Settings."
+      : "Add SMARTBOSS_PAYMENT_LINK_MONTHLY, SMARTBOSS_PAYMENT_LINK_YEARLY, SMARTBOSS_PAYMENT_LINK_LIFETIME, or SMARTBOSS_PAYMENT_LINK_PAYPAL in your environment variables to enable checkout buttons.";
+  }
+
+  if (codeHelp) {
+    codeHelp.textContent = config.supportEmail
+      ? `3. After payment, deliver a Pro access code to the buyer so they can redeem it in Settings. Support contact: ${config.supportEmail}.`
+      : "3. After payment, give the user a Pro access code and they redeem it in Settings.";
+  }
+}
+
+function formatMoney(value) {
+  return new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency: "USD",
+    maximumFractionDigits: value >= 1000 ? 0 : 2,
+  }).format(Number.isFinite(value) ? value : 0);
+}
+
+function runProfitCalculator() {
+  const price = Number(document.getElementById("calc-price").value || 0);
+  const leads = Number(document.getElementById("calc-leads").value || 0);
+  const conversionRate = Number(document.getElementById("calc-conversion").value || 0);
+  const cost = Number(document.getElementById("calc-cost").value || 0);
+
+  const customers = leads * (conversionRate / 100);
+  const revenue = customers * price;
+  const profit = customers * Math.max(price - cost, 0);
+  const profitMargin = revenue > 0 ? (profit / revenue) * 100 : 0;
+
+  document.getElementById("calc-customers").textContent = customers.toFixed(customers % 1 ? 1 : 0);
+  document.getElementById("calc-revenue").textContent = formatMoney(revenue);
+  document.getElementById("calc-profit").textContent = formatMoney(profit);
+
+  const summary = document.getElementById("calc-summary");
+  if (summary) {
+    if (!price || !leads || !conversionRate) {
+      summary.textContent = "Add your numbers to estimate how many buyers, how much revenue, and how much profit your pricing can produce.";
+    } else if (profitMargin < 35) {
+      summary.textContent = `Estimated margin is about ${profitMargin.toFixed(1)}%. That is a sign to review pricing, fulfillment cost, or upsells so growth does not eat your profit.`;
+    } else if (conversionRate < 2) {
+      summary.textContent = `Your math suggests the bigger opportunity may be conversion. Improve the offer, proof, CTA, and follow-up before lowering price too fast.`;
+    } else {
+      summary.textContent = `This setup suggests about ${formatMoney(profit)} in monthly profit before overhead with a margin near ${profitMargin.toFixed(1)}%. Now test whether a small price lift or upsell can raise value per buyer.`;
+    }
+  }
+}
+
+function fillProfitExample() {
+  document.getElementById("calc-price").value = 149;
+  document.getElementById("calc-leads").value = 180;
+  document.getElementById("calc-conversion").value = 4.2;
+  document.getElementById("calc-cost").value = 32;
+  runProfitCalculator();
+  showToast("Profit example loaded", "info");
+}
+
 async function generatePricing() {
   const name = document.getElementById("price-name").value.trim();
   const type = document.getElementById("price-type").value;
@@ -334,6 +590,8 @@ function loadPricingPreset(type) {
   window.scrollTo({ top: 0, behavior: "smooth" });
   setTimeout(generatePricing, 300);
 }
+
+document.addEventListener("DOMContentLoaded", initBillingPlans);
 </script>
 </body>
 </html>

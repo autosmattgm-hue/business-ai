@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Money Audit AI — THE SMART BOSS AI</title>
+  <meta name="description" content="Audit your offer, funnel, pricing, and revenue leaks with Money Audit AI to uncover the fastest path to more sales.">
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>👑</text></svg>">
+</head>
+<body>
+
+<nav class="nav">
+  <a href="index.html" class="nav-brand">
+    <div class="nav-logo">👑</div>
+    <div class="nav-name">THE SMART BOSS<span>AI Platform</span></div>
+  </a>
+  <ul class="nav-links" id="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="business.html">Business AI</a></li>
+    <li><a href="revenue.html">Revenue AI</a></li>
+    <li><a href="pricing.html">Pricing</a></li>
+    <li><a href="resources.html">Toolkit</a></li>
+    <li><a href="documents.html">Docs AI</a></li>
+  </ul>
+  <button class="nav-menu-btn" id="nav-menu-btn">☰</button>
+</nav>
+
+<div class="page-header">
+  <div class="page-header-content">
+    <span class="section-label">// Money Audit AI</span>
+    <h1 style="font-family:var(--font-display);color:var(--text-primary);margin:0.5rem 0 1rem;">
+      Find the <span class="shimmer-text">Revenue Leaks</span> Before They Cost You More
+    </h1>
+    <p style="color:var(--text-muted);font-size:0.95rem;">
+      Audit your current offer, traffic, pricing, and bottlenecks to get the fastest money moves,
+      stronger upsells, and a 30-day cash-focused action plan.
+    </p>
+  </div>
+</div>
+
+<section class="section" style="padding-top:0;">
+  <div class="section-inner" style="max-width:1040px;">
+    <div class="prompt-form">
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:1.5rem;padding-bottom:1rem;border-bottom:1px solid rgba(255,255,255,0.05);">
+        <span style="font-size:1.6rem;">🧠</span>
+        <div>
+          <div style="font-family:var(--font-display);font-size:1.2rem;color:var(--text-primary);font-weight:600;">Money Audit Builder</div>
+          <div style="font-size:0.8rem;color:var(--text-muted);">Turn business context into a prioritized monetization diagnosis</div>
+        </div>
+      </div>
+
+      <div class="form-grid">
+        <div class="form-group">
+          <label class="form-label">Business / Brand Name *</label>
+          <input type="text" class="form-input" id="audit-name" placeholder="e.g. Smart Growth Studio">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Business Model *</label>
+          <select class="form-select" id="audit-model">
+            <option value="">Select model...</option>
+            <option value="service business">Service business</option>
+            <option value="agency or consulting business">Agency or consulting</option>
+            <option value="digital product business">Digital product</option>
+            <option value="subscription or membership business">Subscription or membership</option>
+            <option value="e-commerce business">E-commerce</option>
+            <option value="creator or personal brand business">Creator or personal brand</option>
+            <option value="local business">Local business</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-grid">
+        <div class="form-group">
+          <label class="form-label">Target Buyer *</label>
+          <input type="text" class="form-input" id="audit-buyer" placeholder="e.g. local service owners, busy founders, content creators">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Current Main Offer *</label>
+          <input type="text" class="form-input" id="audit-offer" placeholder="e.g. website package, coaching program, skincare bundle">
+        </div>
+      </div>
+
+      <div class="form-grid">
+        <div class="form-group">
+          <label class="form-label">Current Price / Monthly Revenue</label>
+          <input type="text" class="form-input" id="audit-price" placeholder="e.g. $299, $2,000 MRR, not priced yet">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Traffic or Lead Source</label>
+          <input type="text" class="form-input" id="audit-traffic" placeholder="e.g. Instagram, referrals, cold outreach, local foot traffic">
+        </div>
+      </div>
+
+      <div class="form-grid">
+        <div class="form-group">
+          <label class="form-label">Biggest Bottleneck *</label>
+          <select class="form-select" id="audit-bottleneck">
+            <option value="">Select bottleneck...</option>
+            <option value="not enough qualified leads">Not enough leads</option>
+            <option value="too many leads but weak conversion">Weak conversion</option>
+            <option value="pricing feels too low or confusing">Pricing problem</option>
+            <option value="buyers do not clearly understand the offer value">Offer clarity</option>
+            <option value="customers buy once but do not come back">Retention issue</option>
+            <option value="traffic exists but the website or funnel does not convert">Website or funnel leak</option>
+            <option value="I am not sure what the biggest leak is">Not sure yet</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Next 30-Day Goal</label>
+          <input type="text" class="form-input" id="audit-goal" placeholder="e.g. close 5 clients, reach $5k/month, launch a paid offer">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Extra Context</label>
+        <textarea class="form-textarea" id="audit-notes" placeholder="Share objections, customer behavior, your current funnel, what you've tried already, or any other context that affects sales." style="min-height:95px;"></textarea>
+      </div>
+
+      <div style="display:flex;gap:0.75rem;flex-wrap:wrap;">
+        <button class="btn btn-primary" id="audit-generate-btn" type="button" onclick="generateMoneyAudit()">🧠 Run Money Audit</button>
+        <button class="btn btn-outline btn-sm" type="button" onclick="fillAuditExample()">📋 Example</button>
+        <a href="revenue.html" class="btn btn-ghost btn-sm">💰 Build Revenue Asset</a>
+      </div>
+    </div>
+
+    <div id="audit-result" style="display:none; margin-top:2rem;">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;flex-wrap:wrap;gap:0.75rem;">
+        <div>
+          <h3 style="font-family:var(--font-display);color:var(--gold-primary);">Money Audit Results</h3>
+          <p style="font-size:0.8rem;color:var(--text-muted);margin:0;">Diagnosis, fastest fixes, upsell ideas, and 30-day plan</p>
+        </div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;">
+          <button class="btn btn-ghost btn-sm" type="button" onclick="copyText(document.getElementById('audit-raw-content').textContent)">📋 Copy</button>
+          <a href="pricing.html" class="btn btn-outline btn-sm">💸 Refine Pricing</a>
+        </div>
+      </div>
+
+      <div class="resume-insights-grid" id="audit-insights" style="grid-template-columns:repeat(2,minmax(0,1fr));">
+        <div class="resume-insight-card">
+          <h4>Revenue Leak</h4>
+          <div class="result-content" id="audit-leak-content"></div>
+        </div>
+        <div class="resume-insight-card">
+          <h4>Fastest Money Moves</h4>
+          <div class="result-content" id="audit-fastest-content"></div>
+        </div>
+        <div class="resume-insight-card">
+          <h4>Offer and Upsell Ideas</h4>
+          <div class="result-content" id="audit-upsell-content"></div>
+        </div>
+        <div class="resume-insight-card">
+          <h4>30-Day Money Plan</h4>
+          <div class="result-content" id="audit-plan-content"></div>
+        </div>
+      </div>
+
+      <div class="result-box" style="margin-top:1rem;">
+        <div class="result-box-header">
+          <div class="result-box-label">Raw Audit Output</div>
+        </div>
+        <div class="result-content" id="audit-raw-content"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" style="background:var(--bg-panel);border-top:1px solid rgba(255,255,255,0.04);">
+  <div class="section-inner">
+    <div class="section-header">
+      <span class="section-label">// Why This Helps</span>
+      <h2>Built for Fast Monetization Decisions</h2>
+      <p>Use the audit before you redesign your offer, spend more on ads, or discount your prices.</p>
+    </div>
+
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon">🛑</div>
+        <div class="feature-title">Spot Revenue Leaks</div>
+        <p class="feature-desc">Figure out whether the problem is traffic, conversion, pricing, retention, or weak offer packaging.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">⚡</div>
+        <div class="feature-title">Prioritize Quick Wins</div>
+        <p class="feature-desc">Get the fastest moves to cash instead of generic long-term strategy that delays action.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">📦</div>
+        <div class="feature-title">Expand Revenue Per Buyer</div>
+        <p class="feature-desc">Identify better entry offers, add-ons, upsells, continuity ideas, and higher-ticket positioning.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="footer-inner">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <div class="footer-brand-name">👑 THE SMART BOSS AI</div>
+        <p class="footer-brand-desc">
+          Money Audit AI helps founders and operators see what is blocking revenue, then act on the best fix first.
+        </p>
+      </div>
+
+      <div class="footer-links">
+        <div class="footer-col">
+          <div class="footer-col-title">Monetization</div>
+          <ul>
+            <li><a href="audit.html">Money Audit AI</a></li>
+            <li><a href="revenue.html">Revenue AI</a></li>
+            <li><a href="pricing.html">Pricing Strategist</a></li>
+            <li><a href="business.html">Business AI</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <div class="footer-col-title">Support</div>
+          <ul>
+            <li><a href="resources.html">Business Toolkit</a></li>
+            <li><a href="prompt.html">Web Prompts</a></li>
+            <li><a href="presentation.html">Pitch Coach</a></li>
+            <li><a href="settings.html">Settings</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <p class="footer-copy">© 2026 <span>THE SMART BOSS AI</span>. Built to find the fastest route to more revenue.</p>
+    </div>
+  </div>
+</footer>
+
+<div id="toast-container" class="toast-container"></div>
+
+<script src="main.js"></script>
+<script>
+function parseAuditSections(rawText) {
+  const sections = {
+    leak: [],
+    fastest: [],
+    upsell: [],
+    plan: [],
+  };
+
+  const headingMap = {
+    leak: ["revenue leak diagnosis", "revenue leak", "diagnosis"],
+    fastest: ["fastest money moves", "money moves", "fastest fixes"],
+    upsell: ["offer and upsell ideas", "upsell ideas", "offer ideas"],
+    plan: ["30-day money plan", "30 day money plan", "action plan"],
+  };
+
+  let current = "leak";
+  const lines = sanitizeAiText(rawText).replace(/\r/g, "").split("\n");
+
+  for (const rawLine of lines) {
+    const line = rawLine.trim();
+    if (!line) {
+      if (sections[current]?.length && sections[current][sections[current].length - 1] !== "") {
+        sections[current].push("");
+      }
+      continue;
+    }
+
+    const normalized = line.toLowerCase().replace(/[:\s]+$/g, "").trim();
+    const match = Object.entries(headingMap).find(([, labels]) => labels.includes(normalized));
+
+    if (match) {
+      current = match[0];
+      continue;
+    }
+
+    sections[current].push(line);
+  }
+
+  return Object.fromEntries(
+    Object.entries(sections).map(([key, value]) => [
+      key,
+      value.join("\n").replace(/\n{3,}/g, "\n\n").trim(),
+    ]),
+  );
+}
+
+async function generateMoneyAudit() {
+  const name = document.getElementById("audit-name").value.trim();
+  const model = document.getElementById("audit-model").value;
+  const buyer = document.getElementById("audit-buyer").value.trim();
+  const offer = document.getElementById("audit-offer").value.trim();
+  const price = document.getElementById("audit-price").value.trim();
+  const traffic = document.getElementById("audit-traffic").value.trim();
+  const bottleneck = document.getElementById("audit-bottleneck").value;
+  const goal = document.getElementById("audit-goal").value.trim();
+  const notes = document.getElementById("audit-notes").value.trim();
+
+  if (!name || !model || !buyer || !offer || !bottleneck) {
+    showToast("Please fill in the required money audit fields", "error");
+    return;
+  }
+
+  const btn = document.getElementById("audit-generate-btn");
+  const result = document.getElementById("audit-result");
+  const raw = document.getElementById("audit-raw-content");
+
+  btn.disabled = true;
+  btn.innerHTML = '<div class="spinner"></div> Auditing Revenue...';
+  result.style.display = "block";
+  raw.className = "result-content typing-cursor";
+  raw.textContent = "";
+
+  try {
+    const message = `Run a monetization audit for this business:
+Business name: ${name}
+Business model: ${model}
+Target buyer: ${buyer}
+Current main offer: ${offer}
+Current price or revenue: ${price || "not shared"}
+Traffic or lead source: ${traffic || "not shared"}
+Main bottleneck: ${bottleneck}
+Next 30-day goal: ${goal || "not shared"}
+Extra context: ${notes || "none"}
+
+Return the answer using these exact plain text headings only:
+Revenue Leak Diagnosis:
+Fastest Money Moves:
+Offer and Upsell Ideas:
+30-Day Money Plan:
+
+Keep the advice practical, specific, and focused on the fastest path to more money.
+Do not use markdown tables.
+Do not use asterisks.`;
+
+    const finalText = await streamSmartBossResponse({
+      message,
+      mode: "audit",
+      onToken(fullText) {
+        raw.textContent = sanitizeAiText(fullText);
+      },
+    });
+
+    const sections = parseAuditSections(finalText);
+    document.getElementById("audit-leak-content").textContent = sections.leak || "The audit did not isolate a single leak clearly. Review the raw output for context.";
+    document.getElementById("audit-fastest-content").textContent = sections.fastest || "Use Revenue AI next to build the first asset that can move revenue quickly.";
+    document.getElementById("audit-upsell-content").textContent = sections.upsell || "Use Pricing and Revenue AI to create upsells, add-ons, and better offer packaging.";
+    document.getElementById("audit-plan-content").textContent = sections.plan || "Take the strongest recommendation and turn it into a 30-day execution sprint.";
+    raw.className = "result-content";
+    raw.textContent = sanitizeAiText(finalText);
+
+    result.scrollIntoView({ behavior: "smooth", block: "start" });
+    showToast("Money audit ready", "success");
+  } catch (error) {
+    raw.className = "result-content";
+    raw.textContent = `Error: ${error.message}`;
+    showToast("Could not run money audit", "error");
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = "🧠 Run Money Audit";
+  }
+}
+
+function fillAuditExample() {
+  document.getElementById("audit-name").value = "Smart Growth Studio";
+  document.getElementById("audit-model").value = "service business";
+  document.getElementById("audit-buyer").value = "local service businesses that need more booked calls";
+  document.getElementById("audit-offer").value = "landing page setup and lead follow-up system";
+  document.getElementById("audit-price").value = "$700 setup and $250 monthly support";
+  document.getElementById("audit-traffic").value = "Instagram outreach and referrals";
+  document.getElementById("audit-bottleneck").value = "buyers do not clearly understand the offer value";
+  document.getElementById("audit-goal").value = "close 4 new monthly clients in the next 30 days";
+  document.getElementById("audit-notes").value = "People like the service but say they need to think about it. There is no case study page, no strong guarantee, and no clear upsell after the first setup.";
+  showToast("Example loaded", "info");
+}
+</script>
+</body>
+</html>

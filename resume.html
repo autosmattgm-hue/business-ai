@@ -64,6 +64,28 @@
 
       <div class="form-grid">
         <div class="form-group">
+          <label class="form-label">Email</label>
+          <input type="email" class="form-input" id="resume-email" placeholder="you@example.com">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Phone</label>
+          <input type="text" class="form-input" id="resume-phone" placeholder="+1 555 555 5555">
+        </div>
+      </div>
+
+      <div class="form-grid">
+        <div class="form-group">
+          <label class="form-label">Location</label>
+          <input type="text" class="form-input" id="resume-location" placeholder="City, State or Country">
+        </div>
+        <div class="form-group">
+          <label class="form-label">LinkedIn / Portfolio</label>
+          <input type="text" class="form-input" id="resume-link" placeholder="linkedin.com/in/yourname or your portfolio link">
+        </div>
+      </div>
+
+      <div class="form-grid">
+        <div class="form-group">
           <label class="form-label">Experience Level *</label>
           <select class="form-select" id="resume-level">
             <option value="">Select level...</option>
@@ -85,6 +107,14 @@
       </div>
 
       <div class="form-group">
+        <label class="form-label">Paper Style</label>
+        <select class="form-select" id="resume-paper-style">
+          <option value="white">White paper</option>
+          <option value="brown">Brown paper</option>
+        </select>
+      </div>
+
+      <div class="form-group">
         <label class="form-label">Optional Existing Resume Upload</label>
         <input type="file" class="form-input" id="resume-file" accept=".pdf,.doc,.docx,.txt,.md,.rtf">
         <p style="font-size:0.78rem;color:var(--text-muted);margin-top:0.5rem;">
@@ -95,6 +125,18 @@
       <div id="resume-file-info" style="display:none;margin-bottom:1rem;padding:1rem 1.25rem;background:var(--bg-deep);border:1px solid var(--gold-border);border-radius:var(--radius-md);">
         <div style="font-size:0.78rem;font-weight:600;color:var(--gold-primary);letter-spacing:0.12em;text-transform:uppercase;font-family:var(--font-mono);margin-bottom:0.4rem;">Existing Resume</div>
         <div id="resume-file-meta" style="font-size:0.85rem;color:var(--text-secondary);"></div>
+      </div>
+
+      <div class="tool-assistant-card">
+        <div class="tool-assistant-label">Guided Voice Interview</div>
+        <div class="tool-assistant-question" id="resume-interview-question">Click start and the page will guide the resume questions one by one.</div>
+        <div class="tool-assistant-status" id="resume-interview-status">You can answer by voice or type in the highlighted field, then move to the next question.</div>
+        <div class="tool-assistant-actions">
+          <button class="btn btn-primary btn-sm" type="button" id="resume-interview-start-btn" onclick="startResumeInterview()">🎤 Start Interview</button>
+          <button class="btn btn-outline btn-sm" type="button" id="resume-interview-answer-btn" onclick="toggleResumeInterviewAnswer()">🗣️ Voice Answer</button>
+          <button class="btn btn-ghost btn-sm" type="button" onclick="speakResumeQuestion()">🔊 Repeat Question</button>
+          <button class="btn btn-ghost btn-sm" type="button" onclick="nextResumeInterviewQuestion()">➡️ Next Question</button>
+        </div>
       </div>
 
       <div class="form-group">
@@ -127,22 +169,51 @@
         <button class="btn btn-primary" id="resume-generate-btn" onclick="generateResume()">🧾 Build Resume</button>
         <button class="btn btn-outline btn-sm" onclick="fillResumeExample()">📋 Example</button>
         <a href="documents.html" class="btn btn-ghost btn-sm">📄 Document AI</a>
+        <a href="cv.html" class="btn btn-ghost btn-sm">📘 AI CV Creator</a>
       </div>
     </div>
 
     <div id="resume-result" style="display:none; margin-top:2rem;">
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;flex-wrap:wrap;gap:0.75rem;">
+      <div class="print-hidden" style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;flex-wrap:wrap;gap:0.75rem;">
         <div>
           <h3 style="font-family:var(--font-display);color:var(--gold-primary);">Resume Output</h3>
-          <p style="font-size:0.8rem;color:var(--text-muted);margin:0;">ATS-focused structure, summary, and stronger wording</p>
+          <p style="font-size:0.8rem;color:var(--text-muted);margin:0;">Printable paper preview, PDF export, and stronger resume wording</p>
         </div>
-        <div style="display:flex;gap:8px;">
-          <button class="btn btn-ghost btn-sm" onclick="copyText(document.getElementById('resume-result-content').textContent)">📋 Copy</button>
+        <div class="resume-actions">
+          <button class="btn btn-ghost btn-sm" type="button" onclick="copyText(document.getElementById('resume-raw-content').textContent)">📋 Copy Text</button>
+          <button class="btn btn-outline btn-sm" type="button" onclick="printResumePaper()">🖨️ Print</button>
+          <button class="btn btn-outline btn-sm" type="button" onclick="downloadResumeImage()">🖼️ Download Image</button>
+          <button class="btn btn-outline btn-sm" type="button" onclick="downloadResumeText()">📝 Download Text</button>
+          <button class="btn btn-outline btn-sm" type="button" onclick="downloadResumeHtml()">🌐 Download HTML</button>
+          <button class="btn btn-outline btn-sm" type="button" onclick="toggleEditableElement('resume-paper', this)">Edit Output</button>
+          <button class="btn btn-primary btn-sm" type="button" onclick="downloadResumePdf()">📄 Download PDF</button>
         </div>
       </div>
 
-      <div class="result-box">
-        <div class="result-content typing-cursor" id="resume-result-content"></div>
+      <div class="resume-paper-shell" id="resume-paper-shell">
+        <div class="resume-paper resume-paper-white" id="resume-paper">
+          <div class="resume-paper-placeholder">
+            Your finished resume paper will appear here after generation.
+          </div>
+        </div>
+      </div>
+
+      <div class="resume-insights-grid print-hidden" id="resume-insights" style="display:none;">
+        <div class="resume-insight-card">
+          <h4>Positioning Diagnosis</h4>
+          <div class="result-content" id="resume-diagnosis-content"></div>
+        </div>
+        <div class="resume-insight-card">
+          <h4>Tailoring Advice</h4>
+          <div class="result-content" id="resume-advice-content"></div>
+        </div>
+      </div>
+
+      <div class="result-box print-hidden" id="resume-raw-box">
+        <div class="result-box-header">
+          <div class="result-box-label">Raw AI Resume Text</div>
+        </div>
+        <div class="result-content" id="resume-raw-content"></div>
       </div>
     </div>
   </div>
@@ -193,6 +264,7 @@
           <ul>
             <li><a href="documents.html">Document AI</a></li>
             <li><a href="resume.html">Resume Builder</a></li>
+            <li><a href="cv.html">CV Creator</a></li>
             <li><a href="voice.html">Voice AI</a></li>
             <li><a href="presentation.html">Pitch Coach</a></li>
           </ul>
@@ -218,6 +290,150 @@
 
 <script src="main.js"></script>
 <script>
+let latestResumeBuild = null;
+const RESUME_INTERVIEW_STEPS = [
+  { fieldId: "resume-name", question: "What is your full name?" },
+  { fieldId: "resume-role", question: "What job are you targeting?" },
+  { fieldId: "resume-email", question: "What email should appear on the resume?" },
+  { fieldId: "resume-phone", question: "What phone number should appear on the resume?" },
+  { fieldId: "resume-location", question: "What location should appear on the resume?" },
+  { fieldId: "resume-link", question: "Do you want to include LinkedIn or a portfolio link?" },
+  { fieldId: "resume-level", question: "What experience level best describes you?" },
+  { fieldId: "resume-background", question: "Tell me about your professional background in a few sentences." },
+  { fieldId: "resume-experience", question: "What work experience, responsibilities, or achievements should be included?" },
+  { fieldId: "resume-skills", question: "What skills should be highlighted?" },
+  { fieldId: "resume-education", question: "What education or certifications should be included?" },
+  { fieldId: "resume-notes", question: "Any extra instructions, such as making it concise or targeting a specific kind of job?" },
+];
+const resumeInterviewState = {
+  index: -1,
+  session: null,
+  listening: false,
+};
+
+function getResumeInterviewStep() {
+  return RESUME_INTERVIEW_STEPS[resumeInterviewState.index] || null;
+}
+
+function highlightResumeInterviewField(fieldId) {
+  RESUME_INTERVIEW_STEPS.forEach((step) => {
+    const field = document.getElementById(step.fieldId);
+    if (field) {
+      field.style.boxShadow = step.fieldId === fieldId ? "0 0 0 3px rgba(201,168,76,0.16)" : "";
+      field.style.borderColor = step.fieldId === fieldId ? "var(--gold-primary)" : "";
+    }
+  });
+}
+
+function updateResumeInterviewUi() {
+  const questionEl = document.getElementById("resume-interview-question");
+  const statusEl = document.getElementById("resume-interview-status");
+  const step = getResumeInterviewStep();
+
+  if (!step) {
+    questionEl.textContent = "Click start and the page will guide the resume questions one by one.";
+    statusEl.textContent = "You can answer by voice or type in the highlighted field, then move to the next question.";
+    highlightResumeInterviewField(null);
+    return;
+  }
+
+  questionEl.textContent = step.question;
+  statusEl.textContent = `Question ${resumeInterviewState.index + 1} of ${RESUME_INTERVIEW_STEPS.length}. Answer by voice or type directly into the highlighted field.`;
+  highlightResumeInterviewField(step.fieldId);
+
+  const field = document.getElementById(step.fieldId);
+  if (field) {
+    field.focus();
+    field.scrollIntoView({ behavior: "smooth", block: "center" });
+  }
+}
+
+function speakResumeQuestion() {
+  const step = getResumeInterviewStep();
+  if (!step) return;
+
+  try {
+    speakText(step.question);
+  } catch (error) {
+    showToast(error.message, "error");
+  }
+}
+
+function startResumeInterview() {
+  resumeInterviewState.index = 0;
+  updateResumeInterviewUi();
+  speakResumeQuestion();
+}
+
+function nextResumeInterviewQuestion() {
+  if (resumeInterviewState.listening && resumeInterviewState.session) {
+    resumeInterviewState.session.stop();
+    return;
+  }
+
+  if (resumeInterviewState.index < 0) {
+    startResumeInterview();
+    return;
+  }
+
+  resumeInterviewState.index += 1;
+  if (resumeInterviewState.index >= RESUME_INTERVIEW_STEPS.length) {
+    resumeInterviewState.index = -1;
+    updateResumeInterviewUi();
+    showToast("Resume interview complete. You can generate now or refine any answers.", "success");
+    return;
+  }
+
+  updateResumeInterviewUi();
+  speakResumeQuestion();
+}
+
+function toggleResumeInterviewAnswer() {
+  const answerBtn = document.getElementById("resume-interview-answer-btn");
+  const step = getResumeInterviewStep();
+  if (!step) {
+    startResumeInterview();
+    return;
+  }
+
+  const field = document.getElementById(step.fieldId);
+  if (!field) return;
+
+  if (field.tagName === "SELECT") {
+    showToast("Choose this answer from the dropdown, then move to the next question.", "info");
+    field.focus();
+    return;
+  }
+
+  if (resumeInterviewState.listening && resumeInterviewState.session) {
+    resumeInterviewState.session.stop();
+    return;
+  }
+
+  try {
+    resumeInterviewState.session = createDictationSession({
+      textarea: field,
+      onStart: () => {
+        resumeInterviewState.listening = true;
+        answerBtn.textContent = "⏹️ Stop Voice";
+        showToast("Voice answer started", "info");
+      },
+      onStop: () => {
+        resumeInterviewState.listening = false;
+        answerBtn.textContent = "🗣️ Voice Answer";
+      },
+      onError: (error) => {
+        resumeInterviewState.listening = false;
+        answerBtn.textContent = "🗣️ Voice Answer";
+        showToast(`Voice input error: ${error}`, "error");
+      },
+    });
+    resumeInterviewState.session.start();
+  } catch (error) {
+    showToast(error.message, "error");
+  }
+}
+
 function updateResumeFileInfo(file) {
   const infoBox = document.getElementById("resume-file-info");
   const meta = document.getElementById("resume-file-meta");
@@ -237,12 +453,409 @@ document.getElementById("resume-file").addEventListener("change", (event) => {
   updateResumeFileInfo(event.target.files?.[0] || null);
 });
 
+document.getElementById("resume-paper-style").addEventListener("change", () => {
+  applyResumeTheme(document.getElementById("resume-paper-style").value);
+});
+
+function escapeHtml(value) {
+  return String(value || "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
+
+function slugifyFilename(value) {
+  return String(value || "resume")
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "") || "resume";
+}
+
+function stripBulletPrefix(line) {
+  return String(line || "").replace(/^\s*(?:•|-|\+|\d+\.)\s*/, "").trim();
+}
+
+function normalizeResumeHeading(line) {
+  return String(line || "")
+    .toLowerCase()
+    .replace(/^[\d.\-\s]+/, "")
+    .replace(/[:]+$/, "")
+    .replace(/[^a-z\s/&]+/g, "")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+function parseListItems(text) {
+  const clean = String(text || "").trim();
+  if (!clean) return [];
+
+  const newlineBased = clean
+    .split("\n")
+    .map((line) => stripBulletPrefix(line))
+    .filter(Boolean);
+
+  if (newlineBased.length > 1) {
+    return newlineBased;
+  }
+
+  return clean
+    .split(/[,;|]/)
+    .map((item) => item.trim())
+    .filter(Boolean);
+}
+
+function parseExperienceEntries(text) {
+  const clean = String(text || "").trim();
+  if (!clean) return [];
+
+  const blocks = clean.split(/\n{2,}/).map((block) => block.trim()).filter(Boolean);
+  const sourceBlocks = blocks.length ? blocks : [clean];
+
+  return sourceBlocks.map((block) => {
+    const lines = block.split("\n").map((line) => line.trim()).filter(Boolean);
+    const bulletLines = lines.filter((line) => /^\s*(?:•|-|\+|\d+\.)\s*/.test(line));
+    const plainLines = lines.filter((line) => !/^\s*(?:•|-|\+|\d+\.)\s*/.test(line));
+    const title = plainLines[0] || "Experience Highlight";
+    const meta = plainLines.length > 1 ? plainLines.slice(1).join(" | ") : "";
+    const bullets = bulletLines.length
+      ? bulletLines.map((line) => stripBulletPrefix(line))
+      : plainLines.slice(1).length
+        ? plainLines.slice(1)
+        : [title];
+
+    return {
+      title,
+      meta,
+      bullets: bullets.filter(Boolean),
+    };
+  });
+}
+
+function parseEducationEntries(text) {
+  return String(text || "")
+    .split("\n")
+    .map((line) => stripBulletPrefix(line))
+    .filter(Boolean);
+}
+
+function parseResumeSections(rawText) {
+  const headings = {
+    diagnosis: [
+      "positioning diagnosis",
+      "diagnosis",
+      "quick diagnosis",
+      "resume diagnosis",
+    ],
+    summary: [
+      "professional summary",
+      "summary",
+      "profile summary",
+      "professional profile",
+      "profile",
+    ],
+    skills: [
+      "core skills",
+      "skills",
+      "key skills",
+      "competencies",
+    ],
+    experience: [
+      "professional experience",
+      "experience",
+      "work experience",
+      "employment history",
+    ],
+    education: [
+      "education",
+      "education and certifications",
+      "certifications",
+      "education certifications",
+      "training",
+    ],
+    advice: [
+      "final tailoring advice",
+      "tailoring advice",
+      "final improvements",
+      "improvements",
+      "optional final improvements or tailoring advice",
+      "optional final improvements",
+    ],
+  };
+
+  const sections = {
+    diagnosis: [],
+    summary: [],
+    skills: [],
+    experience: [],
+    education: [],
+    advice: [],
+  };
+
+  let currentSection = "summary";
+  const lines = sanitizeAiText(rawText).replace(/\r/g, "").split("\n");
+
+  for (const rawLine of lines) {
+    const line = rawLine.trim();
+    if (!line) {
+      if (sections[currentSection]?.length && sections[currentSection][sections[currentSection].length - 1] !== "") {
+        sections[currentSection].push("");
+      }
+      continue;
+    }
+
+    const normalizedHeading = normalizeResumeHeading(line);
+    const matchedSection = Object.entries(headings).find(([, labels]) => labels.includes(normalizedHeading));
+
+    if (matchedSection) {
+      currentSection = matchedSection[0];
+      continue;
+    }
+
+    sections[currentSection].push(line);
+  }
+
+  return Object.fromEntries(
+    Object.entries(sections).map(([key, value]) => [
+      key,
+      value.join("\n").replace(/\n{3,}/g, "\n\n").trim(),
+    ]),
+  );
+}
+
+function buildResumeData(formData, rawText) {
+  const sections = parseResumeSections(rawText);
+  const summary = sections.summary || formData.background || "";
+  const experienceSource = sections.experience || formData.experience || "";
+  const educationSource = sections.education || formData.education || "";
+  const skillsSource = sections.skills || formData.skills || "";
+
+  return {
+    name: formData.name,
+    role: formData.role,
+    email: formData.email,
+    phone: formData.phone,
+    location: formData.location,
+    link: formData.link,
+    theme: formData.paperStyle,
+    diagnosis: sections.diagnosis || "",
+    advice: sections.advice || "",
+    summary,
+    skills: parseListItems(skillsSource),
+    experience: parseExperienceEntries(experienceSource),
+    education: parseEducationEntries(educationSource),
+    rawText: sanitizeAiText(rawText),
+  };
+}
+
+function renderResumeContact(data) {
+  const items = [
+    data.email ? { label: "Email", value: data.email } : null,
+    data.phone ? { label: "Phone", value: data.phone } : null,
+    data.location ? { label: "Location", value: data.location } : null,
+    data.link ? { label: "Link", value: data.link } : null,
+  ].filter(Boolean);
+
+  if (!items.length) {
+    return '<div class="resume-paper-contact-item"><span class="resume-paper-contact-label">Tip</span><span>Add email, phone, location, or LinkedIn above.</span></div>';
+  }
+
+  return items
+    .map((item) => `
+      <div class="resume-paper-contact-item">
+        <span class="resume-paper-contact-label">${escapeHtml(item.label)}</span>
+        <span>${escapeHtml(item.value)}</span>
+      </div>
+    `)
+    .join("");
+}
+
+function renderResumeEntries(entries) {
+  if (!entries.length) {
+    return '<div class="resume-paper-entry"><div class="resume-paper-entry-body">Add stronger work history details above for a fuller resume.</div></div>';
+  }
+
+  return entries
+    .map((entry) => `
+      <div class="resume-paper-entry">
+        <div class="resume-paper-entry-header">
+          <div class="resume-paper-entry-title">${escapeHtml(entry.title)}</div>
+          <div class="resume-paper-entry-meta">${escapeHtml(entry.meta)}</div>
+        </div>
+        <ul class="resume-paper-bullets">
+          ${entry.bullets.map((bullet) => `<li>${escapeHtml(bullet)}</li>`).join("")}
+        </ul>
+      </div>
+    `)
+    .join("");
+}
+
+function renderResumePaper(data) {
+  return `
+    <div class="resume-paper-header">
+      <div>
+        <div class="resume-paper-name">${escapeHtml(data.name)}</div>
+        <div class="resume-paper-role">${escapeHtml(data.role)}</div>
+      </div>
+      <div class="resume-paper-contact">
+        ${renderResumeContact(data)}
+      </div>
+    </div>
+
+    <section class="resume-paper-section">
+      <div class="resume-paper-section-title">Professional Summary</div>
+      <div class="resume-paper-summary">${escapeHtml(data.summary || "Add your background and generate again to build a stronger summary.")}</div>
+    </section>
+
+    <section class="resume-paper-section">
+      <div class="resume-paper-section-title">Core Skills</div>
+      <ul class="resume-paper-skills">
+        ${(data.skills.length ? data.skills : ["Add your skills above for a richer resume output."])
+          .map((skill) => `<li>${escapeHtml(skill)}</li>`)
+          .join("")}
+      </ul>
+    </section>
+
+    <section class="resume-paper-section">
+      <div class="resume-paper-section-title">Professional Experience</div>
+      ${renderResumeEntries(data.experience)}
+    </section>
+
+    <section class="resume-paper-section">
+      <div class="resume-paper-section-title">Education and Certifications</div>
+      <div class="resume-paper-education">
+        ${(data.education.length ? data.education : ["Add education or certifications above for a complete resume."])
+          .map((item) => `<div class="resume-paper-education-item">${escapeHtml(item)}</div>`)
+          .join("")}
+      </div>
+    </section>
+  `;
+}
+
+function applyResumeTheme(theme) {
+  const paper = document.getElementById("resume-paper");
+  paper.classList.remove("resume-paper-white", "resume-paper-brown");
+  paper.classList.add(theme === "brown" ? "resume-paper-brown" : "resume-paper-white");
+}
+
+function renderResumeOutputs(resumeData) {
+  latestResumeBuild = resumeData;
+  document.getElementById("resume-paper").innerHTML = renderResumePaper(resumeData);
+  document.getElementById("resume-raw-content").textContent = resumeData.rawText;
+  document.getElementById("resume-diagnosis-content").textContent = resumeData.diagnosis || "The AI focused mainly on the finished resume draft for this build.";
+  document.getElementById("resume-advice-content").textContent = resumeData.advice || "Use the paper preview as your main resume and customize it for each job application.";
+  document.getElementById("resume-insights").style.display = "grid";
+  document.getElementById("resume-raw-box").style.display = "block";
+  applyResumeTheme(resumeData.theme);
+}
+
+async function ensureHtml2Pdf() {
+  if (window.html2pdf) {
+    return window.html2pdf;
+  }
+
+  await new Promise((resolve, reject) => {
+    const existing = document.querySelector('script[data-html2pdf="true"]');
+    if (existing) {
+      existing.addEventListener("load", resolve, { once: true });
+      existing.addEventListener("error", () => reject(new Error("Could not load PDF export library.")), { once: true });
+      return;
+    }
+
+    const script = document.createElement("script");
+    script.src = "https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js";
+    script.async = true;
+    script.dataset.html2pdf = "true";
+    script.onload = resolve;
+    script.onerror = () => reject(new Error("Could not load PDF export library."));
+    document.head.appendChild(script);
+  });
+
+  return window.html2pdf;
+}
+
+async function downloadResumePdf() {
+  if (!latestResumeBuild) {
+    showToast("Build a resume first", "error");
+    return;
+  }
+
+  try {
+    await downloadElementPdf({
+      element: document.getElementById("resume-paper"),
+      filename: `${slugifyFilename(latestResumeBuild.name)}-resume.pdf`,
+    });
+    showToast("PDF downloaded", "success");
+  } catch (error) {
+    showToast(error.message || "Could not export PDF", "error");
+  }
+}
+
+async function downloadResumeImage() {
+  if (!latestResumeBuild) {
+    showToast("Build a resume first", "error");
+    return;
+  }
+
+  try {
+    await downloadElementImage({
+      element: document.getElementById("resume-paper"),
+      filename: `${slugifyFilename(latestResumeBuild.name)}-resume.png`,
+    });
+    showToast("Image downloaded", "success");
+  } catch (error) {
+    showToast(error.message || "Could not export image", "error");
+  }
+}
+
+function downloadResumeText() {
+  if (!latestResumeBuild) {
+    showToast("Build a resume first", "error");
+    return;
+  }
+
+  downloadTextFile(
+    `${slugifyFilename(latestResumeBuild.name)}-resume.txt`,
+    latestResumeBuild.rawText,
+  );
+  showToast("Text file downloaded", "success");
+}
+
+function downloadResumeHtml() {
+  if (!latestResumeBuild) {
+    showToast("Build a resume first", "error");
+    return;
+  }
+
+  downloadHtmlFile(
+    `${slugifyFilename(latestResumeBuild.name)}-resume.html`,
+    `${latestResumeBuild.name} Resume`,
+    document.getElementById("resume-paper").innerHTML,
+  );
+  showToast("HTML file downloaded", "success");
+}
+
+function printResumePaper() {
+  if (!latestResumeBuild) {
+    showToast("Build a resume first", "error");
+    return;
+  }
+
+  window.print();
+}
+
 async function generateResume() {
   const file = document.getElementById("resume-file").files?.[0];
   const name = document.getElementById("resume-name").value.trim();
   const role = document.getElementById("resume-role").value.trim();
+  const email = document.getElementById("resume-email").value.trim();
+  const phone = document.getElementById("resume-phone").value.trim();
+  const location = document.getElementById("resume-location").value.trim();
+  const link = document.getElementById("resume-link").value.trim();
   const level = document.getElementById("resume-level").value;
   const goal = document.getElementById("resume-goal").value;
+  const paperStyle = document.getElementById("resume-paper-style").value;
   const background = document.getElementById("resume-background").value.trim();
   const experience = document.getElementById("resume-experience").value.trim();
   const skills = document.getElementById("resume-skills").value.trim();
@@ -256,13 +869,16 @@ async function generateResume() {
 
   const btn = document.getElementById("resume-generate-btn");
   const result = document.getElementById("resume-result");
-  const content = document.getElementById("resume-result-content");
+  const content = document.getElementById("resume-raw-content");
 
   btn.disabled = true;
   btn.innerHTML = '<div class="spinner"></div> Building Resume...';
   result.style.display = "block";
-  content.className = "result-content typing-cursor";
-  content.innerHTML = "";
+  content.textContent = "";
+  document.getElementById("resume-paper").innerHTML = '<div class="resume-paper-placeholder">Generating your paper-style resume...</div>';
+  applyResumeTheme(paperStyle);
+  document.getElementById("resume-insights").style.display = "none";
+  document.getElementById("resume-raw-box").style.display = "none";
 
   try {
     let existingResumeText = "";
@@ -276,6 +892,10 @@ async function generateResume() {
 
 Name: ${name}
 Target role: ${role}
+Email: ${email || "not provided"}
+Phone: ${phone || "not provided"}
+Location: ${location || "not provided"}
+LinkedIn or portfolio: ${link || "not provided"}
 Experience level: ${level}
 Goal: ${goal}
 Background summary: ${background || "not provided"}
@@ -285,28 +905,47 @@ Education or certifications: ${education || "not provided"}
 Extra instructions: ${notes || "none"}
 Existing resume text: ${existingResumeText || "none provided"}
 
-Please return:
-1. A short positioning diagnosis
-2. A professional summary
-3. An ATS-friendly resume draft with clean sections
-4. Stronger experience bullets where appropriate
-5. Optional final improvements or tailoring advice`;
+Return the answer using these exact plain text headings only:
+Positioning Diagnosis:
+Professional Summary:
+Core Skills:
+Professional Experience:
+Education and Certifications:
+Final Tailoring Advice:
+
+Inside Professional Experience, use job-style entries followed by bullet points.
+Do not use markdown tables.
+Do not use asterisks.
+Make the resume sound polished, credible, ATS-friendly, and ready to turn into a professional one-page or two-page resume.`;
 
     const finalText = await streamSmartBossResponse({
       message,
       mode: "resume",
       onToken(fullText) {
-        content.innerHTML = parseMarkdown(fullText);
+        content.textContent = sanitizeAiText(fullText);
       },
     });
 
-    content.className = "result-content";
-    content.innerHTML = parseMarkdown(finalText);
+    const resumeData = buildResumeData({
+      name,
+      role,
+      email,
+      phone,
+      location,
+      link,
+      paperStyle,
+      background,
+      experience,
+      skills,
+      education,
+    }, finalText);
+
+    renderResumeOutputs(resumeData);
     result.scrollIntoView({ behavior: "smooth", block: "start" });
     showToast("Resume ready", "success");
   } catch (error) {
-    content.className = "result-content";
     content.textContent = `Error: ${error.message}`;
+    document.getElementById("resume-paper").innerHTML = `<div class="resume-paper-placeholder">${escapeHtml(error.message)}</div>`;
     showToast("Could not build resume", "error");
   } finally {
     btn.disabled = false;
@@ -317,8 +956,13 @@ Please return:
 function fillResumeExample() {
   document.getElementById("resume-name").value = "Jordan Smith";
   document.getElementById("resume-role").value = "Administrative Assistant";
+  document.getElementById("resume-email").value = "jordansmith@email.com";
+  document.getElementById("resume-phone").value = "+1 555 218 7821";
+  document.getElementById("resume-location").value = "Dallas, Texas";
+  document.getElementById("resume-link").value = "linkedin.com/in/jordansmith";
   document.getElementById("resume-level").value = "entry-level";
   document.getElementById("resume-goal").value = "create a professional ATS-friendly resume";
+  document.getElementById("resume-paper-style").value = "white";
   document.getElementById("resume-background").value = "Reliable and organized professional with customer service, scheduling, and office support experience.";
   document.getElementById("resume-experience").value = "Handled front desk support, answered customer questions, managed appointments, updated spreadsheets, and helped with filing and communication.";
   document.getElementById("resume-skills").value = "Microsoft Office, communication, scheduling, customer service, data entry, organization";

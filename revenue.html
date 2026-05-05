@@ -1,0 +1,741 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Revenue AI — THE SMART BOSS AI</title>
+  <meta name="description" content="Create offers, sales pages, proposals, upsells, lead magnets, and monetization plans with Revenue AI.">
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>👑</text></svg>">
+</head>
+<body>
+
+<nav class="nav">
+  <a href="index.html" class="nav-brand">
+    <div class="nav-logo">👑</div>
+    <div class="nav-name">THE SMART BOSS<span>AI Platform</span></div>
+  </a>
+  <ul class="nav-links" id="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="business.html">Business AI</a></li>
+    <li><a href="revenue.html">Revenue AI</a></li>
+    <li><a href="pricing.html">Pricing</a></li>
+    <li><a href="resources.html">Toolkit</a></li>
+    <li><a href="voice.html">Voice AI</a></li>
+  </ul>
+  <button class="nav-menu-btn" id="nav-menu-btn">☰</button>
+</nav>
+
+<div class="page-header">
+  <div class="page-header-content">
+    <span class="section-label">// Revenue AI</span>
+    <h1 style="font-family:var(--font-display);color:var(--text-primary);margin:0.5rem 0 1rem;">
+      Build Revenue Assets That <span class="shimmer-text">Actually Sell</span>
+    </h1>
+    <p style="color:var(--text-muted);font-size:0.95rem;">
+      Generate higher-converting offers, sales pages, lead magnets, email sequences,
+      proposals, and upsell funnels designed to help your users make and spend more money.
+    </p>
+  </div>
+</div>
+
+<section class="section" style="padding-top:0;">
+  <div class="section-inner" style="max-width:1040px;">
+    <div class="prompt-form">
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:1.5rem;padding-bottom:1rem;border-bottom:1px solid rgba(255,255,255,0.05);">
+        <span style="font-size:1.6rem;">💰</span>
+        <div>
+          <div style="font-family:var(--font-display);font-size:1.2rem;color:var(--text-primary);font-weight:600;">Revenue Builder</div>
+          <div style="font-size:0.8rem;color:var(--text-muted);">Use one page to create the money-making assets most founders and service businesses need</div>
+        </div>
+      </div>
+
+      <div class="form-grid">
+        <div class="form-group">
+          <label class="form-label">Revenue Asset Type *</label>
+          <select class="form-select" id="revenue-type">
+            <option value="">Select asset...</option>
+            <option value="Create an irresistible offer with value stack, bonuses, guarantee, urgency, and a clear pricing path.">Irresistible offer builder</option>
+            <option value="Write a high-converting sales page with headline, sections, proof prompts, objections, CTA, and closing logic.">Sales page generator</option>
+            <option value="Build a lead magnet and free-to-paid funnel that turns traffic into buyers.">Lead magnet funnel</option>
+            <option value="Design an upsell and recurring revenue flow with entry offer, upsell, continuity, and retention angle.">Upsell and recurring revenue plan</option>
+            <option value="Write a persuasive client proposal that helps close higher-paying business.">Client proposal generator</option>
+            <option value="Create a launch email and DM sequence to promote an offer and drive conversions.">Launch email and DM campaign</option>
+            <option value="Create a low-friction entry offer with order bump, tripwire, CTA, and upgrade path.">Tripwire and order bump builder</option>
+            <option value="Build a referral or affiliate promotion angle that encourages happy buyers or partners to bring in more customers.">Referral or affiliate promotion plan</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Business Model *</label>
+          <select class="form-select" id="revenue-model">
+            <option value="">Select model...</option>
+            <option value="service business">Service business</option>
+            <option value="agency or consulting business">Agency or consulting</option>
+            <option value="digital product business">Digital product</option>
+            <option value="subscription or membership business">Subscription or membership</option>
+            <option value="e-commerce business">E-commerce</option>
+            <option value="local business">Local business</option>
+            <option value="creator or personal brand business">Creator or personal brand</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-grid">
+        <div class="form-group">
+          <label class="form-label">Brand / Offer Name *</label>
+          <input type="text" class="form-input" id="revenue-name" placeholder="e.g. Founder Launch Kit, Smart Growth Agency">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Target Buyer *</label>
+          <input type="text" class="form-input" id="revenue-buyer" placeholder="e.g. startup founders, churches, restaurants, creators">
+        </div>
+      </div>
+
+      <div class="form-grid">
+        <div class="form-group">
+          <label class="form-label">Current Price or Planned Price</label>
+          <input type="text" class="form-input" id="revenue-price" placeholder="e.g. $49, $499, monthly membership, not priced yet">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Revenue Goal</label>
+          <select class="form-select" id="revenue-goal">
+            <option value="increase conversions and get more paying customers">More conversions</option>
+            <option value="raise average order value and close higher-paying buyers">Higher order value</option>
+            <option value="build recurring revenue and stronger retention">Recurring revenue</option>
+            <option value="make the offer feel more premium and easier to justify">Premium positioning</option>
+            <option value="launch a new offer fast and get traction">Faster launch</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-grid">
+        <div class="form-group">
+          <label class="form-label">Main Traffic or Sales Channel</label>
+          <input type="text" class="form-input" id="revenue-channel" placeholder="e.g. Instagram, Facebook ads, cold email, referrals, TikTok">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Primary CTA Destination</label>
+          <input type="text" class="form-input" id="revenue-cta" placeholder="e.g. checkout page, booking call, DM, lead form, sales page">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">What Are You Selling? *</label>
+        <textarea class="form-textarea" id="revenue-offer" placeholder="Describe the product, service, package, transformation, promise, or result you want to sell." style="min-height:95px;"></textarea>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Audience Pain Points / Desired Result</label>
+        <textarea class="form-textarea" id="revenue-pain" placeholder="What pain, frustration, urgency, or desired outcome does your buyer have?" style="min-height:90px;"></textarea>
+      </div>
+
+      <div class="form-grid">
+        <div class="form-group">
+          <label class="form-label">Credibility / Proof</label>
+          <textarea class="form-textarea" id="revenue-proof" placeholder="Client wins, results, experience, case studies, social proof, transformation stories." style="min-height:90px;"></textarea>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Bonuses / Extras / Constraints</label>
+          <textarea class="form-textarea" id="revenue-extras" placeholder="Bonuses, deadlines, delivery model, risks, objections, or special requests." style="min-height:90px;"></textarea>
+        </div>
+      </div>
+
+      <div class="form-grid">
+        <div class="form-group">
+          <label class="form-label">Output Title</label>
+          <input type="text" class="form-input" id="revenue-title" placeholder="Example: Premium Sales Page Draft">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Paper Style</label>
+          <select class="form-select" id="revenue-paper-style">
+            <option value="white">White paper</option>
+            <option value="brown">Brown paper</option>
+          </select>
+        </div>
+      </div>
+
+      <div style="display:flex;gap:0.75rem;flex-wrap:wrap;">
+        <button class="btn btn-primary" id="revenue-generate-btn" type="button" onclick="generateRevenueAsset()">💰 Build Revenue Pack</button>
+        <button class="btn btn-outline btn-sm" type="button" onclick="fillRevenueExample()">📋 Example</button>
+        <a href="pricing.html" class="btn btn-ghost btn-sm">💳 View Pricing</a>
+      </div>
+    </div>
+
+    <div id="revenue-result" style="display:none; margin-top:2rem;">
+      <div class="print-hidden" style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;flex-wrap:wrap;gap:0.75rem;">
+        <div>
+          <h3 style="font-family:var(--font-display);color:var(--gold-primary);">Revenue Output</h3>
+          <p style="font-size:0.8rem;color:var(--text-muted);margin:0;">Paper preview, copy-ready monetization asset, and next-step advice</p>
+        </div>
+        <div class="resume-actions">
+          <button class="btn btn-ghost btn-sm" type="button" onclick="copyText(document.getElementById('revenue-raw-content').textContent)">📋 Copy Text</button>
+          <button class="btn btn-outline btn-sm" type="button" onclick="printRevenuePaper()">🖨️ Print</button>
+          <button class="btn btn-outline btn-sm" type="button" onclick="downloadRevenueImage()">🖼️ Download Image</button>
+          <button class="btn btn-outline btn-sm" type="button" onclick="downloadRevenueText()">📝 Download Text</button>
+          <button class="btn btn-outline btn-sm" type="button" onclick="downloadRevenueHtml()">🌐 Download HTML</button>
+          <button class="btn btn-outline btn-sm" type="button" onclick="toggleEditableElement('revenue-paper', this)">Edit Output</button>
+          <button class="btn btn-primary btn-sm" type="button" onclick="downloadRevenuePdf()">📄 Download PDF</button>
+        </div>
+      </div>
+
+      <div class="resume-paper-shell" id="revenue-paper-shell">
+        <div class="resume-paper resume-paper-white" id="revenue-paper">
+          <div class="resume-paper-placeholder">
+            Your revenue asset paper will appear here after generation.
+          </div>
+        </div>
+      </div>
+
+      <div class="resume-insights-grid print-hidden" id="revenue-insights" style="display:none;">
+        <div class="resume-insight-card">
+          <h4>Revenue Strategy</h4>
+          <div class="result-content" id="revenue-strategy-content"></div>
+        </div>
+        <div class="resume-insight-card">
+          <h4>Upsell Path</h4>
+          <div class="result-content" id="revenue-upsell-content"></div>
+        </div>
+        <div class="resume-insight-card">
+          <h4>Launch Content</h4>
+          <div class="result-content" id="revenue-launch-content"></div>
+        </div>
+        <div class="resume-insight-card">
+          <h4>Best Next Step</h4>
+          <div class="result-content" id="revenue-next-step-content"></div>
+        </div>
+      </div>
+
+      <div class="result-box print-hidden" id="revenue-raw-box">
+        <div class="result-box-header">
+          <div class="result-box-label">Raw AI Output</div>
+        </div>
+        <div class="result-content" id="revenue-raw-content"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" style="background:var(--bg-panel);border-top:1px solid rgba(255,255,255,0.04);">
+  <div class="section-inner">
+    <div class="section-header">
+      <span class="section-label">// Revenue Levers</span>
+      <h2>What This Tool Can Help Sell</h2>
+      <p>These are the kinds of assets that usually move money faster than generic business advice.</p>
+    </div>
+
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon">🎁</div>
+        <div class="feature-title">Better Offers</div>
+        <p class="feature-desc">Improves packaging, value stack, bonuses, and urgency so buyers understand why they should pay now.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🧲</div>
+        <div class="feature-title">Lead Generation</div>
+        <p class="feature-desc">Builds lead magnets and free-to-paid flows that turn visitors into email subscribers and future buyers.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">📈</div>
+        <div class="feature-title">Higher Revenue Per Customer</div>
+        <p class="feature-desc">Designs upsells, recurring plans, and premium versions so one customer is worth more over time.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🤝</div>
+        <div class="feature-title">Client Closing Assets</div>
+        <p class="feature-desc">Creates proposals, outreach copy, and sales language that help close better clients faster.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" style="background:var(--bg-panel);border-top:1px solid rgba(255,255,255,0.04);border-bottom:1px solid rgba(255,255,255,0.04);">
+  <div class="section-inner">
+    <div class="section-header">
+      <span class="section-label">// Fast Presets</span>
+      <h2>Start From a Selling Angle</h2>
+      <p>Load a preset business scenario and adapt the revenue pack instead of starting from a blank form.</p>
+    </div>
+
+    <div class="features-grid">
+      <button class="feature-card" style="text-align:left;border:none;" type="button" onclick="loadRevenuePreset('service')">
+        <div class="feature-icon">🤝</div>
+        <div class="feature-title">Service Closer</div>
+        <p class="feature-desc">Sales page, offer framing, and a higher-value path for a service business.</p>
+        <div class="feature-arrow">Use Preset →</div>
+      </button>
+
+      <button class="feature-card" style="text-align:left;border:none;" type="button" onclick="loadRevenuePreset('digital')">
+        <div class="feature-icon">📦</div>
+        <div class="feature-title">Digital Launch</div>
+        <p class="feature-desc">Lead magnet, tripwire, and upsell logic for a digital product or creator offer.</p>
+        <div class="feature-arrow">Use Preset →</div>
+      </button>
+
+      <button class="feature-card" style="text-align:left;border:none;" type="button" onclick="loadRevenuePreset('local')">
+        <div class="feature-icon">📍</div>
+        <div class="feature-title">Local Offer Boost</div>
+        <p class="feature-desc">Referral and conversion assets for a local business that needs more bookings.</p>
+        <div class="feature-arrow">Use Preset →</div>
+      </button>
+    </div>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="footer-inner">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <div class="footer-brand-name">👑 THE SMART BOSS AI</div>
+        <p class="footer-brand-desc">
+          Revenue AI helps your platform produce sellable assets, not just explanations, so users can move from ideas to cash faster.
+        </p>
+      </div>
+
+      <div class="footer-links">
+        <div class="footer-col">
+          <div class="footer-col-title">Revenue</div>
+          <ul>
+            <li><a href="revenue.html">Revenue AI</a></li>
+            <li><a href="pricing.html">Pricing Strategist</a></li>
+            <li><a href="business.html">Business AI</a></li>
+            <li><a href="resources.html">Business Toolkit</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <div class="footer-col-title">Career</div>
+          <ul>
+            <li><a href="documents.html">Document AI</a></li>
+            <li><a href="resume.html">Resume Builder</a></li>
+            <li><a href="cv.html">CV Creator</a></li>
+            <li><a href="voice.html">Voice AI</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <p class="footer-copy">© 2026 <span>THE SMART BOSS AI</span>. Built to turn ideas into revenue assets.</p>
+    </div>
+  </div>
+</footer>
+
+<div id="toast-container" class="toast-container"></div>
+
+<script src="main.js"></script>
+<script>
+let latestRevenueBuild = null;
+
+function escapeHtml(value) {
+  return String(value || "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
+
+function slugifyFilename(value) {
+  return String(value || "revenue-asset")
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "") || "revenue-asset";
+}
+
+function normalizeRevenueHeading(line) {
+  return String(line || "")
+    .toLowerCase()
+    .replace(/^[\d.\-\s]+/, "")
+    .replace(/[:]+$/, "")
+    .replace(/[^a-z\s/&-]+/g, "")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+function parseRevenueSections(rawText) {
+  const sections = {
+    strategy: [],
+    asset: [],
+    upsell: [],
+    launch: [],
+    next: [],
+  };
+
+  const headingMap = {
+    strategy: ["revenue strategy", "strategy", "monetization strategy"],
+    asset: ["core revenue asset", "ready-to-use revenue asset", "revenue asset", "asset", "sales asset"],
+    upsell: ["upsell path", "upsell plan", "offer upgrade path"],
+    launch: ["launch content", "launch copy", "launch assets"],
+    next: ["best next step", "next step", "execution next step"],
+  };
+
+  let current = "asset";
+  const lines = sanitizeAiText(rawText).replace(/\r/g, "").split("\n");
+
+  for (const rawLine of lines) {
+    const line = rawLine.trim();
+    if (!line) {
+      if (sections[current]?.length && sections[current][sections[current].length - 1] !== "") {
+        sections[current].push("");
+      }
+      continue;
+    }
+
+    const normalized = normalizeRevenueHeading(line);
+    const match = Object.entries(headingMap).find(([, labels]) => labels.includes(normalized));
+
+    if (match) {
+      current = match[0];
+      continue;
+    }
+
+    sections[current].push(line);
+  }
+
+  return Object.fromEntries(
+    Object.entries(sections).map(([key, value]) => [
+      key,
+      value.join("\n").replace(/\n{3,}/g, "\n\n").trim(),
+    ]),
+  );
+}
+
+function formatPaperHtml(text) {
+  const blocks = String(text || "")
+    .split(/\n{2,}/)
+    .map((block) => block.trim())
+    .filter(Boolean);
+
+  if (!blocks.length) {
+    return "<p>No monetization asset was generated yet.</p>";
+  }
+
+  return blocks
+    .map((block) => {
+      const lines = block.split("\n").map((line) => line.trim()).filter(Boolean);
+      const allBullets = lines.length > 1 && lines.every((line) => /^\s*(?:•|-|\+|\d+\.)\s*/.test(line));
+
+      if (allBullets) {
+        return `<ul>${lines.map((line) => `<li>${escapeHtml(line.replace(/^\s*(?:•|-|\+|\d+\.)\s*/, ""))}</li>`).join("")}</ul>`;
+      }
+
+      return `<p>${lines.map((line) => escapeHtml(line)).join("<br>")}</p>`;
+    })
+    .join("");
+}
+
+function applyRevenueTheme(theme) {
+  const paper = document.getElementById("revenue-paper");
+  paper.classList.remove("resume-paper-white", "resume-paper-brown");
+  paper.classList.add(theme === "brown" ? "resume-paper-brown" : "resume-paper-white");
+}
+
+function renderRevenuePaper(data) {
+  return `
+    <div class="document-paper-meta">
+      <div>
+        <div class="document-paper-title">${escapeHtml(data.title)}</div>
+        <div class="document-paper-subtitle">${escapeHtml(data.assetType)} · ${escapeHtml(data.businessModel)}</div>
+      </div>
+      <div class="document-paper-subtitle">${escapeHtml(data.buyer)}</div>
+    </div>
+    <div class="document-paper-body">${formatPaperHtml(data.assetText)}</div>
+  `;
+}
+
+function renderRevenueOutputs(data) {
+  latestRevenueBuild = data;
+  document.getElementById("revenue-paper").innerHTML = renderRevenuePaper(data);
+  document.getElementById("revenue-strategy-content").textContent = data.strategy || "The AI focused mainly on the ready-to-use asset in this build.";
+  document.getElementById("revenue-upsell-content").textContent = data.upsell || "Add a clear next-offer path so each buyer can move into a stronger package or recurring plan.";
+  document.getElementById("revenue-launch-content").textContent = data.launch || "Use a short CTA, one channel, and one proof-backed message to launch this asset quickly.";
+  document.getElementById("revenue-next-step-content").textContent = data.next || "Launch the asset, test it with real buyers, and use Pricing or Business AI to refine it further.";
+  document.getElementById("revenue-raw-content").textContent = data.rawText;
+  document.getElementById("revenue-insights").style.display = "grid";
+  document.getElementById("revenue-raw-box").style.display = "block";
+  applyRevenueTheme(data.paperStyle);
+}
+
+async function ensureHtml2Pdf() {
+  if (window.html2pdf) {
+    return window.html2pdf;
+  }
+
+  await new Promise((resolve, reject) => {
+    const existing = document.querySelector('script[data-html2pdf="true"]');
+    if (existing) {
+      existing.addEventListener("load", resolve, { once: true });
+      existing.addEventListener("error", () => reject(new Error("Could not load PDF export library.")), { once: true });
+      return;
+    }
+
+    const script = document.createElement("script");
+    script.src = "https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js";
+    script.async = true;
+    script.dataset.html2pdf = "true";
+    script.onload = resolve;
+    script.onerror = () => reject(new Error("Could not load PDF export library."));
+    document.head.appendChild(script);
+  });
+
+  return window.html2pdf;
+}
+
+async function downloadRevenuePdf() {
+  if (!latestRevenueBuild) {
+    showToast("Build a revenue asset first", "error");
+    return;
+  }
+
+  try {
+    await downloadElementPdf({
+      element: document.getElementById("revenue-paper"),
+      filename: `${slugifyFilename(latestRevenueBuild.title)}.pdf`,
+    });
+    showToast("PDF downloaded", "success");
+  } catch (error) {
+    showToast(error.message || "Could not export PDF", "error");
+  }
+}
+
+async function downloadRevenueImage() {
+  if (!latestRevenueBuild) {
+    showToast("Build a revenue asset first", "error");
+    return;
+  }
+
+  try {
+    await downloadElementImage({
+      element: document.getElementById("revenue-paper"),
+      filename: `${slugifyFilename(latestRevenueBuild.title)}.png`,
+    });
+    showToast("Image downloaded", "success");
+  } catch (error) {
+    showToast(error.message || "Could not export image", "error");
+  }
+}
+
+function downloadRevenueText() {
+  if (!latestRevenueBuild) {
+    showToast("Build a revenue asset first", "error");
+    return;
+  }
+
+  downloadTextFile(
+    `${slugifyFilename(latestRevenueBuild.title)}.txt`,
+    latestRevenueBuild.rawText,
+  );
+  showToast("Text file downloaded", "success");
+}
+
+function downloadRevenueHtml() {
+  if (!latestRevenueBuild) {
+    showToast("Build a revenue asset first", "error");
+    return;
+  }
+
+  downloadHtmlFile(
+    `${slugifyFilename(latestRevenueBuild.title)}.html`,
+    latestRevenueBuild.title,
+    document.getElementById("revenue-paper").innerHTML,
+  );
+  showToast("HTML file downloaded", "success");
+}
+
+function printRevenuePaper() {
+  if (!latestRevenueBuild) {
+    showToast("Build a revenue asset first", "error");
+    return;
+  }
+
+  window.print();
+}
+
+async function generateRevenueAsset() {
+  const assetPrompt = document.getElementById("revenue-type").value;
+  const businessModel = document.getElementById("revenue-model").value;
+  const name = document.getElementById("revenue-name").value.trim();
+  const buyer = document.getElementById("revenue-buyer").value.trim();
+  const price = document.getElementById("revenue-price").value.trim();
+  const goal = document.getElementById("revenue-goal").value;
+  const channel = document.getElementById("revenue-channel").value.trim();
+  const cta = document.getElementById("revenue-cta").value.trim();
+  const offer = document.getElementById("revenue-offer").value.trim();
+  const pain = document.getElementById("revenue-pain").value.trim();
+  const proof = document.getElementById("revenue-proof").value.trim();
+  const extras = document.getElementById("revenue-extras").value.trim();
+  const title = document.getElementById("revenue-title").value.trim();
+  const paperStyle = document.getElementById("revenue-paper-style").value;
+
+  if (!assetPrompt || !businessModel || !name || !buyer || !offer) {
+    showToast("Please fill in the asset type, business model, name, target buyer, and what you are selling", "error");
+    return;
+  }
+
+  const btn = document.getElementById("revenue-generate-btn");
+  const result = document.getElementById("revenue-result");
+  const raw = document.getElementById("revenue-raw-content");
+
+  btn.disabled = true;
+  btn.innerHTML = '<div class="spinner"></div> Building Revenue Pack...';
+  result.style.display = "block";
+  raw.textContent = "";
+  document.getElementById("revenue-paper").innerHTML = '<div class="resume-paper-placeholder">Generating your monetization asset...</div>';
+  document.getElementById("revenue-insights").style.display = "none";
+  document.getElementById("revenue-raw-box").style.display = "none";
+  applyRevenueTheme(paperStyle);
+
+  try {
+    const message = `Build a money-making revenue asset using the following business details:
+
+Asset request: ${assetPrompt}
+Business model: ${businessModel}
+Brand or offer name: ${name}
+Target buyer: ${buyer}
+Current or planned price: ${price || "not provided"}
+Revenue goal: ${goal}
+Main traffic or sales channel: ${channel || "not provided"}
+Primary CTA destination: ${cta || "not provided"}
+Offer description: ${offer}
+Buyer pain points or desired result: ${pain || "not provided"}
+Credibility or proof: ${proof || "not provided"}
+Bonuses, extras, constraints, or objections: ${extras || "not provided"}
+
+Return the answer using these exact plain text headings only:
+Revenue Strategy:
+Core Revenue Asset:
+Upsell Path:
+Launch Content:
+Best Next Step:
+
+In Core Revenue Asset, give polished copy or structured content the user can use immediately.
+In Launch Content, include concise promotional copy, CTA language, or short launch messaging for the chosen channel.
+Do not use markdown tables.
+Do not use asterisks.
+Focus on conversion, revenue, urgency, clarity, and practical execution.`;
+
+    const finalText = await streamSmartBossResponse({
+      message,
+      mode: "revenue",
+      onToken(fullText) {
+        raw.textContent = sanitizeAiText(fullText);
+      },
+    });
+
+    const sections = parseRevenueSections(finalText);
+    renderRevenueOutputs({
+      title: title || `${name} Revenue Asset`,
+      assetType: document.getElementById("revenue-type").selectedOptions[0]?.textContent || "Revenue asset",
+      businessModel: document.getElementById("revenue-model").selectedOptions[0]?.textContent || businessModel,
+      buyer,
+      paperStyle,
+      strategy: sections.strategy,
+      assetText: sections.asset || sanitizeAiText(finalText),
+      upsell: sections.upsell,
+      launch: sections.launch,
+      next: sections.next,
+      rawText: sanitizeAiText(finalText),
+    });
+
+    result.scrollIntoView({ behavior: "smooth", block: "start" });
+    showToast("Revenue asset ready", "success");
+  } catch (error) {
+    raw.textContent = `Error: ${error.message}`;
+    document.getElementById("revenue-paper").innerHTML = `<div class="resume-paper-placeholder">${escapeHtml(error.message)}</div>`;
+    showToast("Could not build revenue asset", "error");
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = "💰 Build Revenue Pack";
+  }
+}
+
+function fillRevenueExample() {
+  document.getElementById("revenue-type").value = "Write a high-converting sales page with headline, sections, proof prompts, objections, CTA, and closing logic.";
+  document.getElementById("revenue-model").value = "agency or consulting business";
+  document.getElementById("revenue-name").value = "Smart Growth Agency";
+  document.getElementById("revenue-buyer").value = "small business owners who need more leads";
+  document.getElementById("revenue-price").value = "$1,200 setup and $600 monthly";
+  document.getElementById("revenue-goal").value = "raise average order value and close higher-paying buyers";
+  document.getElementById("revenue-channel").value = "Instagram outreach and referrals";
+  document.getElementById("revenue-cta").value = "book a strategy call";
+  document.getElementById("revenue-offer").value = "A done-for-you local lead generation and conversion setup that improves landing pages, follow-up, and ad-to-booking flow.";
+  document.getElementById("revenue-pain").value = "They spend money on marketing but do not get enough qualified leads, follow-up is weak, and their website does not convert.";
+  document.getElementById("revenue-proof").value = "Experience improving conversion funnels, building landing pages, and tightening follow-up systems for service businesses.";
+  document.getElementById("revenue-extras").value = "Include onboarding, a reporting dashboard, a 14-day momentum check, and objections about trust and ROI.";
+  document.getElementById("revenue-title").value = "Smart Growth Agency Sales Page Draft";
+  document.getElementById("revenue-paper-style").value = "white";
+  showToast("Example loaded", "info");
+}
+
+function loadRevenuePreset(type) {
+  const presets = {
+    service: {
+      asset: "Write a high-converting sales page with headline, sections, proof prompts, objections, CTA, and closing logic.",
+      model: "agency or consulting business",
+      name: "Closer Conversion Studio",
+      buyer: "service businesses that want more booked calls",
+      price: "$1,500 setup and $500 monthly optimization",
+      goal: "raise average order value and close higher-paying buyers",
+      channel: "cold outreach and referrals",
+      cta: "book a strategy call",
+      offer: "A done-for-you conversion package that improves landing pages, follow-up systems, and booking flow.",
+      pain: "They get some interest but too many leads disappear before booking or buying.",
+      proof: "Strong experience tightening offers and improving booking conversion for service operators.",
+      extras: "Add a guarantee, onboarding flow, and an upgrade path into monthly optimization.",
+      title: "Service Closer Revenue Pack",
+    },
+    digital: {
+      asset: "Build a lead magnet and free-to-paid funnel that turns traffic into buyers.",
+      model: "digital product business",
+      name: "Creator Launch Vault",
+      buyer: "creators and solo founders who want plug-and-play growth assets",
+      price: "$39 tripwire and $149 core product",
+      goal: "build recurring revenue and stronger retention",
+      channel: "Instagram and email",
+      cta: "download the lead magnet",
+      offer: "A bundle of creator growth templates, launch scripts, and monetization prompts.",
+      pain: "They want faster launches and more sales without hiring a team.",
+      proof: "The offer combines practical templates, launch copy, and monetization systems that save time.",
+      extras: "Include an order bump, membership upsell, and short launch email sequence.",
+      title: "Digital Launch Revenue Pack",
+    },
+    local: {
+      asset: "Build a referral or affiliate promotion angle that encourages happy buyers or partners to bring in more customers.",
+      model: "local business",
+      name: "Neighborhood Smile Dental",
+      buyer: "families and working professionals in the local area",
+      price: "$99 first-visit package",
+      goal: "increase conversions and get more paying customers",
+      channel: "Google Business Profile and local referrals",
+      cta: "claim the new-patient offer",
+      offer: "A first-visit dental package with exam, cleaning, and a small bonus for referred patients.",
+      pain: "People compare options, delay booking, and forget to come back after the first visit.",
+      proof: "Friendly care, modern equipment, and strong local reviews.",
+      extras: "Include a referral reward, reactivation message, and family-plan upgrade angle.",
+      title: "Local Offer Boost Revenue Pack",
+    },
+  };
+
+  const preset = presets[type];
+  if (!preset) return;
+
+  document.getElementById("revenue-type").value = preset.asset;
+  document.getElementById("revenue-model").value = preset.model;
+  document.getElementById("revenue-name").value = preset.name;
+  document.getElementById("revenue-buyer").value = preset.buyer;
+  document.getElementById("revenue-price").value = preset.price;
+  document.getElementById("revenue-goal").value = preset.goal;
+  document.getElementById("revenue-channel").value = preset.channel;
+  document.getElementById("revenue-cta").value = preset.cta;
+  document.getElementById("revenue-offer").value = preset.offer;
+  document.getElementById("revenue-pain").value = preset.pain;
+  document.getElementById("revenue-proof").value = preset.proof;
+  document.getElementById("revenue-extras").value = preset.extras;
+  document.getElementById("revenue-title").value = preset.title;
+  document.getElementById("revenue-paper-style").value = "white";
+
+  window.scrollTo({ top: 0, behavior: "smooth" });
+  showToast("Revenue preset loaded", "info");
+}
+</script>
+</body>
+</html>

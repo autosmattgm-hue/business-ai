@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Office Work AI — THE SMART BOSS AI</title>
+  <meta name="description" content="Create Excel help, PowerPoint outlines, office reports, bank memos, meeting minutes, and workplace documents with Office Work AI.">
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>👑</text></svg>">
+</head>
+<body>
+
+<nav class="nav">
+  <a href="index.html" class="nav-brand">
+    <div class="nav-logo">👑</div>
+    <div class="nav-name">THE SMART BOSS<span>AI Platform</span></div>
+  </a>
+  <ul class="nav-links" id="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="business.html">Business AI</a></li>
+    <li><a href="email.html">Email AI</a></li>
+    <li><a href="office.html">Office AI</a></li>
+    <li><a href="documents.html">Docs AI</a></li>
+    <li><a href="cv.html">CV Creator</a></li>
+  </ul>
+  <button class="nav-menu-btn" id="nav-menu-btn">☰</button>
+</nav>
+
+<div class="page-header">
+  <div class="page-header-content">
+    <span class="section-label">// Office Work AI</span>
+    <h1 style="font-family:var(--font-display);color:var(--text-primary);margin:0.5rem 0 1rem;">
+      Build Better <span class="shimmer-text">Office and Bank Work</span>
+    </h1>
+    <p style="color:var(--text-muted);font-size:0.95rem;">
+      Get help with Excel logic, PowerPoint outlines, Word-ready reports, bank updates,
+      daily office tasks, meeting notes, and professional internal communication.
+    </p>
+  </div>
+</div>
+
+<section class="section" style="padding-top:0;">
+  <div class="section-inner" style="max-width:1000px;">
+    <div class="prompt-form">
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:1.5rem;padding-bottom:1rem;border-bottom:1px solid rgba(255,255,255,0.05);">
+        <span style="font-size:1.6rem;">🏢</span>
+        <div>
+          <div style="font-family:var(--font-display);font-size:1.2rem;color:var(--text-primary);font-weight:600;">Office Builder</div>
+          <div style="font-size:0.8rem;color:var(--text-muted);">Best for Excel, PowerPoint, Word, banking operations, and everyday office tasks</div>
+        </div>
+      </div>
+
+      <div class="form-grid">
+        <div class="form-group">
+          <label class="form-label">Task Type *</label>
+          <select class="form-select" id="office-type">
+            <option value="">Select task...</option>
+            <option value="excel formula or spreadsheet logic helper">Excel formula helper</option>
+            <option value="excel report summary or dashboard commentary">Excel report summary</option>
+            <option value="powerpoint slide outline and speaker notes">PowerPoint outline</option>
+            <option value="word memo, letter, or internal report">Word memo or report</option>
+            <option value="bank reconciliation note or branch operations update">Bank reconciliation or branch update</option>
+            <option value="meeting minutes and action list">Meeting minutes</option>
+            <option value="standard operating procedure or checklist">SOP or checklist</option>
+            <option value="customer complaint, service response, or escalation note">Customer or escalation note</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Tone *</label>
+          <select class="form-select" id="office-tone">
+            <option value="">Select tone...</option>
+            <option value="professional and clear">Professional and clear</option>
+            <option value="formal and structured">Formal and structured</option>
+            <option value="executive and concise">Executive and concise</option>
+            <option value="helpful and practical">Helpful and practical</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-grid">
+        <div class="form-group">
+          <label class="form-label">Role / Department *</label>
+          <input type="text" class="form-input" id="office-role" placeholder="e.g. operations officer, branch admin, accountant, HR assistant">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Audience *</label>
+          <input type="text" class="form-input" id="office-audience" placeholder="e.g. manager, client, branch team, finance head, customers">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Main Goal *</label>
+        <input type="text" class="form-input" id="office-goal" placeholder="e.g. explain branch performance, create slide outline, write a reconciliation note">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Raw Notes / Data / Context *</label>
+        <textarea class="form-textarea" id="office-context" placeholder="Paste the numbers, bullets, task notes, report details, issue summary, or facts the AI should work from." style="min-height:110px;"></textarea>
+      </div>
+
+      <div class="form-grid">
+        <div class="form-group">
+          <label class="form-label">Special Requirements</label>
+          <input type="text" class="form-input" id="office-requirements" placeholder="e.g. include formulas, keep it short, make it bank-ready, give slide titles">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Output Title</label>
+          <input type="text" class="form-input" id="office-title" placeholder="Example: Weekly Branch Operations Update">
+        </div>
+      </div>
+
+      <div style="display:flex;gap:0.75rem;flex-wrap:wrap;">
+        <button class="btn btn-primary" id="office-generate-btn" type="button" onclick="generateOfficeOutput()">🏢 Build Office Output</button>
+        <button class="btn btn-outline btn-sm" type="button" onclick="fillOfficeExample()">📋 Example</button>
+        <a href="email.html" class="btn btn-ghost btn-sm">📧 Open Email AI</a>
+      </div>
+    </div>
+
+    <div id="office-result" style="display:none; margin-top:2rem;">
+      <div class="print-hidden" style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;flex-wrap:wrap;gap:0.75rem;">
+        <div>
+          <h3 style="font-family:var(--font-display);color:var(--gold-primary);">Office Output</h3>
+          <p style="font-size:0.8rem;color:var(--text-muted);margin:0;">Ready-to-use office content, formulas or structure, and extra guidance</p>
+        </div>
+        <div class="resume-actions">
+          <button class="btn btn-ghost btn-sm" type="button" onclick="copyText(document.getElementById('office-raw-content').textContent)">📋 Copy Text</button>
+          <button class="btn btn-outline btn-sm" type="button" onclick="downloadOfficeImage()">🖼️ Download Image</button>
+          <button class="btn btn-outline btn-sm" type="button" onclick="downloadOfficeText()">📝 Download Text</button>
+          <button class="btn btn-outline btn-sm" type="button" onclick="downloadOfficeHtml()">🌐 Download HTML</button>
+          <button class="btn btn-outline btn-sm" type="button" onclick="toggleEditableElement('office-paper', this)">Edit Output</button>
+          <button class="btn btn-primary btn-sm" type="button" onclick="downloadOfficePdf()">📄 Download PDF</button>
+        </div>
+      </div>
+
+      <div class="resume-paper-shell">
+        <div class="resume-paper resume-paper-white" id="office-paper">
+          <div class="resume-paper-placeholder">
+            Your office-ready output will appear here after generation.
+          </div>
+        </div>
+      </div>
+
+      <div class="resume-insights-grid print-hidden" id="office-insights" style="display:none;">
+        <div class="resume-insight-card">
+          <h4>Best Approach</h4>
+          <div class="result-content" id="office-approach-content"></div>
+        </div>
+        <div class="resume-insight-card">
+          <h4>Paste-Ready Formula or Structure</h4>
+          <div class="result-content" id="office-paste-content"></div>
+        </div>
+        <div class="resume-insight-card">
+          <h4>Final Tips</h4>
+          <div class="result-content" id="office-tips-content"></div>
+        </div>
+        <div class="resume-insight-card">
+          <h4>Best Next Step</h4>
+          <div class="result-content" id="office-next-content"></div>
+        </div>
+      </div>
+
+      <div class="result-box print-hidden" id="office-raw-box">
+        <div class="result-box-header">
+          <div class="result-box-label">Raw AI Output</div>
+        </div>
+        <div class="result-content" id="office-raw-content"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" style="background:var(--bg-panel);border-top:1px solid rgba(255,255,255,0.04);">
+  <div class="section-inner">
+    <div class="section-header">
+      <span class="section-label">// Daily Use</span>
+      <h2>Made for Real Job Tasks</h2>
+      <p>Use it to move faster in admin, banking, operations, support, finance, reporting, and office coordination work.</p>
+    </div>
+
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon">📊</div>
+        <div class="feature-title">Excel and Reporting</div>
+        <p class="feature-desc">Generate formulas, report commentary, and spreadsheet-ready explanations from raw notes or numbers.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">📽️</div>
+        <div class="feature-title">PowerPoint Support</div>
+        <p class="feature-desc">Turn a rough idea into slide titles, talking points, and a stronger presentation flow.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🏦</div>
+        <div class="feature-title">Bank and Office Operations</div>
+        <p class="feature-desc">Draft branch updates, reconciliations, issue notes, and internal workplace communication with clearer structure.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="footer-inner">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <div class="footer-brand-name">👑 THE SMART BOSS AI</div>
+        <p class="footer-brand-desc">
+          Office Work AI helps you turn rough office tasks into cleaner, faster, more professional output.
+        </p>
+      </div>
+
+      <div class="footer-links">
+        <div class="footer-col">
+          <div class="footer-col-title">Office</div>
+          <ul>
+            <li><a href="office.html">Office Work AI</a></li>
+            <li><a href="email.html">Email Writer AI</a></li>
+            <li><a href="documents.html">Document AI</a></li>
+            <li><a href="revenue.html">Revenue AI</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <div class="footer-col-title">Career</div>
+          <ul>
+            <li><a href="resume.html">Resume Builder</a></li>
+            <li><a href="cv.html">CV Creator</a></li>
+            <li><a href="voice.html">Voice AI</a></li>
+            <li><a href="settings.html">Settings</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <p class="footer-copy">© 2026 <span>THE SMART BOSS AI</span>. Built for practical office output.</p>
+    </div>
+  </div>
+</footer>
+
+<div id="toast-container" class="toast-container"></div>
+
+<script src="main.js"></script>
+<script>
+let latestOfficeBuild = null;
+
+function escapeHtml(value) {
+  return String(value || "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
+
+function normalizeOfficeHeading(line) {
+  return String(line || "")
+    .toLowerCase()
+    .replace(/^[\d.\-\s]+/, "")
+    .replace(/[:]+$/, "")
+    .replace(/[^a-z\s/-]+/g, "")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+function parseOfficeSections(rawText) {
+  const sections = {
+    approach: [],
+    output: [],
+    paste: [],
+    tips: [],
+    next: [],
+  };
+
+  const headingMap = {
+    approach: ["best approach", "approach"],
+    output: ["ready-to-use office output", "ready to use office output", "office output"],
+    paste: ["paste-ready formula or structure", "paste ready formula or structure", "formula or structure"],
+    tips: ["final tips", "tips"],
+    next: ["best next step", "next step"],
+  };
+
+  let current = "output";
+  const lines = sanitizeAiText(rawText).replace(/\r/g, "").split("\n");
+
+  for (const rawLine of lines) {
+    const line = rawLine.trim();
+    if (!line) {
+      if (sections[current]?.length && sections[current][sections[current].length - 1] !== "") {
+        sections[current].push("");
+      }
+      continue;
+    }
+
+    const normalized = normalizeOfficeHeading(line);
+    const match = Object.entries(headingMap).find(([, labels]) => labels.includes(normalized));
+
+    if (match) {
+      current = match[0];
+      continue;
+    }
+
+    sections[current].push(line);
+  }
+
+  return Object.fromEntries(
+    Object.entries(sections).map(([key, value]) => [
+      key,
+      value.join("\n").replace(/\n{3,}/g, "\n\n").trim(),
+    ]),
+  );
+}
+
+function formatOfficeBodyHtml(text) {
+  const blocks = String(text || "")
+    .split(/\n{2,}/)
+    .map((block) => block.trim())
+    .filter(Boolean);
+
+  if (!blocks.length) {
+    return "<p>No office output was generated yet.</p>";
+  }
+
+  return blocks.map((block) => {
+    const lines = block.split("\n").map((line) => line.trim()).filter(Boolean);
+    const allBullets = lines.length > 1 && lines.every((line) => /^\s*(?:•|-|\+|\d+\.)\s*/.test(line));
+
+    if (allBullets) {
+      return `<ul>${lines.map((line) => `<li>${escapeHtml(line.replace(/^\s*(?:•|-|\+|\d+\.)\s*/, ""))}</li>`).join("")}</ul>`;
+    }
+
+    return `<p>${lines.map((line) => escapeHtml(line)).join("<br>")}</p>`;
+  }).join("");
+}
+
+function renderOfficePaper(data) {
+  return `
+    <div class="document-paper-meta">
+      <div>
+        <div class="document-paper-title">${escapeHtml(data.title)}</div>
+        <div class="document-paper-subtitle">${escapeHtml(data.taskType)} · ${escapeHtml(data.tone)}</div>
+      </div>
+      <div class="document-paper-subtitle">${escapeHtml(data.audience)}</div>
+    </div>
+    <div class="document-paper-body">${formatOfficeBodyHtml(data.outputText)}</div>
+  `;
+}
+
+function renderOfficeOutput(data) {
+  latestOfficeBuild = data;
+  document.getElementById("office-paper").innerHTML = renderOfficePaper(data);
+  document.getElementById("office-approach-content").textContent = data.approach || "The AI focused mainly on the finished office output.";
+  document.getElementById("office-paste-content").textContent = data.paste || "No extra formula or structure block was separated in this draft.";
+  document.getElementById("office-tips-content").textContent = data.tips || "Review the output, adjust names or numbers, and paste it into your office file.";
+  document.getElementById("office-next-content").textContent = data.next || "Paste the output into your workbook, memo, or slides and tailor it to the exact task.";
+  document.getElementById("office-raw-content").textContent = data.rawText;
+  document.getElementById("office-insights").style.display = "grid";
+  document.getElementById("office-raw-box").style.display = "block";
+}
+
+async function downloadOfficePdf() {
+  if (!latestOfficeBuild) {
+    showToast("Build office output first", "error");
+    return;
+  }
+
+  try {
+    await downloadElementPdf({
+      element: document.getElementById("office-paper"),
+      filename: `${slugifyDownloadName(latestOfficeBuild.title, "office-output")}.pdf`,
+    });
+    showToast("PDF downloaded", "success");
+  } catch (error) {
+    showToast(error.message || "Could not export PDF", "error");
+  }
+}
+
+async function downloadOfficeImage() {
+  if (!latestOfficeBuild) {
+    showToast("Build office output first", "error");
+    return;
+  }
+
+  try {
+    await downloadElementImage({
+      element: document.getElementById("office-paper"),
+      filename: `${slugifyDownloadName(latestOfficeBuild.title, "office-output")}.png`,
+    });
+    showToast("Image downloaded", "success");
+  } catch (error) {
+    showToast(error.message || "Could not export image", "error");
+  }
+}
+
+function downloadOfficeText() {
+  if (!latestOfficeBuild) {
+    showToast("Build office output first", "error");
+    return;
+  }
+
+  downloadTextFile(
+    `${slugifyDownloadName(latestOfficeBuild.title, "office-output")}.txt`,
+    latestOfficeBuild.rawText,
+  );
+  showToast("Text file downloaded", "success");
+}
+
+function downloadOfficeHtml() {
+  if (!latestOfficeBuild) {
+    showToast("Build office output first", "error");
+    return;
+  }
+
+  downloadHtmlFile(
+    `${slugifyDownloadName(latestOfficeBuild.title, "office-output")}.html`,
+    latestOfficeBuild.title,
+    document.getElementById("office-paper").innerHTML,
+  );
+  showToast("HTML file downloaded", "success");
+}
+
+async function generateOfficeOutput() {
+  const taskType = document.getElementById("office-type").value;
+  const tone = document.getElementById("office-tone").value;
+  const role = document.getElementById("office-role").value.trim();
+  const audience = document.getElementById("office-audience").value.trim();
+  const goal = document.getElementById("office-goal").value.trim();
+  const context = document.getElementById("office-context").value.trim();
+  const requirements = document.getElementById("office-requirements").value.trim();
+  const title = document.getElementById("office-title").value.trim();
+
+  if (!taskType || !tone || !role || !audience || !goal || !context) {
+    showToast("Please fill in the task type, tone, role, audience, goal, and context", "error");
+    return;
+  }
+
+  const btn = document.getElementById("office-generate-btn");
+  const result = document.getElementById("office-result");
+  const raw = document.getElementById("office-raw-content");
+
+  btn.disabled = true;
+  btn.innerHTML = '<div class="spinner"></div> Building Office Output...';
+  result.style.display = "block";
+  raw.textContent = "";
+  document.getElementById("office-paper").innerHTML = '<div class="resume-paper-placeholder">Generating your office-ready output...</div>';
+  document.getElementById("office-insights").style.display = "none";
+  document.getElementById("office-raw-box").style.display = "none";
+
+  try {
+    const message = `Create office-ready work output using these details:
+
+Task type: ${taskType}
+Tone: ${tone}
+Role or department: ${role}
+Audience: ${audience}
+Main goal: ${goal}
+Raw notes or context: ${context}
+Special requirements: ${requirements || "none"}
+
+Return the answer using these exact plain text headings only:
+Best Approach:
+Ready-To-Use Office Output:
+Paste-Ready Formula or Structure:
+Final Tips:
+Best Next Step:
+
+Inside Ready-To-Use Office Output, give polished content ready to paste into Word, Excel notes, PowerPoint slides, or an internal workplace document.
+If the task is formula-related, include the clearest formula version in Paste-Ready Formula or Structure.
+Do not use markdown tables.
+Do not use asterisks.`;
+
+    const finalText = await streamSmartBossResponse({
+      message,
+      mode: "office",
+      onToken(fullText) {
+        raw.textContent = sanitizeAiText(fullText);
+      },
+    });
+
+    const sections = parseOfficeSections(finalText);
+    renderOfficeOutput({
+      title: title || `${audience} Office Output`,
+      taskType: document.getElementById("office-type").selectedOptions[0]?.textContent || "Office output",
+      tone,
+      audience,
+      approach: sections.approach,
+      outputText: sections.output || sanitizeAiText(finalText),
+      paste: sections.paste,
+      tips: sections.tips,
+      next: sections.next,
+      rawText: sanitizeAiText(finalText),
+    });
+
+    result.scrollIntoView({ behavior: "smooth", block: "start" });
+    showToast("Office output ready", "success");
+  } catch (error) {
+    raw.textContent = `Error: ${error.message}`;
+    document.getElementById("office-paper").innerHTML = `<div class="resume-paper-placeholder">${escapeHtml(error.message)}</div>`;
+    showToast("Could not build office output", "error");
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = "🏢 Build Office Output";
+  }
+}
+
+function fillOfficeExample() {
+  document.getElementById("office-type").value = "bank reconciliation note or branch operations update";
+  document.getElementById("office-tone").value = "executive and concise";
+  document.getElementById("office-role").value = "branch operations officer";
+  document.getElementById("office-audience").value = "branch manager and regional operations lead";
+  document.getElementById("office-goal").value = "summarize cash shortage investigation and explain next actions";
+  document.getElementById("office-context").value = "Cash count showed a shortage of $320 at close. CCTV review is pending. Teller balancing sheets were checked. No customer complaint has been reported. Need a professional internal update with next actions and control steps for tomorrow morning.";
+  document.getElementById("office-requirements").value = "Keep it formal, clear, and suitable for a bank operations report.";
+  document.getElementById("office-title").value = "Branch Cash Shortage Update";
+  showToast("Example loaded", "info");
+}
+</script>
+</body>
+</html>

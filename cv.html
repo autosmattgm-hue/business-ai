@@ -1,0 +1,956 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI CV Creator — THE SMART BOSS AI</title>
+  <meta name="description" content="Create a polished professional CV with paper-style layout, stronger career sections, and PDF export.">
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>👑</text></svg>">
+</head>
+<body>
+
+<nav class="nav">
+  <a href="index.html" class="nav-brand">
+    <div class="nav-logo">👑</div>
+    <div class="nav-name">THE SMART BOSS<span>AI Platform</span></div>
+  </a>
+  <ul class="nav-links" id="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="business.html">Business AI</a></li>
+    <li><a href="documents.html">Docs AI</a></li>
+    <li><a href="resume.html">Resume</a></li>
+    <li><a href="cv.html">CV Creator</a></li>
+    <li><a href="voice.html">Voice AI</a></li>
+  </ul>
+  <button class="nav-menu-btn" id="nav-menu-btn">☰</button>
+</nav>
+
+<div class="page-header">
+  <div class="page-header-content">
+    <span class="section-label">// AI CV Creator</span>
+    <h1 style="font-family:var(--font-display);color:var(--text-primary);margin:0.5rem 0 1rem;">
+      Build a <span class="shimmer-text">Professional CV</span>
+    </h1>
+    <p style="color:var(--text-muted);font-size:0.95rem;">
+      Create a more detailed curriculum vitae with paper styling, stronger section writing,
+      and a polished PDF-ready export.
+    </p>
+  </div>
+</div>
+
+<section class="section" style="padding-top:0;">
+  <div class="section-inner" style="max-width:1000px;">
+    <div class="prompt-form">
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:1.5rem;padding-bottom:1rem;border-bottom:1px solid rgba(255,255,255,0.05);">
+        <span style="font-size:1.6rem;">📘</span>
+        <div>
+          <div style="font-family:var(--font-display);font-size:1.2rem;color:var(--text-primary);font-weight:600;">CV Creator</div>
+          <div style="font-size:0.8rem;color:var(--text-muted);">Best for fuller career histories, detailed profiles, international applications, and professional dossiers</div>
+        </div>
+      </div>
+
+      <div class="form-grid">
+        <div class="form-group">
+          <label class="form-label">Full Name *</label>
+          <input type="text" class="form-input" id="cv-name" placeholder="Your full name">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Target Role or Professional Title *</label>
+          <input type="text" class="form-input" id="cv-role" placeholder="e.g. Operations Manager, Lecturer, Product Designer">
+        </div>
+      </div>
+
+      <div class="form-grid">
+        <div class="form-group">
+          <label class="form-label">Email</label>
+          <input type="email" class="form-input" id="cv-email" placeholder="you@example.com">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Phone</label>
+          <input type="text" class="form-input" id="cv-phone" placeholder="+1 555 555 5555">
+        </div>
+      </div>
+
+      <div class="form-grid">
+        <div class="form-group">
+          <label class="form-label">Location</label>
+          <input type="text" class="form-input" id="cv-location" placeholder="City, State or Country">
+        </div>
+        <div class="form-group">
+          <label class="form-label">LinkedIn / Portfolio</label>
+          <input type="text" class="form-input" id="cv-link" placeholder="linkedin.com/in/yourname or portfolio website">
+        </div>
+      </div>
+
+      <div class="form-grid">
+        <div class="form-group">
+          <label class="form-label">Experience Level *</label>
+          <select class="form-select" id="cv-level">
+            <option value="">Select level...</option>
+            <option value="entry-level">Entry-level</option>
+            <option value="junior-level">Junior-level</option>
+            <option value="mid-level">Mid-level</option>
+            <option value="senior-level">Senior-level</option>
+            <option value="executive-level">Executive-level</option>
+            <option value="academic or research profile">Academic or research profile</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Paper Style</label>
+          <select class="form-select" id="cv-paper-style">
+            <option value="white">White paper</option>
+            <option value="brown">Brown paper</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Optional Existing CV or Resume Upload</label>
+        <input type="file" class="form-input" id="cv-file" accept=".pdf,.doc,.docx,.txt,.md,.rtf">
+      </div>
+
+      <div id="cv-file-info" style="display:none;margin-bottom:1rem;padding:1rem 1.25rem;background:var(--bg-deep);border:1px solid var(--gold-border);border-radius:var(--radius-md);">
+        <div style="font-size:0.78rem;font-weight:600;color:var(--gold-primary);letter-spacing:0.12em;text-transform:uppercase;font-family:var(--font-mono);margin-bottom:0.4rem;">Loaded Source File</div>
+        <div id="cv-file-meta" style="font-size:0.85rem;color:var(--text-secondary);"></div>
+      </div>
+
+      <div class="tool-assistant-card">
+        <div class="tool-assistant-label">Guided Voice Interview</div>
+        <div class="tool-assistant-question" id="cv-interview-question">Click start and the page will guide the CV questions one by one.</div>
+        <div class="tool-assistant-status" id="cv-interview-status">You can answer by voice or type in the highlighted field, then move to the next question.</div>
+        <div class="tool-assistant-actions">
+          <button class="btn btn-primary btn-sm" type="button" id="cv-interview-start-btn" onclick="startCvInterview()">🎤 Start Interview</button>
+          <button class="btn btn-outline btn-sm" type="button" id="cv-interview-answer-btn" onclick="toggleCvInterviewAnswer()">🗣️ Voice Answer</button>
+          <button class="btn btn-ghost btn-sm" type="button" onclick="speakCvQuestion()">🔊 Repeat Question</button>
+          <button class="btn btn-ghost btn-sm" type="button" onclick="nextCvInterviewQuestion()">➡️ Next Question</button>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Professional Profile / Background</label>
+        <textarea class="form-textarea" id="cv-profile" placeholder="Describe your professional background, years of experience, industries, strengths, and the type of work you are known for." style="min-height:100px;"></textarea>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Professional Experience</label>
+        <textarea class="form-textarea" id="cv-experience" placeholder="List your positions, employers, periods, responsibilities, achievements, and measurable outcomes. Separate major roles with blank lines if possible." style="min-height:120px;"></textarea>
+      </div>
+
+      <div class="form-grid">
+        <div class="form-group">
+          <label class="form-label">Core Competencies / Skills</label>
+          <textarea class="form-textarea" id="cv-skills" placeholder="e.g. operations leadership, stakeholder management, budgeting, training, research, curriculum design" style="min-height:100px;"></textarea>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Education</label>
+          <textarea class="form-textarea" id="cv-education" placeholder="Degrees, institutions, years, distinctions, and relevant training." style="min-height:100px;"></textarea>
+        </div>
+      </div>
+
+      <div class="form-grid">
+        <div class="form-group">
+          <label class="form-label">Certifications / Training</label>
+          <textarea class="form-textarea" id="cv-certifications" placeholder="Certificates, licenses, technical training, professional development." style="min-height:90px;"></textarea>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Projects / Achievements</label>
+          <textarea class="form-textarea" id="cv-projects" placeholder="Major projects, awards, publications, grants, impact highlights, special accomplishments." style="min-height:90px;"></textarea>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Leadership, Service, or Additional Information</label>
+        <textarea class="form-textarea" id="cv-extra" placeholder="Volunteer work, leadership roles, affiliations, languages, conferences, service, or anything else worth including." style="min-height:90px;"></textarea>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Extra Instructions</label>
+        <textarea class="form-textarea" id="cv-notes" placeholder="Example: make it stronger for international jobs, keep it elegant, focus on leadership, make it suitable for teaching roles, highlight operational impact." style="min-height:90px;"></textarea>
+      </div>
+
+      <div style="display:flex;gap:0.75rem;flex-wrap:wrap;">
+        <button class="btn btn-primary" id="cv-generate-btn" type="button" onclick="generateCv()">📘 Build CV</button>
+        <button class="btn btn-outline btn-sm" type="button" onclick="fillCvExample()">📋 Example</button>
+        <a href="resume.html" class="btn btn-ghost btn-sm">🧾 Resume Builder</a>
+      </div>
+    </div>
+
+    <div id="cv-result" style="display:none; margin-top:2rem;">
+      <div class="print-hidden" style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;flex-wrap:wrap;gap:0.75rem;">
+        <div>
+          <h3 style="font-family:var(--font-display);color:var(--gold-primary);">CV Output</h3>
+          <p style="font-size:0.8rem;color:var(--text-muted);margin:0;">Detailed CV preview, PDF export, and improvement notes</p>
+        </div>
+        <div class="resume-actions">
+          <button class="btn btn-ghost btn-sm" type="button" onclick="copyText(document.getElementById('cv-raw-content').textContent)">📋 Copy Text</button>
+          <button class="btn btn-outline btn-sm" type="button" onclick="printCvPaper()">🖨️ Print</button>
+          <button class="btn btn-outline btn-sm" type="button" onclick="downloadCvImage()">🖼️ Download Image</button>
+          <button class="btn btn-outline btn-sm" type="button" onclick="downloadCvText()">📝 Download Text</button>
+          <button class="btn btn-outline btn-sm" type="button" onclick="downloadCvHtml()">🌐 Download HTML</button>
+          <button class="btn btn-outline btn-sm" type="button" onclick="toggleEditableElement('cv-paper', this)">Edit Output</button>
+          <button class="btn btn-primary btn-sm" type="button" onclick="downloadCvPdf()">📄 Download PDF</button>
+        </div>
+      </div>
+
+      <div class="resume-paper-shell" id="cv-paper-shell">
+        <div class="resume-paper resume-paper-white" id="cv-paper">
+          <div class="resume-paper-placeholder">
+            Your detailed CV paper will appear here after generation.
+          </div>
+        </div>
+      </div>
+
+      <div class="resume-insights-grid print-hidden" id="cv-insights" style="display:none;">
+        <div class="resume-insight-card">
+          <h4>Profile Notes</h4>
+          <div class="result-content" id="cv-profile-notes-content"></div>
+        </div>
+        <div class="resume-insight-card">
+          <h4>Final CV Advice</h4>
+          <div class="result-content" id="cv-advice-content"></div>
+        </div>
+      </div>
+
+      <div class="result-box print-hidden" id="cv-raw-box">
+        <div class="result-box-header">
+          <div class="result-box-label">Raw AI CV Text</div>
+        </div>
+        <div class="result-content" id="cv-raw-content"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" style="background:var(--bg-panel);border-top:1px solid rgba(255,255,255,0.04);">
+  <div class="section-inner">
+    <div class="section-header">
+      <span class="section-label">// CV Strength</span>
+      <h2>What Makes This Different</h2>
+      <p>The CV Creator is built for fuller career storytelling than a short resume.</p>
+    </div>
+
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon">📚</div>
+        <div class="feature-title">More Detail</div>
+        <p class="feature-desc">Expands your experience into a fuller professional document with more room for depth.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🏆</div>
+        <div class="feature-title">Achievements and Projects</div>
+        <p class="feature-desc">Gives more space for awards, projects, training, publications, and major accomplishments.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">📄</div>
+        <div class="feature-title">Paper and PDF Ready</div>
+        <p class="feature-desc">Lets you preview the CV like a real document and save it as a clean PDF.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="footer-inner">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <div class="footer-brand-name">👑 THE SMART BOSS AI</div>
+        <p class="footer-brand-desc">
+          Use Resume Builder for shorter ATS-focused applications and the CV Creator when you need a fuller professional document.
+        </p>
+      </div>
+
+      <div class="footer-links">
+        <div class="footer-col">
+          <div class="footer-col-title">Career Tools</div>
+          <ul>
+            <li><a href="documents.html">Document AI</a></li>
+            <li><a href="resume.html">Resume Builder</a></li>
+            <li><a href="cv.html">CV Creator</a></li>
+            <li><a href="voice.html">Voice AI</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <div class="footer-col-title">Core</div>
+          <ul>
+            <li><a href="business.html">Business AI</a></li>
+            <li><a href="resources.html">Business Toolkit</a></li>
+            <li><a href="presentation.html">Pitch Coach</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <p class="footer-copy">© 2026 <span>THE SMART BOSS AI</span>. Fuller CVs, stronger professional presence.</p>
+    </div>
+  </div>
+</footer>
+
+<div id="toast-container" class="toast-container"></div>
+
+<script src="main.js"></script>
+<script>
+let latestCvBuild = null;
+const CV_INTERVIEW_STEPS = [
+  { fieldId: "cv-name", question: "What is your full name?" },
+  { fieldId: "cv-role", question: "What professional title or role are you targeting?" },
+  { fieldId: "cv-email", question: "What email should appear on the CV?" },
+  { fieldId: "cv-phone", question: "What phone number should appear on the CV?" },
+  { fieldId: "cv-location", question: "What location should appear on the CV?" },
+  { fieldId: "cv-link", question: "Do you want to include LinkedIn or a portfolio link?" },
+  { fieldId: "cv-level", question: "What experience level best describes your profile?" },
+  { fieldId: "cv-profile", question: "Describe your professional profile and background." },
+  { fieldId: "cv-experience", question: "What professional experience should be included?" },
+  { fieldId: "cv-skills", question: "What core competencies or skills should be highlighted?" },
+  { fieldId: "cv-education", question: "What education details should be included?" },
+  { fieldId: "cv-certifications", question: "What certifications or training should be included?" },
+  { fieldId: "cv-projects", question: "What projects or achievements should be included?" },
+  { fieldId: "cv-extra", question: "What leadership, service, language, or additional information should be included?" },
+  { fieldId: "cv-notes", question: "Any extra instructions for the final CV style or target role?" },
+];
+const cvInterviewState = {
+  index: -1,
+  session: null,
+  listening: false,
+};
+
+function getCvInterviewStep() {
+  return CV_INTERVIEW_STEPS[cvInterviewState.index] || null;
+}
+
+function highlightCvInterviewField(fieldId) {
+  CV_INTERVIEW_STEPS.forEach((step) => {
+    const field = document.getElementById(step.fieldId);
+    if (field) {
+      field.style.boxShadow = step.fieldId === fieldId ? "0 0 0 3px rgba(201,168,76,0.16)" : "";
+      field.style.borderColor = step.fieldId === fieldId ? "var(--gold-primary)" : "";
+    }
+  });
+}
+
+function updateCvInterviewUi() {
+  const questionEl = document.getElementById("cv-interview-question");
+  const statusEl = document.getElementById("cv-interview-status");
+  const step = getCvInterviewStep();
+
+  if (!step) {
+    questionEl.textContent = "Click start and the page will guide the CV questions one by one.";
+    statusEl.textContent = "You can answer by voice or type in the highlighted field, then move to the next question.";
+    highlightCvInterviewField(null);
+    return;
+  }
+
+  questionEl.textContent = step.question;
+  statusEl.textContent = `Question ${cvInterviewState.index + 1} of ${CV_INTERVIEW_STEPS.length}. Answer by voice or type directly into the highlighted field.`;
+  highlightCvInterviewField(step.fieldId);
+
+  const field = document.getElementById(step.fieldId);
+  if (field) {
+    field.focus();
+    field.scrollIntoView({ behavior: "smooth", block: "center" });
+  }
+}
+
+function speakCvQuestion() {
+  const step = getCvInterviewStep();
+  if (!step) return;
+
+  try {
+    speakText(step.question);
+  } catch (error) {
+    showToast(error.message, "error");
+  }
+}
+
+function startCvInterview() {
+  cvInterviewState.index = 0;
+  updateCvInterviewUi();
+  speakCvQuestion();
+}
+
+function nextCvInterviewQuestion() {
+  if (cvInterviewState.listening && cvInterviewState.session) {
+    cvInterviewState.session.stop();
+    return;
+  }
+
+  if (cvInterviewState.index < 0) {
+    startCvInterview();
+    return;
+  }
+
+  cvInterviewState.index += 1;
+  if (cvInterviewState.index >= CV_INTERVIEW_STEPS.length) {
+    cvInterviewState.index = -1;
+    updateCvInterviewUi();
+    showToast("CV interview complete. You can generate now or refine any answers.", "success");
+    return;
+  }
+
+  updateCvInterviewUi();
+  speakCvQuestion();
+}
+
+function toggleCvInterviewAnswer() {
+  const answerBtn = document.getElementById("cv-interview-answer-btn");
+  const step = getCvInterviewStep();
+  if (!step) {
+    startCvInterview();
+    return;
+  }
+
+  const field = document.getElementById(step.fieldId);
+  if (!field) return;
+
+  if (field.tagName === "SELECT") {
+    showToast("Choose this answer from the dropdown, then move to the next question.", "info");
+    field.focus();
+    return;
+  }
+
+  if (cvInterviewState.listening && cvInterviewState.session) {
+    cvInterviewState.session.stop();
+    return;
+  }
+
+  try {
+    cvInterviewState.session = createDictationSession({
+      textarea: field,
+      onStart: () => {
+        cvInterviewState.listening = true;
+        answerBtn.textContent = "⏹️ Stop Voice";
+        showToast("Voice answer started", "info");
+      },
+      onStop: () => {
+        cvInterviewState.listening = false;
+        answerBtn.textContent = "🗣️ Voice Answer";
+      },
+      onError: (error) => {
+        cvInterviewState.listening = false;
+        answerBtn.textContent = "🗣️ Voice Answer";
+        showToast(`Voice input error: ${error}`, "error");
+      },
+    });
+    cvInterviewState.session.start();
+  } catch (error) {
+    showToast(error.message, "error");
+  }
+}
+
+function escapeHtml(value) {
+  return String(value || "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
+
+function slugifyFilename(value) {
+  return String(value || "cv")
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "") || "cv";
+}
+
+function stripBulletPrefix(line) {
+  return String(line || "").replace(/^\s*(?:•|-|\+|\d+\.)\s*/, "").trim();
+}
+
+function normalizeSectionHeading(line) {
+  return String(line || "")
+    .toLowerCase()
+    .replace(/^[\d.\-\s]+/, "")
+    .replace(/[:]+$/, "")
+    .replace(/[^a-z\s/&,-]+/g, "")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+function parseListItems(text) {
+  const clean = String(text || "").trim();
+  if (!clean) return [];
+
+  const newlineItems = clean.split("\n").map((line) => stripBulletPrefix(line)).filter(Boolean);
+  if (newlineItems.length > 1) {
+    return newlineItems;
+  }
+
+  return clean.split(/[,;|]/).map((item) => item.trim()).filter(Boolean);
+}
+
+function parseEntries(text) {
+  const clean = String(text || "").trim();
+  if (!clean) return [];
+
+  const blocks = clean.split(/\n{2,}/).map((block) => block.trim()).filter(Boolean);
+  const sourceBlocks = blocks.length ? blocks : [clean];
+
+  return sourceBlocks.map((block) => {
+    const lines = block.split("\n").map((line) => line.trim()).filter(Boolean);
+    const bulletLines = lines.filter((line) => /^\s*(?:•|-|\+|\d+\.)\s*/.test(line));
+    const plainLines = lines.filter((line) => !/^\s*(?:•|-|\+|\d+\.)\s*/.test(line));
+    const title = plainLines[0] || "Entry";
+    const meta = plainLines.length > 1 ? plainLines[1] : "";
+    const details = bulletLines.length
+      ? bulletLines.map((line) => stripBulletPrefix(line))
+      : plainLines.slice(2).length
+        ? plainLines.slice(2)
+        : plainLines.slice(1);
+
+    return { title, meta, details: details.filter(Boolean) };
+  });
+}
+
+function parseCvSections(rawText) {
+  const headingMap = {
+    profile: ["professional profile", "profile", "professional summary"],
+    competencies: ["core competencies", "competencies", "skills"],
+    experience: ["professional experience", "experience", "work experience"],
+    education: ["education"],
+    certifications: ["certifications and training", "certifications", "training"],
+    projects: ["projects and achievements", "projects", "achievements"],
+    extra: ["leadership, service, or additional information", "leadership service or additional information", "additional information", "leadership", "service"],
+    advice: ["final cv advice", "cv advice", "final advice"],
+  };
+
+  const sections = {
+    profile: [],
+    competencies: [],
+    experience: [],
+    education: [],
+    certifications: [],
+    projects: [],
+    extra: [],
+    advice: [],
+  };
+
+  let current = "profile";
+  const lines = sanitizeAiText(rawText).replace(/\r/g, "").split("\n");
+
+  for (const rawLine of lines) {
+    const line = rawLine.trim();
+    if (!line) {
+      if (sections[current]?.length && sections[current][sections[current].length - 1] !== "") {
+        sections[current].push("");
+      }
+      continue;
+    }
+
+    const normalized = normalizeSectionHeading(line);
+    const match = Object.entries(headingMap).find(([, labels]) => labels.includes(normalized));
+    if (match) {
+      current = match[0];
+      continue;
+    }
+
+    sections[current].push(line);
+  }
+
+  return Object.fromEntries(
+    Object.entries(sections).map(([key, value]) => [
+      key,
+      value.join("\n").replace(/\n{3,}/g, "\n\n").trim(),
+    ]),
+  );
+}
+
+function renderContact(data) {
+  const items = [
+    data.email ? { label: "Email", value: data.email } : null,
+    data.phone ? { label: "Phone", value: data.phone } : null,
+    data.location ? { label: "Location", value: data.location } : null,
+    data.link ? { label: "Link", value: data.link } : null,
+  ].filter(Boolean);
+
+  if (!items.length) {
+    return '<div class="resume-paper-contact-item"><span class="resume-paper-contact-label">Tip</span><span>Add contact details above for a complete CV header.</span></div>';
+  }
+
+  return items.map((item) => `
+    <div class="resume-paper-contact-item">
+      <span class="resume-paper-contact-label">${escapeHtml(item.label)}</span>
+      <span>${escapeHtml(item.value)}</span>
+    </div>
+  `).join("");
+}
+
+function renderSectionList(items, fallback) {
+  const list = items.length ? items : [fallback];
+  return list.map((item) => `<li>${escapeHtml(item)}</li>`).join("");
+}
+
+function renderEntries(entries, fallback) {
+  if (!entries.length) {
+    return `<div class="resume-paper-entry"><div class="resume-paper-entry-body">${escapeHtml(fallback)}</div></div>`;
+  }
+
+  return entries.map((entry) => `
+    <div class="resume-paper-entry">
+      <div class="resume-paper-entry-header">
+        <div class="resume-paper-entry-title">${escapeHtml(entry.title)}</div>
+        <div class="resume-paper-entry-meta">${escapeHtml(entry.meta)}</div>
+      </div>
+      <ul class="resume-paper-bullets">
+        ${renderSectionList(entry.details, "Add more detail to strengthen this entry.")}
+      </ul>
+    </div>
+  `).join("");
+}
+
+function renderCvPaper(data) {
+  return `
+    <div class="resume-paper-header">
+      <div>
+        <div class="resume-paper-name">${escapeHtml(data.name)}</div>
+        <div class="resume-paper-role">${escapeHtml(data.role)}</div>
+      </div>
+      <div class="resume-paper-contact">
+        ${renderContact(data)}
+      </div>
+    </div>
+
+    <section class="resume-paper-section">
+      <div class="resume-paper-section-title">Professional Profile</div>
+      <div class="resume-paper-summary">${escapeHtml(data.profile || "Add background details above and generate again for a stronger profile.")}</div>
+    </section>
+
+    <section class="resume-paper-section">
+      <div class="resume-paper-section-title">Core Competencies</div>
+      <ul class="resume-paper-skills">
+        ${renderSectionList(data.competencies, "Add core competencies above for a stronger CV.")}
+      </ul>
+    </section>
+
+    <section class="resume-paper-section">
+      <div class="resume-paper-section-title">Professional Experience</div>
+      ${renderEntries(data.experience, "Add more work history for a fuller CV.")}
+    </section>
+
+    <section class="resume-paper-section">
+      <div class="resume-paper-section-title">Education</div>
+      <div class="resume-paper-education">
+        ${(data.education.length ? data.education : ["Add education details above for a complete CV."]).map((item) => `<div class="resume-paper-education-item">${escapeHtml(item)}</div>`).join("")}
+      </div>
+    </section>
+
+    <section class="resume-paper-section">
+      <div class="resume-paper-section-title">Certifications and Training</div>
+      <div class="resume-paper-education">
+        ${(data.certifications.length ? data.certifications : ["Add certifications or training if relevant."]).map((item) => `<div class="resume-paper-education-item">${escapeHtml(item)}</div>`).join("")}
+      </div>
+    </section>
+
+    <section class="resume-paper-section">
+      <div class="resume-paper-section-title">Projects and Achievements</div>
+      <div class="resume-paper-education">
+        ${(data.projects.length ? data.projects : ["Add projects, achievements, or awards if relevant."]).map((item) => `<div class="resume-paper-education-item">${escapeHtml(item)}</div>`).join("")}
+      </div>
+    </section>
+
+    <section class="resume-paper-section">
+      <div class="resume-paper-section-title">Leadership, Service, or Additional Information</div>
+      <div class="resume-paper-education">
+        ${(data.extra.length ? data.extra : ["Add extra leadership, service, affiliations, or languages if useful."]).map((item) => `<div class="resume-paper-education-item">${escapeHtml(item)}</div>`).join("")}
+      </div>
+    </section>
+  `;
+}
+
+function applyCvTheme(theme) {
+  const paper = document.getElementById("cv-paper");
+  paper.classList.remove("resume-paper-white", "resume-paper-brown");
+  paper.classList.add(theme === "brown" ? "resume-paper-brown" : "resume-paper-white");
+}
+
+function buildCvData(formData, rawText) {
+  const sections = parseCvSections(rawText);
+  return {
+    name: formData.name,
+    role: formData.role,
+    email: formData.email,
+    phone: formData.phone,
+    location: formData.location,
+    link: formData.link,
+    paperStyle: formData.paperStyle,
+    profileNotes: sections.profile || formData.profile || "",
+    profile: sections.profile || formData.profile || "",
+    competencies: parseListItems(sections.competencies || formData.skills || ""),
+    experience: parseEntries(sections.experience || formData.experience || ""),
+    education: parseListItems(sections.education || formData.education || ""),
+    certifications: parseListItems(sections.certifications || formData.certifications || ""),
+    projects: parseListItems(sections.projects || formData.projects || ""),
+    extra: parseListItems(sections.extra || formData.extra || ""),
+    advice: sections.advice || "",
+    rawText: sanitizeAiText(rawText),
+  };
+}
+
+function renderCvOutputs(data) {
+  latestCvBuild = data;
+  document.getElementById("cv-paper").innerHTML = renderCvPaper(data);
+  document.getElementById("cv-profile-notes-content").textContent = data.profileNotes || "The AI focused mainly on the full CV draft for this build.";
+  document.getElementById("cv-advice-content").textContent = data.advice || "Review each section and tailor the final wording to the exact role or institution.";
+  document.getElementById("cv-raw-content").textContent = data.rawText;
+  document.getElementById("cv-insights").style.display = "grid";
+  document.getElementById("cv-raw-box").style.display = "block";
+  applyCvTheme(data.paperStyle);
+}
+
+async function ensureHtml2Pdf() {
+  if (window.html2pdf) {
+    return window.html2pdf;
+  }
+
+  await new Promise((resolve, reject) => {
+    const existing = document.querySelector('script[data-html2pdf="true"]');
+    if (existing) {
+      existing.addEventListener("load", resolve, { once: true });
+      existing.addEventListener("error", () => reject(new Error("Could not load PDF export library.")), { once: true });
+      return;
+    }
+
+    const script = document.createElement("script");
+    script.src = "https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js";
+    script.async = true;
+    script.dataset.html2pdf = "true";
+    script.onload = resolve;
+    script.onerror = () => reject(new Error("Could not load PDF export library."));
+    document.head.appendChild(script);
+  });
+
+  return window.html2pdf;
+}
+
+async function downloadCvPdf() {
+  if (!latestCvBuild) {
+    showToast("Build a CV first", "error");
+    return;
+  }
+
+  try {
+    await downloadElementPdf({
+      element: document.getElementById("cv-paper"),
+      filename: `${slugifyFilename(latestCvBuild.name)}-cv.pdf`,
+    });
+    showToast("PDF downloaded", "success");
+  } catch (error) {
+    showToast(error.message || "Could not export PDF", "error");
+  }
+}
+
+async function downloadCvImage() {
+  if (!latestCvBuild) {
+    showToast("Build a CV first", "error");
+    return;
+  }
+
+  try {
+    await downloadElementImage({
+      element: document.getElementById("cv-paper"),
+      filename: `${slugifyFilename(latestCvBuild.name)}-cv.png`,
+    });
+    showToast("Image downloaded", "success");
+  } catch (error) {
+    showToast(error.message || "Could not export image", "error");
+  }
+}
+
+function downloadCvText() {
+  if (!latestCvBuild) {
+    showToast("Build a CV first", "error");
+    return;
+  }
+
+  downloadTextFile(
+    `${slugifyFilename(latestCvBuild.name)}-cv.txt`,
+    latestCvBuild.rawText,
+  );
+  showToast("Text file downloaded", "success");
+}
+
+function downloadCvHtml() {
+  if (!latestCvBuild) {
+    showToast("Build a CV first", "error");
+    return;
+  }
+
+  downloadHtmlFile(
+    `${slugifyFilename(latestCvBuild.name)}-cv.html`,
+    `${latestCvBuild.name} CV`,
+    document.getElementById("cv-paper").innerHTML,
+  );
+  showToast("HTML file downloaded", "success");
+}
+
+function printCvPaper() {
+  if (!latestCvBuild) {
+    showToast("Build a CV first", "error");
+    return;
+  }
+
+  window.print();
+}
+
+function updateCvFileInfo(file) {
+  const infoBox = document.getElementById("cv-file-info");
+  const meta = document.getElementById("cv-file-meta");
+
+  if (!file) {
+    infoBox.style.display = "none";
+    meta.textContent = "";
+    return;
+  }
+
+  const sizeKb = Math.max(1, Math.round(file.size / 1024));
+  meta.textContent = `${file.name} · ${sizeKb} KB`;
+  infoBox.style.display = "block";
+}
+
+document.getElementById("cv-file").addEventListener("change", (event) => {
+  updateCvFileInfo(event.target.files?.[0] || null);
+});
+
+document.getElementById("cv-paper-style").addEventListener("change", () => {
+  applyCvTheme(document.getElementById("cv-paper-style").value);
+});
+
+async function generateCv() {
+  const file = document.getElementById("cv-file").files?.[0];
+  const name = document.getElementById("cv-name").value.trim();
+  const role = document.getElementById("cv-role").value.trim();
+  const email = document.getElementById("cv-email").value.trim();
+  const phone = document.getElementById("cv-phone").value.trim();
+  const location = document.getElementById("cv-location").value.trim();
+  const link = document.getElementById("cv-link").value.trim();
+  const level = document.getElementById("cv-level").value;
+  const paperStyle = document.getElementById("cv-paper-style").value;
+  const profile = document.getElementById("cv-profile").value.trim();
+  const experience = document.getElementById("cv-experience").value.trim();
+  const skills = document.getElementById("cv-skills").value.trim();
+  const education = document.getElementById("cv-education").value.trim();
+  const certifications = document.getElementById("cv-certifications").value.trim();
+  const projects = document.getElementById("cv-projects").value.trim();
+  const extra = document.getElementById("cv-extra").value.trim();
+  const notes = document.getElementById("cv-notes").value.trim();
+
+  if (!name || !role || !level) {
+    showToast("Please fill in your name, professional title, and experience level", "error");
+    return;
+  }
+
+  const btn = document.getElementById("cv-generate-btn");
+  const result = document.getElementById("cv-result");
+  const raw = document.getElementById("cv-raw-content");
+
+  btn.disabled = true;
+  btn.innerHTML = '<div class="spinner"></div> Building CV...';
+  result.style.display = "block";
+  raw.textContent = "";
+  document.getElementById("cv-paper").innerHTML = '<div class="resume-paper-placeholder">Generating your detailed CV paper...</div>';
+  document.getElementById("cv-insights").style.display = "none";
+  document.getElementById("cv-raw-box").style.display = "none";
+  applyCvTheme(paperStyle);
+
+  try {
+    let existingText = "";
+    if (file) {
+      btn.innerHTML = '<div class="spinner"></div> Reading Source File...';
+      existingText = truncateDocumentText(await extractTextFromFile(file));
+    }
+
+    const message = `Create or improve a full professional CV with the following details:
+
+Name: ${name}
+Professional title: ${role}
+Email: ${email || "not provided"}
+Phone: ${phone || "not provided"}
+Location: ${location || "not provided"}
+LinkedIn or portfolio: ${link || "not provided"}
+Experience level: ${level}
+Professional profile: ${profile || "not provided"}
+Professional experience: ${experience || "not provided"}
+Core competencies: ${skills || "not provided"}
+Education: ${education || "not provided"}
+Certifications and training: ${certifications || "not provided"}
+Projects and achievements: ${projects || "not provided"}
+Leadership, service, or additional information: ${extra || "not provided"}
+Extra instructions: ${notes || "none"}
+Existing CV or resume text: ${existingText || "none provided"}
+
+Return the answer using these exact plain text headings only:
+Professional Profile:
+Core Competencies:
+Professional Experience:
+Education:
+Certifications and Training:
+Projects and Achievements:
+Leadership, Service, or Additional Information:
+Final CV Advice:
+
+Inside Professional Experience, use job-style entries followed by bullet points.
+Do not use markdown tables.
+Do not use asterisks.
+Make the CV polished, credible, well-structured, and ready for a professional application.`;
+
+    const finalText = await streamSmartBossResponse({
+      message,
+      mode: "cv",
+      onToken(fullText) {
+        raw.textContent = sanitizeAiText(fullText);
+      },
+    });
+
+    const cvData = buildCvData({
+      name,
+      role,
+      email,
+      phone,
+      location,
+      link,
+      paperStyle,
+      profile,
+      experience,
+      skills,
+      education,
+      certifications,
+      projects,
+      extra,
+    }, finalText);
+
+    renderCvOutputs(cvData);
+    result.scrollIntoView({ behavior: "smooth", block: "start" });
+    showToast("CV ready", "success");
+  } catch (error) {
+    raw.textContent = `Error: ${error.message}`;
+    document.getElementById("cv-paper").innerHTML = `<div class="resume-paper-placeholder">${escapeHtml(error.message)}</div>`;
+    showToast("Could not build CV", "error");
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = "📘 Build CV";
+  }
+}
+
+function fillCvExample() {
+  document.getElementById("cv-name").value = "Jordan Smith";
+  document.getElementById("cv-role").value = "Operations Coordinator";
+  document.getElementById("cv-email").value = "jordansmith@email.com";
+  document.getElementById("cv-phone").value = "+1 555 218 7821";
+  document.getElementById("cv-location").value = "Dallas, Texas";
+  document.getElementById("cv-link").value = "linkedin.com/in/jordansmith";
+  document.getElementById("cv-level").value = "mid-level";
+  document.getElementById("cv-paper-style").value = "brown";
+  document.getElementById("cv-profile").value = "Operations professional with experience supporting internal processes, customer communication, scheduling, reporting, and cross-functional coordination.";
+  document.getElementById("cv-experience").value = "Operations Coordinator\nNorthfield Services | 2022 to Present\n• Managed schedules, tracked internal requests, and improved communication between teams.\n• Built reporting spreadsheets and helped leadership monitor service delivery.\n\nAdministrative Assistant\nBluegate Support | 2019 to 2022\n• Handled records, front-desk communication, travel support, and client coordination.";
+  document.getElementById("cv-skills").value = "Operations support, reporting, stakeholder communication, process improvement, scheduling, Microsoft Office";
+  document.getElementById("cv-education").value = "B.Sc. Business Administration\nNorth Central College";
+  document.getElementById("cv-certifications").value = "Project coordination training\nAdvanced Excel short course";
+  document.getElementById("cv-projects").value = "Helped improve reporting visibility for leadership\nSupported process cleanup project that reduced manual follow-ups";
+  document.getElementById("cv-extra").value = "Volunteer mentor for young professionals\nEnglish language proficiency";
+  document.getElementById("cv-notes").value = "Make it polished, detailed, and suitable for international applications.";
+  showToast("Example loaded", "info");
+}
+</script>
+</body>
+</html>

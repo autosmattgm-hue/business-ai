@@ -53,7 +53,14 @@
 
       <div class="form-group">
         <label class="form-label">Upload File *</label>
-        <input type="file" class="form-input" id="document-file" accept=".pdf,.doc,.docx,.txt,.md,.rtf">
+        <input type="file" class="upload-plus-input" id="document-file" accept=".pdf,.doc,.docx,.txt,.md,.rtf">
+        <label for="document-file" class="upload-plus-box" id="document-upload-box">
+          <div class="upload-plus-icon">+</div>
+          <div class="upload-plus-title">Add A Document To Fix</div>
+          <div class="upload-plus-desc">
+            Click the plus sign to add the document that needs fixing. PDF, DOC, DOCX, TXT, MD, and RTF are supported.
+          </div>
+        </label>
         <p style="font-size:0.78rem;color:var(--text-muted);margin-top:0.5rem;">
           PDF and DOCX work best. Legacy DOC files are supported on a best-effort basis and may need conversion to DOCX for cleaner extraction.
         </p>
@@ -83,6 +90,20 @@
         </div>
       </div>
 
+      <div class="form-grid">
+        <div class="form-group">
+          <label class="form-label">Output Title</label>
+          <input type="text" class="form-input" id="document-title" placeholder="Example: Rewritten Proposal or Professional Summary">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Paper Style</label>
+          <select class="form-select" id="document-paper-style">
+            <option value="white">White paper</option>
+            <option value="brown">Brown paper</option>
+          </select>
+        </div>
+      </div>
+
       <div class="form-group">
         <label class="form-label">Extra Instructions</label>
         <textarea class="form-textarea" id="document-notes" placeholder="Example: keep it concise, focus on grammar, make it ATS-friendly, improve weak wording, keep the original meaning." style="min-height:90px;"></textarea>
@@ -97,22 +118,51 @@
         <button class="btn btn-primary" id="document-run-btn" onclick="runDocumentAssistant()">📄 Process Document</button>
         <button class="btn btn-outline btn-sm" onclick="loadDocumentExample()">📋 Example Prompt</button>
         <a href="resume.html" class="btn btn-ghost btn-sm">🧾 Resume Builder</a>
+        <a href="cv.html" class="btn btn-ghost btn-sm">📘 AI CV Creator</a>
       </div>
     </div>
 
     <div id="document-result" style="display:none; margin-top:2rem;">
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;flex-wrap:wrap;gap:0.75rem;">
+      <div class="print-hidden" style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;flex-wrap:wrap;gap:0.75rem;">
         <div>
           <h3 style="font-family:var(--font-display);color:var(--gold-primary);">Document Output</h3>
-          <p style="font-size:0.8rem;color:var(--text-muted);margin:0;">Review, rewrite, summary, or upgraded version</p>
+          <p style="font-size:0.8rem;color:var(--text-muted);margin:0;">Paper preview, PDF export, diagnosis, and upgraded document text</p>
         </div>
-        <div style="display:flex;gap:8px;">
-          <button class="btn btn-ghost btn-sm" onclick="copyText(document.getElementById('document-result-content').textContent)">📋 Copy</button>
+        <div class="resume-actions">
+          <button class="btn btn-ghost btn-sm" type="button" onclick="copyText(document.getElementById('document-raw-content').textContent)">📋 Copy Text</button>
+          <button class="btn btn-outline btn-sm" type="button" onclick="printDocumentPaper()">🖨️ Print</button>
+          <button class="btn btn-outline btn-sm" type="button" onclick="downloadDocumentImage()">🖼️ Download Image</button>
+          <button class="btn btn-outline btn-sm" type="button" onclick="downloadDocumentText()">📝 Download Text</button>
+          <button class="btn btn-outline btn-sm" type="button" onclick="downloadDocumentHtml()">🌐 Download HTML</button>
+          <button class="btn btn-outline btn-sm" type="button" onclick="toggleEditableElement('document-paper', this)">Edit Output</button>
+          <button class="btn btn-primary btn-sm" type="button" onclick="downloadDocumentPdf()">📄 Download PDF</button>
         </div>
       </div>
 
-      <div class="result-box">
-        <div class="result-content typing-cursor" id="document-result-content"></div>
+      <div class="resume-paper-shell" id="document-paper-shell">
+        <div class="resume-paper resume-paper-white" id="document-paper">
+          <div class="resume-paper-placeholder">
+            Your polished document paper will appear here after processing.
+          </div>
+        </div>
+      </div>
+
+      <div class="resume-insights-grid print-hidden" id="document-insights" style="display:none;">
+        <div class="resume-insight-card">
+          <h4>Document Diagnosis</h4>
+          <div class="result-content" id="document-diagnosis-content"></div>
+        </div>
+        <div class="resume-insight-card">
+          <h4>Major Issues and Notes</h4>
+          <div class="result-content" id="document-issues-content"></div>
+        </div>
+      </div>
+
+      <div class="result-box print-hidden" id="document-raw-box">
+        <div class="result-box-header">
+          <div class="result-box-label">Raw AI Output</div>
+        </div>
+        <div class="result-content" id="document-raw-content"></div>
       </div>
     </div>
   </div>
@@ -165,6 +215,7 @@
             <li><a href="ideas.html">Idea Engine</a></li>
             <li><a href="documents.html">Document AI</a></li>
             <li><a href="resume.html">Resume Builder</a></li>
+            <li><a href="cv.html">CV Creator</a></li>
             <li><a href="voice.html">Voice AI</a></li>
           </ul>
         </div>
@@ -189,29 +240,273 @@
 
 <script src="main.js"></script>
 <script>
+let latestDocumentBuild = null;
+
 function updateDocumentFileInfo(file) {
   const infoBox = document.getElementById("document-file-info");
   const meta = document.getElementById("document-file-meta");
+  const uploadBox = document.getElementById("document-upload-box");
 
   if (!file) {
     infoBox.style.display = "none";
     meta.textContent = "";
+    if (uploadBox) {
+      uploadBox.classList.remove("is-active");
+      uploadBox.querySelector(".upload-plus-title").textContent = "Add A Document To Fix";
+      uploadBox.querySelector(".upload-plus-desc").textContent = "Click the plus sign to add the document that needs fixing. PDF, DOC, DOCX, TXT, MD, and RTF are supported.";
+    }
     return;
   }
 
   const sizeKb = Math.max(1, Math.round(file.size / 1024));
   meta.textContent = `${file.name} · ${sizeKb} KB`;
   infoBox.style.display = "block";
+  if (uploadBox) {
+    uploadBox.classList.add("is-active");
+    uploadBox.querySelector(".upload-plus-title").textContent = "Document Added";
+    uploadBox.querySelector(".upload-plus-desc").textContent = `${file.name} is ready to be fixed. Click again if you want to replace it with another file.`;
+  }
 }
 
 document.getElementById("document-file").addEventListener("change", (event) => {
-  updateDocumentFileInfo(event.target.files?.[0] || null);
+  const file = event.target.files?.[0] || null;
+  updateDocumentFileInfo(file);
+
+  if (file && !document.getElementById("document-title").value.trim()) {
+    document.getElementById("document-title").value = file.name.replace(/\.[^.]+$/, "");
+  }
 });
+
+document.getElementById("document-paper-style").addEventListener("change", () => {
+  applyDocumentTheme(document.getElementById("document-paper-style").value);
+});
+
+function escapeHtml(value) {
+  return String(value || "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
+
+function slugifyFilename(value) {
+  return String(value || "document")
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "") || "document";
+}
+
+function normalizeSectionHeading(line) {
+  return String(line || "")
+    .toLowerCase()
+    .replace(/^[\d.\-\s]+/, "")
+    .replace(/[:]+$/, "")
+    .replace(/[^a-z\s/&-]+/g, "")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+function parseDocumentSections(rawText) {
+  const sections = {
+    diagnosis: [],
+    issues: [],
+    clean: [],
+    advice: [],
+  };
+
+  const headingMap = {
+    diagnosis: ["document diagnosis", "diagnosis", "quality diagnosis"],
+    issues: ["major issues", "issues", "major issues and notes", "main issues"],
+    clean: ["clean ready-to-use version", "improved document", "clean version", "rewritten document"],
+    advice: ["final suggestions", "suggestions", "final notes"],
+  };
+
+  let currentSection = "clean";
+  const lines = sanitizeAiText(rawText).replace(/\r/g, "").split("\n");
+
+  for (const rawLine of lines) {
+    const line = rawLine.trim();
+    if (!line) {
+      if (sections[currentSection]?.length && sections[currentSection][sections[currentSection].length - 1] !== "") {
+        sections[currentSection].push("");
+      }
+      continue;
+    }
+
+    const normalized = normalizeSectionHeading(line);
+    const match = Object.entries(headingMap).find(([, names]) => names.includes(normalized));
+    if (match) {
+      currentSection = match[0];
+      continue;
+    }
+
+    sections[currentSection].push(line);
+  }
+
+  return Object.fromEntries(
+    Object.entries(sections).map(([key, value]) => [
+      key,
+      value.join("\n").replace(/\n{3,}/g, "\n\n").trim(),
+    ]),
+  );
+}
+
+function formatDocumentPreviewHtml(text) {
+  const blocks = String(text || "")
+    .split(/\n{2,}/)
+    .map((block) => block.trim())
+    .filter(Boolean);
+
+  if (!blocks.length) {
+    return "<p>No improved document text was generated yet.</p>";
+  }
+
+  return blocks
+    .map((block) => {
+      const lines = block.split("\n").map((line) => line.trim()).filter(Boolean);
+      const allBullets = lines.length > 1 && lines.every((line) => /^\s*(?:•|-|\+|\d+\.)\s*/.test(line));
+
+      if (allBullets) {
+        return `<ul>${lines.map((line) => `<li>${escapeHtml(line.replace(/^\s*(?:•|-|\+|\d+\.)\s*/, ""))}</li>`).join("")}</ul>`;
+      }
+
+      return `<p>${lines.map((line) => escapeHtml(line)).join("<br>")}</p>`;
+    })
+    .join("");
+}
+
+function applyDocumentTheme(theme) {
+  const paper = document.getElementById("document-paper");
+  paper.classList.remove("resume-paper-white", "resume-paper-brown");
+  paper.classList.add(theme === "brown" ? "resume-paper-brown" : "resume-paper-white");
+}
+
+function renderDocumentPaper(data) {
+  return `
+    <div class="document-paper-meta">
+      <div>
+        <div class="document-paper-title">${escapeHtml(data.title)}</div>
+        <div class="document-paper-subtitle">${escapeHtml(data.taskLabel)} · ${escapeHtml(data.tone)}</div>
+      </div>
+      <div class="document-paper-subtitle">${escapeHtml(data.fileName)}</div>
+    </div>
+    <div class="document-paper-body">${formatDocumentPreviewHtml(data.cleanText)}</div>
+  `;
+}
+
+function renderDocumentOutputs(data) {
+  latestDocumentBuild = data;
+  document.getElementById("document-paper").innerHTML = renderDocumentPaper(data);
+  document.getElementById("document-diagnosis-content").textContent = data.diagnosis || "The AI focused mainly on improving the document itself.";
+  document.getElementById("document-issues-content").textContent = data.issues || data.advice || "No extra issue notes were returned for this build.";
+  document.getElementById("document-raw-content").textContent = data.rawText;
+  document.getElementById("document-insights").style.display = "grid";
+  document.getElementById("document-raw-box").style.display = "block";
+  applyDocumentTheme(data.paperStyle);
+}
+
+async function ensureHtml2Pdf() {
+  if (window.html2pdf) {
+    return window.html2pdf;
+  }
+
+  await new Promise((resolve, reject) => {
+    const existing = document.querySelector('script[data-html2pdf="true"]');
+    if (existing) {
+      existing.addEventListener("load", resolve, { once: true });
+      existing.addEventListener("error", () => reject(new Error("Could not load PDF export library.")), { once: true });
+      return;
+    }
+
+    const script = document.createElement("script");
+    script.src = "https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js";
+    script.async = true;
+    script.dataset.html2pdf = "true";
+    script.onload = resolve;
+    script.onerror = () => reject(new Error("Could not load PDF export library."));
+    document.head.appendChild(script);
+  });
+
+  return window.html2pdf;
+}
+
+async function downloadDocumentPdf() {
+  if (!latestDocumentBuild) {
+    showToast("Process a document first", "error");
+    return;
+  }
+
+  try {
+    await downloadElementPdf({
+      element: document.getElementById("document-paper"),
+      filename: `${slugifyFilename(latestDocumentBuild.title)}.pdf`,
+    });
+    showToast("PDF downloaded", "success");
+  } catch (error) {
+    showToast(error.message || "Could not export PDF", "error");
+  }
+}
+
+async function downloadDocumentImage() {
+  if (!latestDocumentBuild) {
+    showToast("Process a document first", "error");
+    return;
+  }
+
+  try {
+    await downloadElementImage({
+      element: document.getElementById("document-paper"),
+      filename: `${slugifyFilename(latestDocumentBuild.title)}.png`,
+    });
+    showToast("Image downloaded", "success");
+  } catch (error) {
+    showToast(error.message || "Could not export image", "error");
+  }
+}
+
+function downloadDocumentText() {
+  if (!latestDocumentBuild) {
+    showToast("Process a document first", "error");
+    return;
+  }
+
+  downloadTextFile(
+    `${slugifyFilename(latestDocumentBuild.title)}.txt`,
+    latestDocumentBuild.rawText,
+  );
+  showToast("Text file downloaded", "success");
+}
+
+function downloadDocumentHtml() {
+  if (!latestDocumentBuild) {
+    showToast("Process a document first", "error");
+    return;
+  }
+
+  downloadHtmlFile(
+    `${slugifyFilename(latestDocumentBuild.title)}.html`,
+    latestDocumentBuild.title,
+    document.getElementById("document-paper").innerHTML,
+  );
+  showToast("HTML file downloaded", "success");
+}
+
+function printDocumentPaper() {
+  if (!latestDocumentBuild) {
+    showToast("Process a document first", "error");
+    return;
+  }
+
+  window.print();
+}
 
 async function runDocumentAssistant() {
   const file = document.getElementById("document-file").files?.[0];
   const task = document.getElementById("document-task").value;
   const tone = document.getElementById("document-tone").value;
+  const title = document.getElementById("document-title").value.trim();
+  const paperStyle = document.getElementById("document-paper-style").value;
   const notes = document.getElementById("document-notes").value.trim();
 
   if (!file || !task) {
@@ -221,13 +516,16 @@ async function runDocumentAssistant() {
 
   const btn = document.getElementById("document-run-btn");
   const result = document.getElementById("document-result");
-  const content = document.getElementById("document-result-content");
+  const content = document.getElementById("document-raw-content");
 
   btn.disabled = true;
   btn.innerHTML = '<div class="spinner"></div> Reading File...';
   result.style.display = "block";
-  content.className = "result-content typing-cursor";
-  content.innerHTML = "Preparing your file...";
+  content.textContent = "Preparing your file...";
+  document.getElementById("document-paper").innerHTML = '<div class="resume-paper-placeholder">Preparing your paper-style document...</div>';
+  document.getElementById("document-insights").style.display = "none";
+  document.getElementById("document-raw-box").style.display = "none";
+  applyDocumentTheme(paperStyle);
 
   try {
     const extractedText = await extractTextFromFile(file);
@@ -248,12 +546,18 @@ async function runDocumentAssistant() {
 Document name: ${file.name}
 Requested task: ${task}
 Desired tone: ${tone}
+Output title: ${title || file.name.replace(/\.[^.]+$/, "")}
 Extra instructions: ${notes || "none"}
 
-Please:
-1. Briefly diagnose the document quality
-2. Point out the biggest issues
-3. Provide the improved output in a clean ready-to-use version
+Return the answer using these exact plain text headings only:
+Document Diagnosis:
+Major Issues:
+Clean Ready-To-Use Version:
+Final Suggestions:
+
+Inside Clean Ready-To-Use Version, write the improved document exactly as the user could reuse it.
+Do not use markdown tables.
+Do not use asterisks.
 
 Document text:
 ${trimmedText}`;
@@ -262,17 +566,29 @@ ${trimmedText}`;
       message,
       mode: "documents",
       onToken(fullText) {
-        content.innerHTML = parseMarkdown(fullText);
+        content.textContent = sanitizeAiText(fullText);
       },
     });
 
-    content.className = "result-content";
-    content.innerHTML = parseMarkdown(finalText);
+    const sections = parseDocumentSections(finalText);
+    renderDocumentOutputs({
+      fileName: file.name,
+      title: title || file.name.replace(/\.[^.]+$/, ""),
+      taskLabel: document.getElementById("document-task").selectedOptions[0]?.textContent || "Document output",
+      tone,
+      paperStyle,
+      diagnosis: sections.diagnosis,
+      issues: sections.issues,
+      cleanText: sections.clean || sanitizeAiText(finalText),
+      advice: sections.advice,
+      rawText: sanitizeAiText(finalText),
+    });
+
     result.scrollIntoView({ behavior: "smooth", block: "start" });
     showToast("Document processed successfully", "success");
   } catch (error) {
-    content.className = "result-content";
     content.textContent = `Error: ${error.message}`;
+    document.getElementById("document-paper").innerHTML = `<div class="resume-paper-placeholder">${escapeHtml(error.message)}</div>`;
     showToast("Could not process document", "error");
   } finally {
     btn.disabled = false;
@@ -281,6 +597,8 @@ ${trimmedText}`;
 }
 
 function loadDocumentExample() {
+  document.getElementById("document-title").value = "Professional Project Proposal";
+  document.getElementById("document-paper-style").value = "white";
   document.getElementById("document-task").value = "rewrite the document to sound more professional and polished";
   document.getElementById("document-tone").value = "executive and concise";
   document.getElementById("document-notes").value = "Keep the meaning, remove weak wording, tighten structure, and improve professionalism.";
