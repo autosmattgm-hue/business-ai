@@ -14,8 +14,7 @@ const {
   getProviderErrorMessage,
   getPublicChatError,
   validateChatRequest,
-  requestChatCompletion,
-  streamCompletionTokens,
+  streamCompleteChatResponse,
 } = require("./lib/chat-service");
 const { createPayPalOrder, capturePayPalOrder } = require("./lib/paypal-service");
 
@@ -287,21 +286,19 @@ async function handleChat(req, res) {
   startSse(res);
 
   try {
-    const response = await requestChatCompletion(body, process.env.NVIDIA_API_KEY);
+    const result = await streamCompleteChatResponse(body, process.env.NVIDIA_API_KEY, (token) => {
+      writeSseData(res, { token });
+    });
 
-    if (!response.ok) {
-      const errorText = await response.text();
+    if (!result.ok) {
+      const errorText = await result.response.text();
       console.error("NVIDIA API error:", errorText);
-      writeSseData(res, { error: getProviderErrorMessage(response.status) });
+      writeSseData(res, { error: getProviderErrorMessage(result.response.status) });
       finishSse(res);
       return;
     }
 
-    const fullText = await streamCompletionTokens(response, (token) => {
-      writeSseData(res, { token });
-    });
-
-    cacheChatResponse(body, fullText);
+    cacheChatResponse(body, result.text);
     finishSse(res);
   } catch (error) {
     console.error("Server error:", error);
