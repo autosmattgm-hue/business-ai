@@ -8,11 +8,14 @@ const { getPublicAppConfig, getSecretAccessConfig } = require("./lib/app-config"
 const {
   MODEL,
   FALLBACK_MODELS,
+  DEFAULT_MODEL_PROFILE,
+  MODEL_OPTIONS,
   cacheChatResponse,
   getCachedChatResponse,
   getChatErrorStatus,
   getProviderErrorMessage,
   getPublicChatError,
+  getPublicModelOptions,
   validateChatRequest,
   streamCompleteChatResponse,
 } = require("./lib/chat-service");
@@ -100,8 +103,14 @@ function handleHealth(res) {
     service: "smart-boss-ai",
     model: MODEL,
     fallbackModels: FALLBACK_MODELS,
+    defaultModelProfile: DEFAULT_MODEL_PROFILE,
+    modelOptions: MODEL_OPTIONS,
     hasApiKey: Boolean(process.env.NVIDIA_API_KEY),
   });
+}
+
+function handleModels(res) {
+  sendJson(res, 200, getPublicModelOptions());
 }
 
 function handlePublicConfig(res) {
@@ -257,6 +266,7 @@ async function handleChat(req, res) {
     body = {
       ...body,
       mode: body.mode || "business",
+      model: typeof body.model === "string" ? body.model.trim() : body.model,
       history: Array.isArray(body.history) ? body.history : [],
       message: typeof body.message === "string" ? body.message.trim() : body.message,
     };
@@ -331,6 +341,11 @@ const server = http.createServer(async (req, res) => {
 
   if (req.method === "GET" && urlPath === "/api/public-config") {
     handlePublicConfig(res);
+    return;
+  }
+
+  if (req.method === "GET" && urlPath === "/api/models") {
+    handleModels(res);
     return;
   }
 

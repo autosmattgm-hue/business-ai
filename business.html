@@ -247,6 +247,22 @@
     </div>
 
     <div class="chat-input-area">
+      <div class="ai-model-bar" aria-label="AI model selection">
+        <label class="ai-model-label" for="ai-model-select">Model</label>
+        <select class="ai-model-select" id="ai-model-select" aria-label="Choose AI model">
+          <option value="auto">Smart Auto</option>
+          <option value="fast">Fast</option>
+          <option value="balanced">Balanced</option>
+          <option value="deep">Deep Strategy</option>
+          <option value="creative">Creative</option>
+          <option value="nemotron-9b">Nemotron Nano 9B</option>
+          <option value="mistral-medium">Mistral Medium 3.5</option>
+          <option value="deepseek-flash">DeepSeek V4 Flash</option>
+          <option value="deepseek-pro">DeepSeek V4 Pro</option>
+          <option value="minimax">MiniMax M2.7</option>
+        </select>
+        <span class="ai-model-note" id="ai-model-note">Default production profile with reliable fallbacks.</span>
+      </div>
       <div class="chat-input-wrapper">
         <textarea
           id="chat-input"

@@ -103,6 +103,7 @@ export default async function handler(req, res) {
     body = {
       ...body,
       mode: body.mode || "business",
+      model: typeof body.model === "string" ? body.model.trim() : body.model,
       history: Array.isArray(body.history) ? body.history : [],
       message: typeof body.message === "string" ? body.message.trim() : body.message,
     };

@@ -59,6 +59,7 @@ const SMART_BOSS_STORAGE = {
   users: "smartboss_users_v1",
   session: "smartboss_session_v1",
   checkout: "smartboss_pending_checkout_v1",
+  aiModel: "smartboss_ai_model_profile_v1",
 };
 
 const SMART_BOSS_DEFAULT_ACCESS = {
@@ -69,8 +70,26 @@ const SMART_BOSS_DEFAULT_ACCESS = {
   adminCode: "ADMIN2026",
 };
 
+const SMART_BOSS_DEFAULT_MODEL_CONFIG = {
+  defaultModel: "auto",
+  models: [
+    { id: "auto", label: "Smart Auto", description: "Default production profile with reliable fallbacks." },
+    { id: "fast", label: "Fast", description: "Shorter, faster responses for quick decisions and drafts." },
+    { id: "balanced", label: "Balanced", description: "Strong general-purpose business reasoning." },
+    { id: "deep", label: "Deep Strategy", description: "More deliberate reasoning for complex plans." },
+    { id: "creative", label: "Creative", description: "Higher-variation responses for ideas and content." },
+    { id: "nemotron-9b", label: "Nemotron Nano 9B", description: "NVIDIA reasoning model for agentic business strategy and analysis." },
+    { id: "mistral-medium", label: "Mistral Medium 3.5", description: "High-performing model for text generation, coding, and agentic work." },
+    { id: "deepseek-flash", label: "DeepSeek V4 Flash", description: "Fast reasoning and coding model for quick strategic answers." },
+    { id: "deepseek-pro", label: "DeepSeek V4 Pro", description: "Deeper reasoning profile for complex plans, audits, and coding tasks." },
+    { id: "minimax", label: "MiniMax M2.7", description: "Strong text-to-text model for reasoning, coding, and office tasks." },
+  ],
+};
+
 let smartBossPublicConfigPromise = null;
 let smartBossPublicConfigCache = null;
+let smartBossModelConfigPromise = null;
+let smartBossModelConfigCache = null;
 
 function isStorageAvailable() {
   try {
@@ -97,6 +116,82 @@ function readStorageJson(key, fallback) {
 function writeStorageJson(key, value) {
   if (!isStorageAvailable()) return;
   window.localStorage.setItem(key, JSON.stringify(value));
+}
+
+function normalizeAiModelId(value) {
+  return String(value || "")
+    .trim()
+    .toLowerCase()
+    .replace(/[^a-z0-9_-]/g, "");
+}
+
+function normalizeAiModelOption(option) {
+  const id = normalizeAiModelId(option?.id);
+  const label = String(option?.label || "").trim();
+  const description = String(option?.description || "").trim();
+
+  if (!id || !label) return null;
+  return { id, label, description };
+}
+
+function getDefaultModelConfig() {
+  return {
+    defaultModel: SMART_BOSS_DEFAULT_MODEL_CONFIG.defaultModel,
+    models: SMART_BOSS_DEFAULT_MODEL_CONFIG.models.map((option) => ({ ...option })),
+  };
+}
+
+function normalizeModelConfig(payload) {
+  const fallback = getDefaultModelConfig();
+  const models = Array.isArray(payload?.models)
+    ? payload.models.map(normalizeAiModelOption).filter(Boolean)
+    : fallback.models;
+
+  const safeModels = models.length ? models : fallback.models;
+  const requestedDefault = normalizeAiModelId(payload?.defaultModel) || fallback.defaultModel;
+  const defaultModel = safeModels.some((option) => option.id === requestedDefault)
+    ? requestedDefault
+    : safeModels[0].id;
+
+  return { defaultModel, models: safeModels };
+}
+
+async function loadSmartBossModelConfig() {
+  if (smartBossModelConfigPromise) {
+    return smartBossModelConfigPromise;
+  }
+
+  smartBossModelConfigPromise = (async () => {
+    try {
+      const response = await fetchApi("/api/models", { method: "GET" });
+      if (!response.ok) {
+        throw new Error(`Model config request failed with ${response.status}`);
+      }
+
+      smartBossModelConfigCache = normalizeModelConfig(await response.json());
+      return smartBossModelConfigCache;
+    } catch (_) {
+      smartBossModelConfigCache = getDefaultModelConfig();
+      return smartBossModelConfigCache;
+    }
+  })();
+
+  return smartBossModelConfigPromise;
+}
+
+function getStoredSmartBossModel() {
+  if (!isStorageAvailable()) return "";
+  return normalizeAiModelId(window.localStorage.getItem(SMART_BOSS_STORAGE.aiModel));
+}
+
+function setStoredSmartBossModel(model) {
+  if (!isStorageAvailable()) return;
+  window.localStorage.setItem(SMART_BOSS_STORAGE.aiModel, normalizeAiModelId(model));
+}
+
+function getAiModelOption(options, model) {
+  const modelId = normalizeAiModelId(model);
+  return (options || []).find((option) => option.id === modelId) || null;
 }
 
 function normalizeEmail(value) {
@@ -1200,15 +1295,20 @@ function createDictationSession({ textarea, onStart, onStop, onError }) {
   };
 }
 
-async function streamSmartBossResponse({ message, mode, history = [], onToken, onDone }) {
+async function streamSmartBossResponse({ message, mode, model, history = [], onToken, onDone }) {
   const refundUsage = reserveAiUsageOrThrow();
   let res;
+  const payload = { message, mode, history };
+
+  if (model) {
+    payload.model = model;
+  }
 
   try {
     res = await fetchApi("/api/chat", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ message, mode, history }),
+      body: JSON.stringify(payload),
     });
   } catch (error) {
     refundUsage();
@@ -1281,6 +1381,8 @@ async function streamSmartBossResponse({ message, mode, history = [], onToken, o
 class SmartBossChat {
   constructor(options) {
     this.mode = options.mode || "business";
+    this.model = normalizeAiModelId(options.model) || getStoredSmartBossModel() || "auto";
+    this.modelOptions = getDefaultModelConfig().models;
     this.history = [];
     this.isStreaming = false;
     this.lastAssistantText = "";
@@ -1294,6 +1396,8 @@ class SmartBossChat {
     this.voiceInputBtn = document.getElementById("voice-input-btn");
     this.readResponseBtn = document.getElementById("read-response-btn");
     this.stopVoiceBtn = document.getElementById("stop-voice-btn");
+    this.modelSelectEl = document.getElementById("ai-model-select");
+    this.modelNoteEl = document.getElementById("ai-model-note");
 
     this.init();
   }
@@ -1317,6 +1421,8 @@ class SmartBossChat {
     if (this.sendBtn) {
       this.sendBtn.addEventListener("click", () => this.send());
     }
+
+    this.initModelSelector();
 
     if (this.voiceInputBtn) {
       this.voiceInputBtn.addEventListener("click", () => this.toggleDictation());
@@ -1361,6 +1467,71 @@ class SmartBossChat {
         this.clearMessages();
       });
     }
+  }
+
+  initModelSelector() {
+    if (!this.modelSelectEl) return;
+
+    this.renderModelOptions(this.modelOptions, this.model);
+
+    this.modelSelectEl.addEventListener("change", () => {
+      const selectedModel = normalizeAiModelId(this.modelSelectEl.value) || "auto";
+      const selectedOption = getAiModelOption(this.modelOptions, selectedModel);
+
+      this.model = selectedOption ? selectedModel : "auto";
+      this.modelSelectEl.value = this.model;
+      setStoredSmartBossModel(this.model);
+      this.updateModelNote();
+
+      const label = getAiModelOption(this.modelOptions, this.model)?.label || "Smart Auto";
+      showToast(`AI model set to ${label}`, "success");
+    });
+
+    loadSmartBossModelConfig().then((config) => {
+      const storedModel = getStoredSmartBossModel();
+      const selectedModel = getAiModelOption(config.models, this.model)
+        ? this.model
+        : storedModel;
+      const safeModel = getAiModelOption(config.models, selectedModel)
+        ? selectedModel
+        : config.defaultModel;
+
+      this.renderModelOptions(config.models, safeModel);
+    });
+  }
+
+  renderModelOptions(options, selectedModel) {
+    if (!this.modelSelectEl) return;
+
+    const safeOptions = Array.isArray(options) && options.length
+      ? options
+      : getDefaultModelConfig().models;
+    const safeModel = getAiModelOption(safeOptions, selectedModel)
+      ? normalizeAiModelId(selectedModel)
+      : safeOptions[0].id;
+
+    this.modelOptions = safeOptions;
+    this.model = safeModel;
+    this.modelSelectEl.textContent = "";
+
+    safeOptions.forEach((option) => {
+      const optionEl = document.createElement("option");
+      optionEl.value = option.id;
+      optionEl.textContent = option.label;
+      if (option.description) optionEl.title = option.description;
+      this.modelSelectEl.appendChild(optionEl);
+    });
+
+    this.modelSelectEl.value = this.model;
+    setStoredSmartBossModel(this.model);
+    this.updateModelNote();
+  }
+
+  updateModelNote() {
+    if (!this.modelNoteEl) return;
+
+    const option = getAiModelOption(this.modelOptions, this.model);
+    this.modelNoteEl.textContent = option?.description || "";
   }
 
   clearMessages() {
@@ -1440,6 +1611,7 @@ class SmartBossChat {
       const cleanResponse = await streamSmartBossResponse({
         message: text,
         mode: this.mode,
+        model: this.model,
         history: priorHistory,
         onToken: (fullText) => {
           this.updateBubble(aiBubble, fullText, true);
