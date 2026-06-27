@@ -1453,7 +1453,8 @@ class SmartBossChat {
       this.addToHistory(text);
 
     } catch (err) {
-      const errorText = `AI Service Notice:\n\n${err.message}\n\nPlease try again in a moment.`;
+      const retryHint = /try again/i.test(err.message) ? "" : "\n\nPlease try again in a moment.";
+      const errorText = `AI Service Notice:\n\n${err.message}${retryHint}`;
       this.updateBubble(aiBubble, errorText, false);
       this.lastAssistantText = errorText;
     } finally {

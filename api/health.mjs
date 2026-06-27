@@ -2,9 +2,8 @@ import { createRequire } from "node:module";
 
 const require = createRequire(import.meta.url);
 const { loadLocalEnv } = require("../lib/load-env.js");
-const { MODEL, FALLBACK_MODELS } = require("../lib/chat-service.js");
-
 loadLocalEnv(process.cwd());
+const { MODEL, FALLBACK_MODELS } = require("../lib/chat-service.js");
 
 export default function handler(req, res) {
   res.setHeader("Access-Control-Allow-Origin", "*");

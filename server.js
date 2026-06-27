@@ -2,6 +2,8 @@ const http = require("http");
 const fs = require("fs");
 const path = require("path");
 const { loadLocalEnv } = require("./lib/load-env");
+loadLocalEnv(__dirname);
+
 const { getPublicAppConfig, getSecretAccessConfig } = require("./lib/app-config");
 const {
   MODEL,
@@ -16,8 +18,6 @@ const {
   streamCompletionTokens,
 } = require("./lib/chat-service");
 const { createPayPalOrder, capturePayPalOrder } = require("./lib/paypal-service");
-
-loadLocalEnv(__dirname);
 
 const DEFAULT_PORT = Number(process.env.PORT) || 3010;
 const PUBLIC_DIR = fs.existsSync(path.join(__dirname, "public"))

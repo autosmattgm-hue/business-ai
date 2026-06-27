@@ -92,7 +92,8 @@ NVIDIA_API_KEY
 Recommended AI runtime settings:
 
 ```text
-NVIDIA_MODEL=google/gemma-2-2b-it
+NVIDIA_MODEL=nvidia/llama-3.1-nemotron-nano-8b-v1
+NVIDIA_FALLBACK_MODELS=nvidia/nvidia-nemotron-nano-9b-v2,meta/llama-3.1-8b-instruct,google/gemma-2-2b-it
 NVIDIA_REQUEST_TIMEOUT_MS=12000
 SMARTBOSS_MAX_OUTPUT_TOKENS=1400
 SMARTBOSS_AI_CACHE_TTL_MS=300000

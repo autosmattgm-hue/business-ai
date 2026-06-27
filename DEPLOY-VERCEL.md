@@ -48,8 +48,8 @@ In the Vercel project:
 
 ```text
 NVIDIA_API_KEY=your_real_nvidia_key
-NVIDIA_MODEL=google/gemma-2-2b-it
-NVIDIA_FALLBACK_MODELS=
+NVIDIA_MODEL=nvidia/llama-3.1-nemotron-nano-8b-v1
+NVIDIA_FALLBACK_MODELS=nvidia/nvidia-nemotron-nano-9b-v2,meta/llama-3.1-8b-instruct,google/gemma-2-2b-it
 NVIDIA_REQUEST_TIMEOUT_MS=12000
 SMARTBOSS_MAX_MESSAGE_CHARS=2000
 SMARTBOSS_MAX_HISTORY_ITEMS=8
@@ -129,7 +129,7 @@ If the site loads but AI does not respond:
 
 - check `NVIDIA_API_KEY` in Vercel settings
 - check `NVIDIA_MODEL` if Vercel reports that the configured model is unavailable
-- keep `NVIDIA_FALLBACK_MODELS` empty unless you have verified those model IDs work with your NVIDIA account
+- keep `NVIDIA_FALLBACK_MODELS` set to the recommended fallback list unless your NVIDIA account cannot access one of those models
 - redeploy after adding or changing the variable
 - check the `Functions` logs in Vercel
 

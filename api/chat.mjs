@@ -2,6 +2,8 @@ import { createRequire } from "node:module";
 
 const require = createRequire(import.meta.url);
 const { loadLocalEnv } = require("../lib/load-env.js");
+loadLocalEnv(process.cwd());
+
 const {
   cacheChatResponse,
   getCachedChatResponse,
@@ -12,8 +14,6 @@ const {
   requestChatCompletion,
   streamCompletionTokens,
 } = require("../lib/chat-service.js");
-
-loadLocalEnv(process.cwd());
 
 async function readJsonBody(req) {
   if (req.body && typeof req.body === "object") {
