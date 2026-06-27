@@ -89,6 +89,16 @@ Required:
 NVIDIA_API_KEY
 ```
 
+Recommended AI runtime settings:
+
+```text
+NVIDIA_MODEL=google/gemma-2-2b-it
+NVIDIA_REQUEST_TIMEOUT_MS=12000
+SMARTBOSS_MAX_OUTPUT_TOKENS=1400
+SMARTBOSS_AI_CACHE_TTL_MS=300000
+SMARTBOSS_AI_CACHE_MAX_ITEMS=500
+```
+
 The API key is not stored in the deployable app code. You must add it in your local environment and in Vercel project settings.
 
 For automatic paid-plan activation after PayPal checkout, also add:

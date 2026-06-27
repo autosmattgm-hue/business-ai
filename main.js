@@ -1227,6 +1227,11 @@ async function streamSmartBossResponse({ message, mode, history = [], onToken, o
     throw new Error(detail);
   }
 
+  if (!res.body) {
+    refundUsage();
+    throw new Error("The AI response stream was not available. Please try again.");
+  }
+
   const reader = res.body.getReader();
   const decoder = new TextDecoder();
   let buffer = "";
@@ -1244,13 +1249,22 @@ async function streamSmartBossResponse({ message, mode, history = [], onToken, o
       for (const line of lines) {
         if (!line.trim() || line === "data: [DONE]" || !line.startsWith("data: ")) continue;
 
+        let json;
+
         try {
-          const json = JSON.parse(line.slice(6));
-          if (json.token) {
-            fullText += json.token;
-            if (onToken) onToken(fullText, json.token);
-          }
+          json = JSON.parse(line.slice(6));
         } catch (_) {}
+
+        if (!json) continue;
+
+        if (json.error) {
+          throw new Error(json.error);
+        }
+
+        if (json.token) {
+          fullText += json.token;
+          if (onToken) onToken(fullText, json.token);
+        }
       }
     }
   } catch (error) {
@@ -1439,7 +1453,7 @@ class SmartBossChat {
       this.addToHistory(text);
 
     } catch (err) {
-      const errorText = `Connection Error:\n\nCould not reach the AI service. Please check the server is running.\n\nDetails: ${err.message}`;
+      const errorText = `AI Service Notice:\n\n${err.message}\n\nPlease try again in a moment.`;
       this.updateBubble(aiBubble, errorText, false);
       this.lastAssistantText = errorText;
     } finally {

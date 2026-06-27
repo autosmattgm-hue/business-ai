@@ -6,9 +6,14 @@ const { getPublicAppConfig, getSecretAccessConfig } = require("./lib/app-config"
 const {
   MODEL,
   FALLBACK_MODELS,
-  sanitizeModelText,
+  cacheChatResponse,
+  getCachedChatResponse,
+  getChatErrorStatus,
+  getProviderErrorMessage,
+  getPublicChatError,
   validateChatRequest,
   requestChatCompletion,
+  streamCompletionTokens,
 } = require("./lib/chat-service");
 const { createPayPalOrder, capturePayPalOrder } = require("./lib/paypal-service");
 
@@ -69,6 +74,25 @@ function sendJson(res, statusCode, data) {
   setCorsHeaders(res);
   res.writeHead(statusCode, { "Content-Type": "application/json; charset=utf-8" });
   res.end(JSON.stringify(data));
+}
+
+function startSse(res) {
+  setCorsHeaders(res);
+  res.writeHead(200, {
+    "Cache-Control": "no-cache, no-transform",
+    Connection: "keep-alive",
+    "Content-Type": "text/event-stream; charset=utf-8",
+  });
+  res.write(": connected\n\n");
+}
+
+function writeSseData(res, data) {
+  res.write(`data: ${JSON.stringify(data)}\n\n`);
+}
+
+function finishSse(res) {
+  res.write("data: [DONE]\n\n");
+  res.end();
 }
 
 function handleHealth(res) {
@@ -245,75 +269,50 @@ async function handleChat(req, res) {
     return;
   }
 
+  const cachedResponse = getCachedChatResponse(body);
+  if (cachedResponse) {
+    startSse(res);
+    writeSseData(res, { token: cachedResponse, cached: true });
+    finishSse(res);
+    return;
+  }
+
+  if (!process.env.NVIDIA_API_KEY) {
+    sendJson(res, 503, {
+      error: "AI service is not configured. Add NVIDIA_API_KEY in Vercel Environment Variables, then redeploy.",
+    });
+    return;
+  }
+
+  startSse(res);
+
   try {
     const response = await requestChatCompletion(body, process.env.NVIDIA_API_KEY);
 
     if (!response.ok) {
       const errorText = await response.text();
       console.error("NVIDIA API error:", errorText);
-      sendJson(res, response.status, { error: "AI service error", detail: errorText });
+      writeSseData(res, { error: getProviderErrorMessage(response.status) });
+      finishSse(res);
       return;
     }
 
-    setCorsHeaders(res);
-    res.writeHead(200, {
-      "Cache-Control": "no-cache",
-      Connection: "keep-alive",
-      "Content-Type": "text/event-stream; charset=utf-8",
+    const fullText = await streamCompletionTokens(response, (token) => {
+      writeSseData(res, { token });
     });
 
-    let buffer = "";
-    let inThinking = false;
-
-    for await (const chunk of response.body) {
-      buffer += typeof chunk === "string" ? chunk : new TextDecoder().decode(chunk);
-      const lines = buffer.split("\n");
-      buffer = lines.pop() || "";
-
-      for (const line of lines) {
-        if (!line.trim() || line === "data: [DONE]" || !line.startsWith("data: ")) {
-          continue;
-        }
-
-        try {
-          const json = JSON.parse(line.slice(6));
-          const delta = json.choices?.[0]?.delta?.content || "";
-
-          if (delta.includes("<think>")) {
-            inThinking = true;
-            continue;
-          }
-
-          if (delta.includes("</think>")) {
-            inThinking = false;
-            continue;
-          }
-
-          if (!inThinking && delta) {
-            const cleanedDelta = sanitizeModelText(delta);
-            if (cleanedDelta) {
-              res.write(`data: ${JSON.stringify({ token: cleanedDelta })}\n\n`);
-            }
-          }
-        } catch (error) {
-          console.error("SSE parse error:", error.message);
-        }
-      }
-    }
-
-    res.write("data: [DONE]\n\n");
-    res.end();
+    cacheChatResponse(body, fullText);
+    finishSse(res);
   } catch (error) {
     console.error("Server error:", error);
 
     if (!res.headersSent) {
-      sendJson(res, 500, { error: "Internal server error", detail: error.message });
+      sendJson(res, getChatErrorStatus(error), { error: getPublicChatError(error) });
       return;
     }
 
-    res.write(`data: ${JSON.stringify({ token: "\nConnection issue while generating the response." })}\n\n`);
-    res.write("data: [DONE]\n\n");
-    res.end();
+    writeSseData(res, { error: getPublicChatError(error) });
+    finishSse(res);
   }
 }
 

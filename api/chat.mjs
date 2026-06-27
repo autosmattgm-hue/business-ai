@@ -3,9 +3,14 @@ import { createRequire } from "node:module";
 const require = createRequire(import.meta.url);
 const { loadLocalEnv } = require("../lib/load-env.js");
 const {
-  sanitizeModelText,
+  cacheChatResponse,
+  getCachedChatResponse,
+  getChatErrorStatus,
+  getProviderErrorMessage,
+  getPublicChatError,
   validateChatRequest,
   requestChatCompletion,
+  streamCompletionTokens,
 } = require("../lib/chat-service.js");
 
 loadLocalEnv(process.cwd());
@@ -41,6 +46,29 @@ async function readJsonBody(req) {
   }
 
   return JSON.parse(rawBody);
+}
+
+function sendJson(res, statusCode, data) {
+  res.statusCode = statusCode;
+  res.setHeader("Content-Type", "application/json; charset=utf-8");
+  res.end(JSON.stringify(data));
+}
+
+function startSse(res) {
+  res.statusCode = 200;
+  res.setHeader("Cache-Control", "no-cache, no-transform");
+  res.setHeader("Connection", "keep-alive");
+  res.setHeader("Content-Type", "text/event-stream; charset=utf-8");
+  res.write(": connected\n\n");
+}
+
+function writeSseData(res, data) {
+  res.write(`data: ${JSON.stringify(data)}\n\n`);
+}
+
+function finishSse(res) {
+  res.write("data: [DONE]\n\n");
+  res.end();
 }
 
 export default async function handler(req, res) {
@@ -83,11 +111,26 @@ export default async function handler(req, res) {
 
   const validationError = validateChatRequest(body);
   if (validationError) {
-    res.statusCode = 400;
-    res.setHeader("Content-Type", "application/json; charset=utf-8");
-    res.end(JSON.stringify({ error: validationError }));
+    sendJson(res, 400, { error: validationError });
     return;
   }
+
+  const cachedResponse = getCachedChatResponse(body);
+  if (cachedResponse) {
+    startSse(res);
+    writeSseData(res, { token: cachedResponse, cached: true });
+    finishSse(res);
+    return;
+  }
+
+  if (!process.env.NVIDIA_API_KEY) {
+    sendJson(res, 503, {
+      error: "AI service is not configured. Add NVIDIA_API_KEY in Vercel Environment Variables, then redeploy.",
+    });
+    return;
+  }
+
+  startSse(res);
 
   try {
     const response = await requestChatCompletion(body, process.env.NVIDIA_API_KEY);
@@ -95,62 +138,26 @@ export default async function handler(req, res) {
     if (!response.ok) {
       const errorText = await response.text();
       console.error("NVIDIA API error:", errorText);
-      res.statusCode = response.status;
-      res.setHeader("Content-Type", "application/json; charset=utf-8");
-      res.end(JSON.stringify({ error: "AI service error", detail: errorText }));
+      writeSseData(res, { error: getProviderErrorMessage(response.status) });
+      finishSse(res);
       return;
     }
 
-    res.statusCode = 200;
-    res.setHeader("Cache-Control", "no-cache");
-    res.setHeader("Connection", "keep-alive");
-    res.setHeader("Content-Type", "text/event-stream; charset=utf-8");
+    const fullText = await streamCompletionTokens(response, (token) => {
+      writeSseData(res, { token });
+    });
 
-    let buffer = "";
-    let inThinking = false;
-
-    for await (const chunk of response.body) {
-      buffer += typeof chunk === "string" ? chunk : new TextDecoder().decode(chunk);
-      const lines = buffer.split("\n");
-      buffer = lines.pop() || "";
-
-      for (const line of lines) {
-        if (!line.trim() || line === "data: [DONE]" || !line.startsWith("data: ")) {
-          continue;
-        }
-
-        try {
-          const json = JSON.parse(line.slice(6));
-          const delta = json.choices?.[0]?.delta?.content || "";
-
-          if (delta.includes("<think>")) {
-            inThinking = true;
-            continue;
-          }
-
-          if (delta.includes("</think>")) {
-            inThinking = false;
-            continue;
-          }
-
-          if (!inThinking && delta) {
-            const cleanedDelta = sanitizeModelText(delta);
-            if (cleanedDelta) {
-              res.write(`data: ${JSON.stringify({ token: cleanedDelta })}\n\n`);
-            }
-          }
-        } catch (error) {
-          console.error("SSE parse error:", error.message);
-        }
-      }
-    }
-
-    res.write("data: [DONE]\n\n");
-    res.end();
+    cacheChatResponse(body, fullText);
+    finishSse(res);
   } catch (error) {
     console.error("Vercel API error:", error);
-    res.statusCode = 500;
-    res.setHeader("Content-Type", "application/json; charset=utf-8");
-    res.end(JSON.stringify({ error: "Internal server error", detail: error.message }));
+
+    if (!res.headersSent) {
+      sendJson(res, getChatErrorStatus(error), { error: getPublicChatError(error) });
+      return;
+    }
+
+    writeSseData(res, { error: getPublicChatError(error) });
+    finishSse(res);
   }
 }

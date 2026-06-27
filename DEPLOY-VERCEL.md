@@ -48,6 +48,14 @@ In the Vercel project:
 
 ```text
 NVIDIA_API_KEY=your_real_nvidia_key
+NVIDIA_MODEL=google/gemma-2-2b-it
+NVIDIA_FALLBACK_MODELS=
+NVIDIA_REQUEST_TIMEOUT_MS=12000
+SMARTBOSS_MAX_MESSAGE_CHARS=2000
+SMARTBOSS_MAX_HISTORY_ITEMS=8
+SMARTBOSS_MAX_OUTPUT_TOKENS=1400
+SMARTBOSS_AI_CACHE_TTL_MS=300000
+SMARTBOSS_AI_CACHE_MAX_ITEMS=500
 SMARTBOSS_PAYPAL_CLIENT_ID=your_paypal_client_id
 SMARTBOSS_PAYPAL_CLIENT_SECRET=your_paypal_client_secret
 SMARTBOSS_PAYPAL_ENVIRONMENT=live
@@ -120,6 +128,8 @@ Then test the AI:
 If the site loads but AI does not respond:
 
 - check `NVIDIA_API_KEY` in Vercel settings
+- check `NVIDIA_MODEL` if Vercel reports that the configured model is unavailable
+- keep `NVIDIA_FALLBACK_MODELS` empty unless you have verified those model IDs work with your NVIDIA account
 - redeploy after adding or changing the variable
 - check the `Functions` logs in Vercel
 
