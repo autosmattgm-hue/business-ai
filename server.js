@@ -10,6 +10,7 @@ const {
   validateChatRequest,
   requestChatCompletion,
 } = require("./lib/chat-service");
+const { createPayPalOrder, capturePayPalOrder } = require("./lib/paypal-service");
 
 loadLocalEnv(__dirname);
 
@@ -24,6 +25,10 @@ const PAGE_ROUTES = {
   "/ideas": "ideas.html",
   "/planner": "planner.html",
   "/pricing": "pricing.html",
+  "/pricing-strategy": "pricing-strategy.html",
+  "/pricing-builder": "pricing-strategy.html",
+  "/checkout": "checkout.html",
+  "/payment-success": "payment-success.html",
   "/revenue": "revenue.html",
   "/audit": "audit.html",
   "/email": "email.html",
@@ -121,6 +126,55 @@ async function handleRedeemCode(req, res) {
   }
 
   sendJson(res, 400, { error: "Invalid access code" });
+}
+
+async function handleCreatePayPalOrder(req, res) {
+  let body;
+
+  try {
+    body = JSON.parse(await readRequestBody(req));
+  } catch (error) {
+    sendJson(res, 400, { error: "Invalid JSON body", detail: error.message });
+    return;
+  }
+
+  try {
+    const order = await createPayPalOrder({
+      planKey: body?.planKey,
+      userId: body?.userId,
+      userEmail: body?.userEmail,
+    });
+    sendJson(res, 200, order);
+  } catch (error) {
+    sendJson(res, error.statusCode || 500, {
+      error: error.message || "Could not create PayPal order.",
+      detail: error.detail,
+    });
+  }
+}
+
+async function handleCapturePayPalOrder(req, res) {
+  let body;
+
+  try {
+    body = JSON.parse(await readRequestBody(req));
+  } catch (error) {
+    sendJson(res, 400, { error: "Invalid JSON body", detail: error.message });
+    return;
+  }
+
+  try {
+    const capture = await capturePayPalOrder({
+      orderId: body?.orderId,
+      planKey: body?.planKey,
+    });
+    sendJson(res, 200, capture);
+  } catch (error) {
+    sendJson(res, error.statusCode || 500, {
+      error: error.message || "Could not capture PayPal order.",
+      detail: error.detail,
+    });
+  }
 }
 
 function getSafeFilePath(urlPath) {
@@ -291,6 +345,16 @@ const server = http.createServer(async (req, res) => {
 
   if (req.method === "POST" && urlPath === "/api/redeem-code") {
     await handleRedeemCode(req, res);
+    return;
+  }
+
+  if (req.method === "POST" && urlPath === "/api/paypal-create-order") {
+    await handleCreatePayPalOrder(req, res);
+    return;
+  }
+
+  if (req.method === "POST" && urlPath === "/api/paypal-capture-order") {
+    await handleCapturePayPalOrder(req, res);
     return;
   }
 

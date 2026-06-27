@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Payment Success — THE SMART BOSS AI</title>
+  <meta name="description" content="Smart Boss AI payment success and account activation.">
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>👑</text></svg>">
+</head>
+<body>
+
+<nav class="nav">
+  <a href="index.html" class="nav-brand">
+    <div class="nav-logo">👑</div>
+    <div class="nav-name">THE SMART BOSS<span>AI Platform</span></div>
+  </a>
+  <ul class="nav-links" id="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="pricing.html">Paid Plans</a></li>
+    <li><a href="settings.html">Settings</a></li>
+  </ul>
+  <button class="nav-menu-btn" id="nav-menu-btn">☰</button>
+</nav>
+
+<div class="page-header">
+  <div class="page-header-content">
+    <span class="section-label">// Payment Complete</span>
+    <h1 style="font-family:var(--font-display);color:var(--text-primary);margin:0.5rem 0 1rem;">
+      Activating Your <span class="shimmer-text">Pro Access</span>
+    </h1>
+    <p style="color:var(--text-muted);font-size:0.95rem;" id="success-copy">
+      Please wait while Smart Boss AI finishes your upgrade.
+    </p>
+  </div>
+</div>
+
+<section class="section" style="padding-top:0;">
+  <div class="section-inner" style="max-width:760px;">
+    <div class="prompt-form" style="text-align:center;">
+      <div style="font-size:3rem;margin-bottom:1rem;">👑</div>
+      <h2 id="success-title" style="font-family:var(--font-display);color:var(--gold-primary);margin-bottom:0.75rem;">Checking your payment return...</h2>
+      <p id="success-status" style="color:var(--text-secondary);font-size:0.95rem;margin-bottom:1.25rem;">
+        Looking for your pending checkout.
+      </p>
+      <div style="display:flex;gap:0.75rem;justify-content:center;flex-wrap:wrap;">
+        <a href="settings.html" class="btn btn-primary">Open Settings</a>
+        <a href="pricing.html" class="btn btn-outline">Back to Plans</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div id="toast-container" class="toast-container"></div>
+<script src="main.js"></script>
+<script>
+function setSuccessMessage(title, status, type = "info") {
+  document.getElementById("success-title").textContent = title;
+  const statusEl = document.getElementById("success-status");
+  statusEl.textContent = status;
+  statusEl.style.color = type === "error" ? "var(--accent-red)" : "var(--text-secondary)";
+}
+
+function isCheckoutFresh(checkout) {
+  const startedAt = Date.parse(checkout?.startedAt || "");
+  if (!Number.isFinite(startedAt)) return false;
+  const fourHours = 4 * 60 * 60 * 1000;
+  return Date.now() - startedAt <= fourHours;
+}
+
+function initPaymentSuccess() {
+  const user = getCurrentSmartBossUser();
+  if (!user) {
+    setSuccessMessage("Log in to finish activation", "Your browser is not logged in. Log in with the same account, then open Settings or restart checkout.", "error");
+    return;
+  }
+
+  const checkout = getPendingSmartBossCheckout();
+  if (!checkout) {
+    setSuccessMessage("No pending checkout found", "If your payment was completed, use your Pro code in Settings or contact support with your PayPal receipt.", "error");
+    return;
+  }
+
+  if (checkout.userId !== user.id) {
+    setSuccessMessage("Wrong account for this checkout", "Log in with the account that started checkout, then return here.", "error");
+    return;
+  }
+
+  if (!isCheckoutFresh(checkout)) {
+    clearPendingSmartBossCheckout();
+    setSuccessMessage("Checkout session expired", "For security, restart checkout so Smart Boss AI can attach the upgrade to the right account.", "error");
+    return;
+  }
+
+  setSuccessMessage(
+    "Payment return received",
+    "For security, Smart Boss AI only auto-unlocks after verified PayPal API capture. If you paid through a payment link, use the Pro code from the seller or contact support with your PayPal receipt.",
+    "error",
+  );
+}
+
+document.addEventListener("DOMContentLoaded", initPaymentSuccess);
+</script>
+</body>
+</html>

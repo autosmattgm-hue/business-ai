@@ -1,0 +1,15 @@
+.env
+.env.local
+.env.*.local
+node_modules/
+.vercel/
+*.log
+server.out.log
+server.err.log
+server3010.out.log
+server3010.err.log
+launch-server.out.log
+launch-server.err.log
+live-server.out.log
+live-server.err.log
+smart-boss-ai/

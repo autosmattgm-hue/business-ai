@@ -58,6 +58,7 @@ async function fetchApi(path, init = {}) {
 const SMART_BOSS_STORAGE = {
   users: "smartboss_users_v1",
   session: "smartboss_session_v1",
+  checkout: "smartboss_pending_checkout_v1",
 };
 
 const SMART_BOSS_DEFAULT_ACCESS = {
@@ -260,6 +261,12 @@ function getDefaultPublicConfig() {
       lifetime: "",
       paypal: "",
     },
+    paypal: {
+      clientId: "",
+      currency: "USD",
+      environment: "sandbox",
+      enabled: false,
+    },
     freeAccess: {
       dailyRequests: SMART_BOSS_DEFAULT_ACCESS.freeDailyRequests,
       promoCode: SMART_BOSS_DEFAULT_ACCESS.freePromoCode,
@@ -268,7 +275,29 @@ function getDefaultPublicConfig() {
     },
     plans: {
       free: { name: "Free Starter" },
-      pro: { name: "Smart Boss Pro" },
+      pro: {
+        name: "Smart Boss Pro",
+        priceOptions: {
+          monthly: {
+            price: "$9",
+            amount: "9.00",
+            cadence: "/month",
+            description: "Best for users who want affordable access without a yearly commitment.",
+          },
+          yearly: {
+            price: "$79",
+            amount: "79.00",
+            cadence: "/year",
+            description: "Good for loyal users and gives you better upfront cash flow.",
+          },
+          lifetime: {
+            price: "$149",
+            amount: "149.00",
+            cadence: "one-time",
+            description: "A launch deal for early supporters who want long-term access and help fund growth faster.",
+          },
+        },
+      },
       admin: { name: "Admin Unlimited" },
     },
   };
@@ -298,9 +327,21 @@ async function loadSmartBossPublicConfig() {
           ...getDefaultPublicConfig().paymentLinks,
           ...(config.paymentLinks || {}),
         },
+        paypal: {
+          ...getDefaultPublicConfig().paypal,
+          ...(config.paypal || {}),
+        },
         plans: {
           ...getDefaultPublicConfig().plans,
           ...(config.plans || {}),
+          pro: {
+            ...getDefaultPublicConfig().plans.pro,
+            ...(config.plans?.pro || {}),
+            priceOptions: {
+              ...getDefaultPublicConfig().plans.pro.priceOptions,
+              ...(config.plans?.pro?.priceOptions || {}),
+            },
+          },
         },
       };
 
@@ -312,6 +353,94 @@ async function loadSmartBossPublicConfig() {
   })();
 
   return smartBossPublicConfigPromise;
+}
+
+function getSmartBossPaidPlanLabel(planKey) {
+  const labels = {
+    monthly: "Smart Boss Pro Monthly",
+    yearly: "Smart Boss Pro Yearly",
+    lifetime: "Founder Lifetime",
+  };
+
+  return labels[planKey] || "Smart Boss Pro";
+}
+
+function normalizeSmartBossPaidPlanKey(planKey) {
+  const normalized = String(planKey || "").trim().toLowerCase();
+  return ["monthly", "yearly", "lifetime"].includes(normalized) ? normalized : "monthly";
+}
+
+function getPendingSmartBossCheckout() {
+  return readStorageJson(SMART_BOSS_STORAGE.checkout, null);
+}
+
+function clearPendingSmartBossCheckout() {
+  if (!isStorageAvailable()) return;
+  window.localStorage.removeItem(SMART_BOSS_STORAGE.checkout);
+}
+
+function startSmartBossCheckout({ planKey, paymentUrl = "", provider = "paypal" } = {}) {
+  const user = getCurrentSmartBossUser();
+  if (!user) {
+    throw new Error("Please log in or create an account before checkout.");
+  }
+
+  const normalizedPlanKey = normalizeSmartBossPaidPlanKey(planKey);
+  const checkout = {
+    id: createSmartBossUserId(),
+    provider,
+    planKey: normalizedPlanKey,
+    planLabel: getSmartBossPaidPlanLabel(normalizedPlanKey),
+    paymentUrl,
+    userId: user.id,
+    email: user.email,
+    startedAt: new Date().toISOString(),
+  };
+
+  writeStorageJson(SMART_BOSS_STORAGE.checkout, checkout);
+  return checkout;
+}
+
+function createLocalSmartBossActivationCode(planKey) {
+  const planPart = String(planKey || "pro").toUpperCase().replace(/[^A-Z0-9]/g, "").slice(0, 12) || "PRO";
+  const randomPart = Math.random().toString(16).slice(2, 10).toUpperCase().padEnd(8, "0");
+  return `SB-${planPart}-PRO-${randomPart}`;
+}
+
+function activateSmartBossPaidPlan({ planKey = "monthly", provider = "paypal", orderId = "", checkoutId = "", activationCode = "" } = {}) {
+  const user = getCurrentSmartBossUser();
+  if (!user) {
+    throw new Error("Please log in before activating paid access.");
+  }
+
+  const normalizedPlanKey = normalizeSmartBossPaidPlanKey(planKey);
+  const activatedAt = new Date().toISOString();
+  const paidActivationCode = String(activationCode || "").trim() || createLocalSmartBossActivationCode(normalizedPlanKey);
+
+  updateCurrentSmartBossUser((draft) => {
+    draft.plan = "pro";
+    draft.role = "user";
+    draft.unlockedAt = activatedAt;
+    draft.paidPlanKey = normalizedPlanKey;
+    draft.paidPlanLabel = getSmartBossPaidPlanLabel(normalizedPlanKey);
+    draft.paidAccessActivatedAt = activatedAt;
+    draft.paidAccessProvider = provider;
+    draft.paidCheckoutId = checkoutId || draft.paidCheckoutId || "";
+    draft.paypalOrderId = orderId || draft.paypalOrderId || "";
+    draft.paidActivationCode = paidActivationCode;
+    return draft;
+  });
+
+  clearPendingSmartBossCheckout();
+
+  return {
+    ok: true,
+    plan: "pro",
+    paidPlanKey: normalizedPlanKey,
+    paidPlanLabel: getSmartBossPaidPlanLabel(normalizedPlanKey),
+    activationCode: paidActivationCode,
+    message: `${getSmartBossPaidPlanLabel(normalizedPlanKey)} unlocked.`,
+  };
 }
 
 function getFreeAccessConfigSync() {
@@ -535,6 +664,7 @@ function initAuthNav() {
   if (!navList) return;
 
   ensureNavLink(navList, "revenue.html", "Revenue AI");
+  ensureNavLink(navList, "pricing-strategy.html", "Price Builder");
   ensureNavLink(navList, "pricing.html", "Pricing");
   ensureNavLink(navList, "audit.html", "Money Audit");
   ensureNavLink(navList, "cv.html", "CV Creator");
@@ -1604,3 +1734,8 @@ window.getCurrentSmartBossUser = getCurrentSmartBossUser;
 window.getCurrentUsageSnapshot = getCurrentUsageSnapshot;
 window.redeemSmartBossAccessCode = redeemSmartBossAccessCode;
 window.loadSmartBossPublicConfig = loadSmartBossPublicConfig;
+window.startSmartBossCheckout = startSmartBossCheckout;
+window.getPendingSmartBossCheckout = getPendingSmartBossCheckout;
+window.clearPendingSmartBossCheckout = clearPendingSmartBossCheckout;
+window.activateSmartBossPaidPlan = activateSmartBossPaidPlan;
+window.getSmartBossPaidPlanLabel = getSmartBossPaidPlanLabel;

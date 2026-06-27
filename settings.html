@@ -88,7 +88,7 @@
         <div class="feature-card">
           <div class="feature-icon">💼</div>
           <div class="feature-title">Paid Access</div>
-          <p class="feature-desc">After payment, use your pro access code here to unlock the paid plan on this device.</p>
+          <p class="feature-desc">Verified PayPal checkout unlocks Pro automatically. Manual Pro codes still work as a backup.</p>
         </div>
         <div class="feature-card">
           <div class="feature-icon">👑</div>
@@ -136,6 +136,15 @@ function renderSettingsPage() {
   const usageText = usage.unlimited
     ? "Unlimited AI access"
     : `${usage.remainingToday} of ${usage.totalToday} AI requests left today`;
+  const paidPlanText = user.plan === "pro" && user.paidPlanLabel
+    ? `<div style="font-size:0.8rem;color:var(--text-muted);margin-top:0.35rem;">Activated plan: ${user.paidPlanLabel}</div>`
+    : "";
+  const paymentProviderText = user.paidAccessProvider
+    ? `<div style="font-size:0.8rem;color:var(--text-muted);margin-top:0.25rem;">Payment source: ${user.paidAccessProvider}</div>`
+    : "";
+  const paidActivationCodeText = user.paidActivationCode
+    ? `<div style="font-size:0.8rem;color:var(--text-muted);margin-top:0.25rem;">Subscription code: <span style="font-family:var(--font-mono);color:var(--gold-primary);">${user.paidActivationCode}</span></div>`
+    : "";
 
   box.innerHTML = `
     <div style="padding:1rem 1.25rem;background:var(--bg-deep);border:1px solid rgba(255,255,255,0.06);border-radius:var(--radius-md);">
@@ -149,6 +158,9 @@ function renderSettingsPage() {
     <div style="padding:1rem 1.25rem;background:var(--bg-deep);border:1px solid rgba(255,255,255,0.06);border-radius:var(--radius-md);">
       <div style="font-size:0.72rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.12em;font-family:var(--font-mono);margin-bottom:0.4rem;">Plan</div>
       <div style="font-size:1rem;color:var(--gold-primary);font-weight:700;">${formatPlanLabel(user.plan)}</div>
+      ${paidPlanText}
+      ${paymentProviderText}
+      ${paidActivationCodeText}
     </div>
     <div style="padding:1rem 1.25rem;background:var(--bg-deep);border:1px solid rgba(255,255,255,0.06);border-radius:var(--radius-md);">
       <div style="font-size:0.72rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.12em;font-family:var(--font-mono);margin-bottom:0.4rem;">Today</div>
@@ -158,6 +170,11 @@ function renderSettingsPage() {
   `;
 
   help.textContent = `Free code ${freeAccess.promoCode} adds ${freeAccess.promoBonusRequests} extra AI requests and can be redeemed ${freeAccess.maxDailyPromoRedeems} times per day.`;
+
+  const params = new URLSearchParams(window.location.search);
+  if (params.get("payment") === "success" && user.plan === "pro") {
+    help.textContent = `${user.paidPlanLabel || "Smart Boss Pro"} is active. You now have unlimited AI access on this account.`;
+  }
 }
 
 function fillFreeCode() {
