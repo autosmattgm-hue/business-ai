@@ -1,0 +1,17 @@
+=== SERIAL RETEST OF TIMED-OUT MODELS (120s cap) ===
+FAIL ERR  120016ms  moonshotai/kimi-k3                     || AbortError
+FAIL ERR  120002ms  deepseek-ai/deepseek-v4.1-flash        || AbortError
+FAIL ERR  120003ms  z-ai/glm-5.3                           || AbortError
+PASS 200   40095ms  z-ai/glm-5.3-flash                     content="OK"
+PASS 200   85159ms  openai/gpt-oss-20b                     content="OK"
+FAIL ERR  120002ms  google/gemma-4-31b-it                  || AbortError
+FAIL ERR  120001ms  meta/llama-3.2-90b-vision-instruct     || AbortError
+
+=== TIME TO FIRST BYTE (stream:true, real business prompt) ===
+200 ttfb=15913ms total= 23703ms chunks= 926 finish=stop    nvidia/nemotron-3-nano-omni-30b-a3b-reasoning
+200 ttfb= 1197ms total=  6758ms chunks= 145 finish=stop    nvidia/nemotron-3-super-120b-a12b
+200 ttfb= 1574ms total= 13911ms chunks= 197 finish=stop    nvidia/nemotron-3-ultra-550b-a55b
+200 ttfb=  464ms total=  9314ms chunks= 295 finish=stop    meta/llama-3.2-11b-vision-instruct
+200 ttfb=20745ms total= 20746ms chunks= 640 finish=length  nvidia/nemotron-3.5-lightning-30b-a3b
+
+=== DONE ===

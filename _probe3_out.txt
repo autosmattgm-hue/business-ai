@@ -1,0 +1,29 @@
+=== VISION: http image url ===
+PASS 200 10976ms [http-img] meta/llama-3.2-11b-vision-instruct
+      "The image shows a wooden boardwalk in a grassy field."
+PASS 200 5658ms [http-img] nvidia/nemotron-3-nano-omni-30b-a3b-reasoning
+      "A wooden boardwalk winds through a field of tall green grass under a bright blue sky."
+
+=== VISION: base64 data: URL (needed for user uploads) ===
+FAIL 500 406ms [data-url] meta/llama-3.2-11b-vision-instruct
+      || Internal Server Error
+FAIL 500 308ms [data-url] nvidia/nemotron-3-nano-omni-30b-a3b-reasoning
+      || {"error":{"message":"Exception: Failed to load image from data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAFUlEQVR42m...: Failed 
+
+=== TEXT-ONLY MODEL given image parts (should reject?) ===
+PASS 200 3584ms [img-on-text] nvidia/nemotron-3-nano-omni-30b-a3b-reasoning
+      "A wooden boardwalk stretches through a field of tall green grass, leading toward a distant tree line under a blue sky with wispy clouds."
+
+=== reasoning_effort on winners ===
+PASS 200 598ms [reasoning_effort=low] nvidia/nemotron-3-nano-omni-30b-a3b-reasoning
+      "OK"
+PASS 200 768ms [reasoning_effort=low] nvidia/nemotron-3-super-120b-a12b
+      "OK"
+PASS 200 760ms [reasoning_effort=low] nvidia/nemotron-3-ultra-550b-a55b
+      "OK"
+
+=== name/label sanity: streaming business answer quality ===
+PASS 200 2608ms [quality] nvidia/nemotron-3-nano-omni-30b-a3b-reasoning
+      "The fastest way for a 3‑person design studio to add revenue is to secure a high‑value retainer or project with an existing client by quickly upsellin
+
+=== DONE ===

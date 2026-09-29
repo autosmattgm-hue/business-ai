@@ -1,0 +1,29 @@
+
+### /v1/models status=200 count=81
+vision-ish candidates:
+   meta/llama-3.2-11b-vision-instruct
+   meta/llama-3.2-90b-vision-instruct
+   microsoft/phi-3-vision-128k-instruct
+   moonshotai/kimi-k2.6
+   moonshotai/kimi-k3
+   nvidia/llama-3.2-nemoretriever-1b-vlm-embed-v1
+   nvidia/llama-nemotron-embed-vl-1b-v2
+   nvidia/nemotron-3-nano-omni-30b-a3b-reasoning
+
+chosen vision model: meta/llama-3.2-11b-vision-instruct
+
+### A: wikimedia url :: model=meta/llama-3.2-11b-vision-instruct
+status=500 headers=769ms
+BODY: Internal Server Error
+
+### B: inline data url :: model=meta/llama-3.2-11b-vision-instruct
+status=200 headers=182ms
+content=43 reasoning=0 finish=stop total=6556ms
+content: The image is a solid salmon-colored square.
+raw head: data: {"id":"chatcmpl-be53b98a472f4ffd9680f347a80a320c","object":"chat.completion.chunk","created":1790723675,"model":"meta/llama-3.2-11b-vision-instruct","choices":[{"index":0,"delta":{"role":"assistant","content":""},"logprobs":null,"finish_reason":null}]} data: {"id":"chatcmpl-be53b98a472f4ffd96
+
+### C: text only sanity :: model=meta/llama-3.2-11b-vision-instruct
+status=200 headers=412ms
+content=11 reasoning=0 finish=stop total=572ms
+content: VISION-SANE
+raw head: data: {"id":"chatcmpl-7c506a10b0984eb38af0c35fea9d9128","object":"chat.completion.chunk","created":1790723682,"model":"meta/llama-3.2-11b-vision-instruct","choices":[{"index":0,"delta":{"role":"assistant","content":""},"logprobs":null,"finish_reason":null}]} data: {"id":"chatcmpl-7c506a10b0984eb38a

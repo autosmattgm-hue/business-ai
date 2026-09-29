@@ -1,0 +1,12 @@
+### remote image urls against meta/llama-3.2-11b-vision-instruct (non-streaming)
+200  3290ms  github avatar    This image is of the GitHub mascot, a cartoon cat with a black body and a smiling face.
+500   852ms  github raw       Internal Server Error
+200  1763ms  picsum           The image depicts a woman sitting in the woods, writing in a notebook.
+500   215ms  wikimedia thumb  Internal Server Error
+500   220ms  wikimedia full   Internal Server Error
+
+### same wikimedia thumb through nvidia/nemotron-3-nano-omni-30b-a3b-reasoning
+500   362ms  omni-30b         [object Object]
+
+### llama-3.2-90b-vision with wikimedia thumb
+504 302126ms  llama-90b-v      

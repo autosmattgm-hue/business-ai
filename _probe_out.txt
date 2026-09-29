@@ -1,0 +1,46 @@
+=== PLAIN CHAT (stream:false) ===
+PASS 200    9000ms  nvidia/nemotron-3-ultra-550b-a55b          content="OK"
+PASS 200    8655ms  nvidia/nemotron-3-super-120b-a12b          content="OK"
+PASS 200   14129ms  nvidia/nemotron-3.5-lightning-30b-a3b      content="Here's a thinking process:\n\n1.  **Analyze User Input:** T
+PASS 200   10527ms  nvidia/nemotron-3-nano-omni-30b-a3b-reasoning content="OK"
+FAIL 404    8541ms  nvidia/nemotron-nano-3-30b-a3b             || {"status":404,"title":"Not Found","detail":"Function '2b2dcd47-c858-425a-9c04-4cacf2eac993': Not found for acc
+FAIL 404    8561ms  nvidia/llama-3.1-nemotron-51b-instruct     || {"status":404,"title":"Not Found","detail":"Function '5beba52c-65a9-4f46-8cd9-656689a1b205': Not found for acc
+FAIL 404    8547ms  nvidia/nemotron-4-340b-instruct            || {"status":404,"title":"Not Found","detail":"Function 'b0fcd392-e905-4ab4-8eb9-aeae95c30b37': Not found for acc
+FAIL ERR   45007ms  moonshotai/kimi-k3                         || AbortError: This operation was aborted
+FAIL 404    8467ms  moonshotai/kimi-k2.6                       || {"status":404,"title":"Not Found","detail":"Function '23d4f03a-b8a6-4adb-a183-7daa083a09cc': Not found for acc
+FAIL ERR   45005ms  deepseek-ai/deepseek-v4.1-flash            || AbortError: This operation was aborted
+FAIL ERR   45005ms  z-ai/glm-5.3                               || AbortError: This operation was aborted
+FAIL ERR   45007ms  z-ai/glm-5.3-flash                         || AbortError: This operation was aborted
+FAIL ERR   45006ms  openai/gpt-oss-20b                         || AbortError: This operation was aborted
+FAIL 404    8460ms  mistralai/mistral-large-2-instruct         || {"status":404,"title":"Not Found","detail":"Function '7fadd4de-e22a-48e4-90e9-f02ef14a74b9': Not found for acc
+FAIL ERR   45005ms  google/gemma-4-31b-it                      || AbortError: This operation was aborted
+FAIL 404    8475ms  google/gemma-3-12b-it                      || {"status":404,"title":"Not Found","detail":"Function 'ee47df99-c92b-4dc9-b3a7-f3fb0f087b73': Not found for acc
+FAIL 404    8460ms  google/gemma-3-4b-it                       || {"status":404,"title":"Not Found","detail":"Function 'c322f327-55a3-4af3-a91f-c757e2b8b135': Not found for acc
+PASS 200    8480ms  meta/llama-3.2-11b-vision-instruct         content="OK"
+FAIL ERR   45009ms  meta/llama-3.2-90b-vision-instruct         || AbortError: This operation was aborted
+FAIL 404    8668ms  microsoft/phi-3-vision-128k-instruct       || {"status":404,"title":"Not Found","detail":"Function '20f2537e-8593-4eb9-ad40-60eee3bbaa55': Not found for acc
+
+=== REASONING_EFFORT SUPPORT ===
+FAIL ERR   45002ms  moonshotai/kimi-k3                         || AbortError: This operation was aborted
+FAIL 404     463ms  nvidia/nemotron-nano-3-30b-a3b             || {"status":404,"title":"Not Found","detail":"Function '2b2dcd47-c858-425a-9c04-4cacf2eac993': Not found for acc
+FAIL 503     599ms  nvidia/nemotron-3-super-120b-a12b          || {"error":{"message":"Service temporarily overloaded","type":"Service Unavailable","code":503}}
+FAIL ERR   45006ms  deepseek-ai/deepseek-v4.1-flash            || AbortError: This operation was aborted
+FAIL ERR   45006ms  openai/gpt-oss-20b                         || AbortError: This operation was aborted
+
+=== STREAM:true SMOKE ===
+200 1210ms nvidia/nemotron-3-nano-omni-30b-a3b-reasoning  delta=true hasThinkTag=false bytes=10589
+504 302384ms moonshotai/kimi-k3  delta=false hasThinkTag=false bytes=0
+504 302377ms openai/gpt-oss-20b  delta=false hasThinkTag=false bytes=0
+200 1368ms nvidia/nemotron-3.5-lightning-30b-a3b  delta=true hasThinkTag=true bytes=13773
+
+=== VISION (image_url parts) ===
+200 927ms meta/llama-3.2-11b-vision-instruct
+     {"id":"chatcmpl-db28495a6d034dcbad705e87573228b9","object":"chat.completion","created":1790638121,"model":"meta/llama-3.2-11b-vision-instruct","choices":[{"index":0,"message":{"role":"assist
+ERR meta/llama-3.2-90b-vision-instruct fetch failed
+404 698ms microsoft/phi-3-vision-128k-instruct
+     {"status":404,"title":"Not Found","detail":"Function '20f2537e-8593-4eb9-ad40-60eee3bbaa55': Not found for account 'D3QLXTQJoond9yij-VXa16-nXbihTcLZ53TYG1k37s0'"}
+200 6009ms nvidia/nemotron-3-nano-omni-30b-a3b-reasoning
+     {"id":"chatcmpl-67e1457d-730e-4a37-92a6-d28d2c418c6b","choices":[{"index":0,"message":{"content":"A wooden boardwalk leads through a field of tall green grass under a blue sky.","role":"assi
+ERR openai/gpt-oss-20b fetch failed
+
+=== DONE ===

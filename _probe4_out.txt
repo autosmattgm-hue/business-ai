@@ -1,0 +1,17 @@
+
+--- round 1 (cold) ---
+0 SLOW nvidia/nemotron-3-super-120b-a12b :: headers=0 firstToken=- total=11092 chars=0 :: TypeError: UND_ERR_CONNECT_TIMEOUT
+0 SLOW meta/llama-3.2-11b-vision-instruct :: headers=0 firstToken=- total=10637 chars=0 :: TypeError: UND_ERR_CONNECT_TIMEOUT
+0 SLOW nvidia/nemotron-3-ultra-550b-a55b :: headers=0 firstToken=- total=10629 chars=0 :: TypeError: UND_ERR_CONNECT_TIMEOUT
+200 OK  nvidia/nemotron-3-nano-omni-30b-a3b-reasoning :: headers=10749 firstToken=17453 total=17474 chars=5
+200 SLOW nvidia/nemotron-3.5-lightning-30b-a3b :: headers=18603 firstToken=- total=70022 chars=0 :: AbortError: This operation was aborted
+
+--- round 2 (repeat) ---
+200 SLOW nvidia/nemotron-3-super-120b-a12b :: headers=4119 firstToken=- total=4120 chars=0 :: streamed 200 but zero content tokens
+200 OK  meta/llama-3.2-11b-vision-instruct :: headers=9096 firstToken=9202 total=9216 chars=5
+200 OK  nvidia/nemotron-3-ultra-550b-a55b :: headers=11336 firstToken=13307 total=13308 chars=5
+0 SLOW nvidia/nemotron-3-nano-omni-30b-a3b-reasoning :: headers=0 firstToken=- total=10600 chars=0 :: TypeError: UND_ERR_CONNECT_TIMEOUT
+0 SLOW nvidia/nemotron-3.5-lightning-30b-a3b :: headers=0 firstToken=- total=10597 chars=0 :: TypeError: UND_ERR_CONNECT_TIMEOUT
+
+--- parallel race (super + vision, first token wins) ---
+race winner after 11076ms :: meta/llama-3.2-11b-vision-instruct firstToken=11075ms
