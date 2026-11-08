@@ -17,7 +17,6 @@ You need:
 - A Vercel account
 - A GitHub account
 - Your NVIDIA API key
-- PayPal REST app credentials if you want automatic paid-plan activation
 
 ## Recommended Flow
 
@@ -48,25 +47,6 @@ In the Vercel project:
 
 ```text
 NVIDIA_API_KEY=your_real_nvidia_key
-NVIDIA_MODEL=nvidia/llama-3.1-nemotron-nano-8b-v1
-NVIDIA_FALLBACK_MODELS=nvidia/nvidia-nemotron-nano-9b-v2
-NVIDIA_REQUEST_TIMEOUT_MS=8000
-SMARTBOSS_MAX_MESSAGE_CHARS=2000
-SMARTBOSS_MAX_HISTORY_ITEMS=4
-SMARTBOSS_MAX_OUTPUT_TOKENS=1150
-SMARTBOSS_AUTO_CONTINUE_ROUNDS=2
-SMARTBOSS_AI_CACHE_TTL_MS=300000
-SMARTBOSS_AI_CACHE_MAX_ITEMS=500
-SMARTBOSS_PAYPAL_CLIENT_ID=your_paypal_client_id
-SMARTBOSS_PAYPAL_CLIENT_SECRET=your_paypal_client_secret
-SMARTBOSS_PAYPAL_ENVIRONMENT=live
-SMARTBOSS_PAYPAL_CURRENCY=USD
-SMARTBOSS_PLAN_MONTHLY_AMOUNT=9.00
-SMARTBOSS_PLAN_YEARLY_AMOUNT=79.00
-SMARTBOSS_PLAN_LIFETIME_AMOUNT=149.00
-SMARTBOSS_PAYMENT_LINK_MONTHLY=https://www.paypal.com/ncp/payment/WKR8LDGWABW6J
-SMARTBOSS_PAYMENT_LINK_YEARLY=https://www.paypal.com/ncp/payment/8BWQCDZ9JSS4J
-SMARTBOSS_PAYMENT_LINK_LIFETIME=https://www.paypal.com/ncp/payment/54X56PTY2T4Q8
 ```
 
 Apply it to:
@@ -99,10 +79,7 @@ After deployment, Vercel will serve:
 
 - `vercel.json`: enables clean URLs like `/business`
 - `api/chat.mjs`: Vercel serverless function
-- `api/paypal-create-order.mjs`: creates verified PayPal checkout orders
-- `api/paypal-capture-order.mjs`: captures PayPal payment before Pro activation
 - `lib/chat-service.js`: shared AI prompt and streaming logic
-- `lib/paypal-service.js`: server-side PayPal API integration
 - `server.js`: local development server only
 
 ## Test After Deployment
@@ -114,8 +91,6 @@ After the first deploy, test these pages:
 - `/ideas`
 - `/planner`
 - `/pricing`
-- `/pricing-strategy`
-- `/checkout?plan=monthly`
 - `/resources`
 - `/presentation`
 - `/prompt`
@@ -129,25 +104,8 @@ Then test the AI:
 If the site loads but AI does not respond:
 
 - check `NVIDIA_API_KEY` in Vercel settings
-- check `NVIDIA_MODEL` if Vercel reports that the configured model is unavailable
-- keep `NVIDIA_FALLBACK_MODELS` short for speed; add more models only if the primary model is unreliable
 - redeploy after adding or changing the variable
 - check the `Functions` logs in Vercel
-
-Then test paid checkout:
-
-1. Open `/pricing`
-2. Click a paid plan
-3. Confirm `/checkout?plan=...` opens
-4. Complete PayPal checkout
-5. Confirm the app redirects to `/settings?payment=success...` and shows Pro access
-
-If PayPal checkout falls back to the old payment link:
-
-- check `SMARTBOSS_PAYPAL_CLIENT_ID`
-- check `SMARTBOSS_PAYPAL_CLIENT_SECRET`
-- check `SMARTBOSS_PAYPAL_ENVIRONMENT=live`
-- redeploy after changing Vercel environment variables
 
 ## Redeploying Changes
 

@@ -2,13 +2,9 @@ import { createRequire } from "node:module";
 
 const require = createRequire(import.meta.url);
 const { loadLocalEnv } = require("../lib/load-env.js");
+const { MODEL, FALLBACK_MODELS } = require("../lib/chat-service.js");
+
 loadLocalEnv(process.cwd());
-const {
-  MODEL,
-  FALLBACK_MODELS,
-  DEFAULT_MODEL_PROFILE,
-  MODEL_OPTIONS,
-} = require("../lib/chat-service.js");
 
 export default function handler(req, res) {
   res.setHeader("Access-Control-Allow-Origin", "*");
@@ -35,8 +31,6 @@ export default function handler(req, res) {
     service: "smart-boss-ai",
     model: MODEL,
     fallbackModels: FALLBACK_MODELS,
-    defaultModelProfile: DEFAULT_MODEL_PROFILE,
-    modelOptions: MODEL_OPTIONS,
     hasApiKey: Boolean(process.env.NVIDIA_API_KEY),
   }));
 }

@@ -6,7 +6,9 @@
   <title>THE SMART BOSS AI — Business Strategy, Launch Planning, Pricing & Website Tools</title>
   <meta name="description" content="THE SMART BOSS AI helps founders generate business ideas, build launch plans, create pricing strategies, improve pitches, and choose the right websites and tools.">
   <link rel="stylesheet" href="style.css">
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>👑</text></svg>">
+  <link rel="manifest" href="manifest.webmanifest">
+  <meta name="theme-color" content="#07111f">
+  <link rel="icon" href="assets/ai-crown.svg" type="image/svg+xml">
 </head>
 <body>
 
@@ -37,24 +39,59 @@
   <div class="hero-grid"></div>
 
   <div class="hero-content">
-    <div class="hero-badge">
-      Revenue-Focused AI Business Workspace
-    </div>
+    <div class="hero-badge"><span class="status-dot"></span> Your always-on business operating system</div>
 
     <h1 class="hero-title">
-      <span class="line1">Build Smarter</span>
-      <span class="line2">SMART BOSS</span>
-      <span class="line3">AI</span>
+      <span class="line1">Turn ideas into</span>
+      <span class="line2">business momentum.</span>
+      <span class="line3">With AI.</span>
     </h1>
 
     <p class="hero-desc">
-      Your AI business operating partner for ideas, launch planning, pricing, pitch prep,
-      website strategy, and the tools you need to grow with confidence.
+      Go from a blank page to your next profitable move. Plan launches, create offers, write
+      client-ready work, and make sharper business decisions in one focused workspace.
     </p>
 
     <div class="hero-actions">
-      <a href="business.html" class="btn btn-primary">👑 Open Business AI</a>
-      <a href="revenue.html" class="btn btn-outline">💰 Open Revenue AI</a>
+      <a href="register.html" class="btn btn-primary">Start free <span>→</span></a>
+      <a href="#popular-workflows" class="btn btn-outline">Explore workflows</a>
+      <button id="install-app-btn" class="btn btn-ghost install-app-btn" hidden>Install app</button>
+    </div>
+    <div class="hero-proof" aria-label="Platform benefits"><span>✓ No setup required</span><span>✓ Built for action</span><span>✓ Works on mobile</span></div>
+  </div>
+</section>
+
+<section class="strategy-launcher" aria-labelledby="strategy-launcher-title">
+  <div class="strategy-launcher-inner">
+    <div class="launcher-heading">
+      <span class="eyebrow">ONE QUESTION AWAY</span>
+      <h2 id="strategy-launcher-title">Get unstuck in the next 60 seconds.</h2>
+    </div>
+    <form id="homepage-strategy-form" class="strategy-form">
+      <label class="sr-only" for="homepage-strategy-input">Tell Smart Boss what you need help with</label>
+      <input id="homepage-strategy-input" maxlength="1000" required placeholder="Example: I have $500 and want to start a business this month…">
+      <button class="btn btn-primary" type="submit">Ask Smart Boss <span>→</span></button>
+    </form>
+    <div class="prompt-chips" aria-label="Suggested questions">
+      <button type="button" data-prompt="Give me 3 realistic business ideas I can start with a small budget.">Small-budget idea</button>
+      <button type="button" data-prompt="Help me create an offer that is easier for customers to buy.">Improve my offer</button>
+      <button type="button" data-prompt="Create a practical 30-day plan to get my first paying customer.">Get first customer</button>
+    </div>
+  </div>
+</section>
+
+<section class="command-center" aria-labelledby="command-center-title">
+  <div class="command-center-inner">
+    <div class="command-copy">
+      <span class="eyebrow">START HERE</span>
+      <h2 id="command-center-title">What do you need to move forward today?</h2>
+      <p>Choose a proven starting point. Each workflow guides the AI toward an output you can use immediately.</p>
+    </div>
+    <div class="quick-actions">
+      <a href="ideas.html" class="quick-action"><span class="quick-icon">01</span><span><strong>Find a business idea</strong><small>Match ideas to your skills and budget</small></span><b>→</b></a>
+      <a href="revenue.html" class="quick-action"><span class="quick-icon">02</span><span><strong>Make an offer that sells</strong><small>Create a revenue plan and sales assets</small></span><b>→</b></a>
+      <a href="planner.html" class="quick-action"><span class="quick-icon">03</span><span><strong>Plan my next 30 days</strong><small>Turn a goal into focused weekly actions</small></span><b>→</b></a>
+      <a href="documents.html" class="quick-action"><span class="quick-icon">04</span><span><strong>Improve an important document</strong><small>Rewrite, summarize, and polish faster</small></span><b>→</b></a>
     </div>
   </div>
 </section>
@@ -78,12 +115,12 @@
   </div>
 </div>
 
-<section class="section">
+<section class="section" id="popular-workflows">
   <div class="section-inner">
     <div class="section-header">
-      <span class="section-label">// Core Workspace</span>
-      <h2>High-Leverage Tools for <span class="shimmer-text">Founders</span></h2>
-      <p>Use the main AI workspace for strategy, planning, execution, and digital growth.</p>
+      <span class="section-label">// MOST USED WORKFLOWS</span>
+      <h2>Everything you need to <span class="shimmer-text">make progress</span></h2>
+      <p>Start with a focused tool, get an organised result, then keep building from there.</p>
     </div>
 
     <div class="features-grid">
@@ -229,7 +266,7 @@
         <div class="feature-arrow">Build Plan →</div>
       </a>
 
-      <a href="pricing-strategy.html" class="feature-card">
+      <a href="pricing.html" class="feature-card">
         <div class="feature-icon">💸</div>
         <div class="feature-title">Pricing Strategist</div>
         <p class="feature-desc">
@@ -252,10 +289,27 @@
   </div>
 </section>
 
+<section class="outcomes-section">
+  <div class="outcomes-inner">
+    <div>
+      <span class="section-label">// BUILT FOR USEFUL OUTPUT</span>
+      <h2>Less advice. More work you can actually use.</h2>
+      <p>Smart Boss AI is designed around the moments when people need clarity, structure, and a fast first draft.</p>
+      <a href="business.html" class="text-link">Ask Business AI a question <span>→</span></a>
+    </div>
+    <div class="outcomes-list">
+      <div><span>01</span><p><strong>Launch plans</strong> with milestones, priorities, risks and next actions.</p></div>
+      <div><span>02</span><p><strong>Sales-ready assets</strong> including offers, outreach and follow-up copy.</p></div>
+      <div><span>03</span><p><strong>Professional documents</strong> that are ready to edit, export or send.</p></div>
+      <div><span>04</span><p><strong>Better decisions</strong> with clear recommendations and practical trade-offs.</p></div>
+    </div>
+  </div>
+</section>
+
 <section class="section">
   <div class="section-inner">
     <div class="section-header">
-      <span class="section-label">// Monetization Stack</span>
+      <span class="section-label">// MONETIZATION STACK</span>
       <h2>Tools That Help Users Pay You</h2>
       <p>These are the upgrades that make the platform feel more valuable and easier to monetize.</p>
     </div>
@@ -397,8 +451,7 @@
           <ul>
             <li><a href="resources.html">Business Toolkit</a></li>
             <li><a href="planner.html">Launch Planner</a></li>
-            <li><a href="pricing-strategy.html">Pricing Strategist</a></li>
-            <li><a href="pricing.html">Paid Plans</a></li>
+            <li><a href="pricing.html">Pricing Strategist</a></li>
             <li><a href="revenue.html">Revenue AI</a></li>
           </ul>
         </div>

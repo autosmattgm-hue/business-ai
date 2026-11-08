@@ -5,6 +5,45 @@
 
 // ── GLOBALS ─────────────────────────────────────────────
 const LOCAL_API_PORTS = [3010, 3000, 3001, 3100, 3200];
+
+// Installable app support and consistent AI crown branding across every page.
+(function initSmartBossPwa() {
+  let deferredInstallPrompt = null;
+  const head = document.head;
+  if (head && !head.querySelector('link[rel="manifest"]')) {
+    const manifest = document.createElement("link");
+    manifest.rel = "manifest";
+    manifest.href = "manifest.webmanifest";
+    head.appendChild(manifest);
+  }
+  if (head && !head.querySelector('link[rel="icon"]')) {
+    const icon = document.createElement("link");
+    icon.rel = "icon";
+    icon.type = "image/svg+xml";
+    icon.href = "assets/ai-crown.svg";
+    head.appendChild(icon);
+  }
+  if ("serviceWorker" in navigator && (location.protocol === "http:" || location.protocol === "https:")) {
+    navigator.serviceWorker.register("sw.js").catch(() => {});
+  }
+
+  window.addEventListener("beforeinstallprompt", (event) => {
+    event.preventDefault();
+    deferredInstallPrompt = event;
+    const installButton = document.getElementById("install-app-btn");
+    if (installButton) installButton.hidden = false;
+  });
+
+  document.addEventListener("click", async (event) => {
+    if (event.target.closest("#install-app-btn") && deferredInstallPrompt) {
+      deferredInstallPrompt.prompt();
+      await deferredInstallPrompt.userChoice;
+      deferredInstallPrompt = null;
+      const installButton = document.getElementById("install-app-btn");
+      if (installButton) installButton.hidden = true;
+    }
+  });
+})();
 const API_BASES = (() => {
   const bases = [];
   const addBase = (value) => {
@@ -58,8 +97,6 @@ async function fetchApi(path, init = {}) {
 const SMART_BOSS_STORAGE = {
   users: "smartboss_users_v1",
   session: "smartboss_session_v1",
-  checkout: "smartboss_pending_checkout_v1",
-  aiModel: "smartboss_ai_model_profile_v1",
 };
 
 const SMART_BOSS_DEFAULT_ACCESS = {
@@ -70,26 +107,8 @@ const SMART_BOSS_DEFAULT_ACCESS = {
   adminCode: "ADMIN2026",
 };
 
-const SMART_BOSS_DEFAULT_MODEL_CONFIG = {
-  defaultModel: "auto",
-  models: [
-    { id: "auto", label: "Smart Auto", description: "Default production profile with reliable fallbacks." },
-    { id: "fast", label: "Fast", description: "Shorter, faster responses for quick decisions and drafts." },
-    { id: "balanced", label: "Balanced", description: "Strong general-purpose business reasoning." },
-    { id: "deep", label: "Deep Strategy", description: "More deliberate reasoning for complex plans." },
-    { id: "creative", label: "Creative", description: "Higher-variation responses for ideas and content." },
-    { id: "nemotron-9b", label: "Nemotron Nano 9B", description: "NVIDIA reasoning model for agentic business strategy and analysis." },
-    { id: "mistral-medium", label: "Mistral Medium 3.5", description: "High-performing model for text generation, coding, and agentic work." },
-    { id: "deepseek-flash", label: "DeepSeek V4 Flash", description: "Fast reasoning and coding model for quick strategic answers." },
-    { id: "deepseek-pro", label: "DeepSeek V4 Pro", description: "Deeper reasoning profile for complex plans, audits, and coding tasks." },
-    { id: "minimax", label: "MiniMax M2.7", description: "Strong text-to-text model for reasoning, coding, and office tasks." },
-  ],
-};
-
 let smartBossPublicConfigPromise = null;
 let smartBossPublicConfigCache = null;
-let smartBossModelConfigPromise = null;
-let smartBossModelConfigCache = null;
 
 function isStorageAvailable() {
   try {
@@ -116,82 +135,6 @@ function readStorageJson(key, fallback) {
 function writeStorageJson(key, value) {
   if (!isStorageAvailable()) return;
   window.localStorage.setItem(key, JSON.stringify(value));
-}
-
-function normalizeAiModelId(value) {
-  return String(value || "")
-    .trim()
-    .toLowerCase()
-    .replace(/[^a-z0-9_-]/g, "");
-}
-
-function normalizeAiModelOption(option) {
-  const id = normalizeAiModelId(option?.id);
-  const label = String(option?.label || "").trim();
-  const description = String(option?.description || "").trim();
-
-  if (!id || !label) return null;
-  return { id, label, description };
-}
-
-function getDefaultModelConfig() {
-  return {
-    defaultModel: SMART_BOSS_DEFAULT_MODEL_CONFIG.defaultModel,
-    models: SMART_BOSS_DEFAULT_MODEL_CONFIG.models.map((option) => ({ ...option })),
-  };
-}
-
-function normalizeModelConfig(payload) {
-  const fallback = getDefaultModelConfig();
-  const models = Array.isArray(payload?.models)
-    ? payload.models.map(normalizeAiModelOption).filter(Boolean)
-    : fallback.models;
-
-  const safeModels = models.length ? models : fallback.models;
-  const requestedDefault = normalizeAiModelId(payload?.defaultModel) || fallback.defaultModel;
-  const defaultModel = safeModels.some((option) => option.id === requestedDefault)
-    ? requestedDefault
-    : safeModels[0].id;
-
-  return { defaultModel, models: safeModels };
-}
-
-async function loadSmartBossModelConfig() {
-  if (smartBossModelConfigPromise) {
-    return smartBossModelConfigPromise;
-  }
-
-  smartBossModelConfigPromise = (async () => {
-    try {
-      const response = await fetchApi("/api/models", { method: "GET" });
-      if (!response.ok) {
-        throw new Error(`Model config request failed with ${response.status}`);
-      }
-
-      smartBossModelConfigCache = normalizeModelConfig(await response.json());
-      return smartBossModelConfigCache;
-    } catch (_) {
-      smartBossModelConfigCache = getDefaultModelConfig();
-      return smartBossModelConfigCache;
-    }
-  })();
-
-  return smartBossModelConfigPromise;
-}
-
-function getStoredSmartBossModel() {
-  if (!isStorageAvailable()) return "";
-  return normalizeAiModelId(window.localStorage.getItem(SMART_BOSS_STORAGE.aiModel));
-}
-
-function setStoredSmartBossModel(model) {
-  if (!isStorageAvailable()) return;
-  window.localStorage.setItem(SMART_BOSS_STORAGE.aiModel, normalizeAiModelId(model));
-}
-
-function getAiModelOption(options, model) {
-  const modelId = normalizeAiModelId(model);
-  return (options || []).find((option) => option.id === modelId) || null;
 }
 
 function normalizeEmail(value) {
@@ -356,12 +299,6 @@ function getDefaultPublicConfig() {
       lifetime: "",
       paypal: "",
     },
-    paypal: {
-      clientId: "",
-      currency: "USD",
-      environment: "sandbox",
-      enabled: false,
-    },
     freeAccess: {
       dailyRequests: SMART_BOSS_DEFAULT_ACCESS.freeDailyRequests,
       promoCode: SMART_BOSS_DEFAULT_ACCESS.freePromoCode,
@@ -370,29 +307,7 @@ function getDefaultPublicConfig() {
     },
     plans: {
       free: { name: "Free Starter" },
-      pro: {
-        name: "Smart Boss Pro",
-        priceOptions: {
-          monthly: {
-            price: "$9",
-            amount: "9.00",
-            cadence: "/month",
-            description: "Best for users who want affordable access without a yearly commitment.",
-          },
-          yearly: {
-            price: "$79",
-            amount: "79.00",
-            cadence: "/year",
-            description: "Good for loyal users and gives you better upfront cash flow.",
-          },
-          lifetime: {
-            price: "$149",
-            amount: "149.00",
-            cadence: "one-time",
-            description: "A launch deal for early supporters who want long-term access and help fund growth faster.",
-          },
-        },
-      },
+      pro: { name: "Smart Boss Pro" },
       admin: { name: "Admin Unlimited" },
     },
   };
@@ -422,21 +337,9 @@ async function loadSmartBossPublicConfig() {
           ...getDefaultPublicConfig().paymentLinks,
           ...(config.paymentLinks || {}),
         },
-        paypal: {
-          ...getDefaultPublicConfig().paypal,
-          ...(config.paypal || {}),
-        },
         plans: {
           ...getDefaultPublicConfig().plans,
           ...(config.plans || {}),
-          pro: {
-            ...getDefaultPublicConfig().plans.pro,
-            ...(config.plans?.pro || {}),
-            priceOptions: {
-              ...getDefaultPublicConfig().plans.pro.priceOptions,
-              ...(config.plans?.pro?.priceOptions || {}),
-            },
-          },
         },
       };
 
@@ -448,94 +351,6 @@ async function loadSmartBossPublicConfig() {
   })();
 
   return smartBossPublicConfigPromise;
-}
-
-function getSmartBossPaidPlanLabel(planKey) {
-  const labels = {
-    monthly: "Smart Boss Pro Monthly",
-    yearly: "Smart Boss Pro Yearly",
-    lifetime: "Founder Lifetime",
-  };
-
-  return labels[planKey] || "Smart Boss Pro";
-}
-
-function normalizeSmartBossPaidPlanKey(planKey) {
-  const normalized = String(planKey || "").trim().toLowerCase();
-  return ["monthly", "yearly", "lifetime"].includes(normalized) ? normalized : "monthly";
-}
-
-function getPendingSmartBossCheckout() {
-  return readStorageJson(SMART_BOSS_STORAGE.checkout, null);
-}
-
-function clearPendingSmartBossCheckout() {
-  if (!isStorageAvailable()) return;
-  window.localStorage.removeItem(SMART_BOSS_STORAGE.checkout);
-}
-
-function startSmartBossCheckout({ planKey, paymentUrl = "", provider = "paypal" } = {}) {
-  const user = getCurrentSmartBossUser();
-  if (!user) {
-    throw new Error("Please log in or create an account before checkout.");
-  }
-
-  const normalizedPlanKey = normalizeSmartBossPaidPlanKey(planKey);
-  const checkout = {
-    id: createSmartBossUserId(),
-    provider,
-    planKey: normalizedPlanKey,
-    planLabel: getSmartBossPaidPlanLabel(normalizedPlanKey),
-    paymentUrl,
-    userId: user.id,
-    email: user.email,
-    startedAt: new Date().toISOString(),
-  };
-
-  writeStorageJson(SMART_BOSS_STORAGE.checkout, checkout);
-  return checkout;
-}
-
-function createLocalSmartBossActivationCode(planKey) {
-  const planPart = String(planKey || "pro").toUpperCase().replace(/[^A-Z0-9]/g, "").slice(0, 12) || "PRO";
-  const randomPart = Math.random().toString(16).slice(2, 10).toUpperCase().padEnd(8, "0");
-  return `SB-${planPart}-PRO-${randomPart}`;
-}
-
-function activateSmartBossPaidPlan({ planKey = "monthly", provider = "paypal", orderId = "", checkoutId = "", activationCode = "" } = {}) {
-  const user = getCurrentSmartBossUser();
-  if (!user) {
-    throw new Error("Please log in before activating paid access.");
-  }
-
-  const normalizedPlanKey = normalizeSmartBossPaidPlanKey(planKey);
-  const activatedAt = new Date().toISOString();
-  const paidActivationCode = String(activationCode || "").trim() || createLocalSmartBossActivationCode(normalizedPlanKey);
-
-  updateCurrentSmartBossUser((draft) => {
-    draft.plan = "pro";
-    draft.role = "user";
-    draft.unlockedAt = activatedAt;
-    draft.paidPlanKey = normalizedPlanKey;
-    draft.paidPlanLabel = getSmartBossPaidPlanLabel(normalizedPlanKey);
-    draft.paidAccessActivatedAt = activatedAt;
-    draft.paidAccessProvider = provider;
-    draft.paidCheckoutId = checkoutId || draft.paidCheckoutId || "";
-    draft.paypalOrderId = orderId || draft.paypalOrderId || "";
-    draft.paidActivationCode = paidActivationCode;
-    return draft;
-  });
-
-  clearPendingSmartBossCheckout();
-
-  return {
-    ok: true,
-    plan: "pro",
-    paidPlanKey: normalizedPlanKey,
-    paidPlanLabel: getSmartBossPaidPlanLabel(normalizedPlanKey),
-    activationCode: paidActivationCode,
-    message: `${getSmartBossPaidPlanLabel(normalizedPlanKey)} unlocked.`,
-  };
 }
 
 function getFreeAccessConfigSync() {
@@ -759,7 +574,6 @@ function initAuthNav() {
   if (!navList) return;
 
   ensureNavLink(navList, "revenue.html", "Revenue AI");
-  ensureNavLink(navList, "pricing-strategy.html", "Price Builder");
   ensureNavLink(navList, "pricing.html", "Pricing");
   ensureNavLink(navList, "audit.html", "Money Audit");
   ensureNavLink(navList, "cv.html", "CV Creator");
@@ -1295,20 +1109,15 @@ function createDictationSession({ textarea, onStart, onStop, onError }) {
   };
 }
 
-async function streamSmartBossResponse({ message, mode, model, history = [], onToken, onDone }) {
+async function streamSmartBossResponse({ message, mode, history = [], onToken, onDone }) {
   const refundUsage = reserveAiUsageOrThrow();
   let res;
-  const payload = { message, mode, history };
-
-  if (model) {
-    payload.model = model;
-  }
 
   try {
     res = await fetchApi("/api/chat", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload),
+      body: JSON.stringify({ message, mode, history }),
     });
   } catch (error) {
     refundUsage();
@@ -1325,11 +1134,6 @@ async function streamSmartBossResponse({ message, mode, model, history = [], onT
     } catch (_) {}
 
     throw new Error(detail);
-  }
-
-  if (!res.body) {
-    refundUsage();
-    throw new Error("The AI response stream was not available. Please try again.");
   }
 
   const reader = res.body.getReader();
@@ -1349,22 +1153,13 @@ async function streamSmartBossResponse({ message, mode, model, history = [], onT
       for (const line of lines) {
         if (!line.trim() || line === "data: [DONE]" || !line.startsWith("data: ")) continue;
 
-        let json;
-
         try {
-          json = JSON.parse(line.slice(6));
+          const json = JSON.parse(line.slice(6));
+          if (json.token) {
+            fullText += json.token;
+            if (onToken) onToken(fullText, json.token);
+          }
         } catch (_) {}
-
-        if (!json) continue;
-
-        if (json.error) {
-          throw new Error(json.error);
-        }
-
-        if (json.token) {
-          fullText += json.token;
-          if (onToken) onToken(fullText, json.token);
-        }
       }
     }
   } catch (error) {
@@ -1381,8 +1176,6 @@ async function streamSmartBossResponse({ message, mode, model, history = [], onT
 class SmartBossChat {
   constructor(options) {
     this.mode = options.mode || "business";
-    this.model = normalizeAiModelId(options.model) || getStoredSmartBossModel() || "auto";
-    this.modelOptions = getDefaultModelConfig().models;
     this.history = [];
     this.isStreaming = false;
     this.lastAssistantText = "";
@@ -1396,8 +1189,6 @@ class SmartBossChat {
     this.voiceInputBtn = document.getElementById("voice-input-btn");
     this.readResponseBtn = document.getElementById("read-response-btn");
     this.stopVoiceBtn = document.getElementById("stop-voice-btn");
-    this.modelSelectEl = document.getElementById("ai-model-select");
-    this.modelNoteEl = document.getElementById("ai-model-note");
 
     this.init();
   }
@@ -1421,8 +1212,6 @@ class SmartBossChat {
     if (this.sendBtn) {
       this.sendBtn.addEventListener("click", () => this.send());
     }
-
-    this.initModelSelector();
 
     if (this.voiceInputBtn) {
       this.voiceInputBtn.addEventListener("click", () => this.toggleDictation());
@@ -1467,71 +1256,6 @@ class SmartBossChat {
         this.clearMessages();
       });
     }
-  }
-
-  initModelSelector() {
-    if (!this.modelSelectEl) return;
-
-    this.renderModelOptions(this.modelOptions, this.model);
-
-    this.modelSelectEl.addEventListener("change", () => {
-      const selectedModel = normalizeAiModelId(this.modelSelectEl.value) || "auto";
-      const selectedOption = getAiModelOption(this.modelOptions, selectedModel);
-
-      this.model = selectedOption ? selectedModel : "auto";
-      this.modelSelectEl.value = this.model;
-      setStoredSmartBossModel(this.model);
-      this.updateModelNote();
-
-      const label = getAiModelOption(this.modelOptions, this.model)?.label || "Smart Auto";
-      showToast(`AI model set to ${label}`, "success");
-    });
-
-    loadSmartBossModelConfig().then((config) => {
-      const storedModel = getStoredSmartBossModel();
-      const selectedModel = getAiModelOption(config.models, this.model)
-        ? this.model
-        : storedModel;
-      const safeModel = getAiModelOption(config.models, selectedModel)
-        ? selectedModel
-        : config.defaultModel;
-
-      this.renderModelOptions(config.models, safeModel);
-    });
-  }
-
-  renderModelOptions(options, selectedModel) {
-    if (!this.modelSelectEl) return;
-
-    const safeOptions = Array.isArray(options) && options.length
-      ? options
-      : getDefaultModelConfig().models;
-    const safeModel = getAiModelOption(safeOptions, selectedModel)
-      ? normalizeAiModelId(selectedModel)
-      : safeOptions[0].id;
-
-    this.modelOptions = safeOptions;
-    this.model = safeModel;
-    this.modelSelectEl.textContent = "";
-
-    safeOptions.forEach((option) => {
-      const optionEl = document.createElement("option");
-      optionEl.value = option.id;
-      optionEl.textContent = option.label;
-      if (option.description) optionEl.title = option.description;
-      this.modelSelectEl.appendChild(optionEl);
-    });
-
-    this.modelSelectEl.value = this.model;
-    setStoredSmartBossModel(this.model);
-    this.updateModelNote();
-  }
-
-  updateModelNote() {
-    if (!this.modelNoteEl) return;
-
-    const option = getAiModelOption(this.modelOptions, this.model);
-    this.modelNoteEl.textContent = option?.description || "";
   }
 
   clearMessages() {
@@ -1611,7 +1335,6 @@ class SmartBossChat {
       const cleanResponse = await streamSmartBossResponse({
         message: text,
         mode: this.mode,
-        model: this.model,
         history: priorHistory,
         onToken: (fullText) => {
           this.updateBubble(aiBubble, fullText, true);
@@ -1625,8 +1348,7 @@ class SmartBossChat {
       this.addToHistory(text);
 
     } catch (err) {
-      const retryHint = /try again/i.test(err.message) ? "" : "\n\nPlease try again in a moment.";
-      const errorText = `AI Service Notice:\n\n${err.message}${retryHint}`;
+      const errorText = `Connection Error:\n\nCould not reach the AI service. Please check the server is running.\n\nDetails: ${err.message}`;
       this.updateBubble(aiBubble, errorText, false);
       this.lastAssistantText = errorText;
     } finally {
@@ -1867,11 +1589,43 @@ function initScrollAnimations() {
   });
 }
 
+function initHomepageStrategyLauncher() {
+  const form = document.getElementById("homepage-strategy-form");
+  const input = document.getElementById("homepage-strategy-input");
+  if (!form || !input) return;
+
+  document.querySelectorAll("[data-prompt]").forEach((button) => {
+    button.addEventListener("click", () => {
+      input.value = button.dataset.prompt || "";
+      input.focus();
+    });
+  });
+
+  form.addEventListener("submit", (event) => {
+    event.preventDefault();
+    const message = input.value.trim();
+    if (!message) return;
+    try { window.sessionStorage.setItem("smartboss_pending_prompt", message); } catch (_) {}
+    window.location.href = "business.html";
+  });
+}
+
+function sendPendingHomepagePrompt() {
+  if (!window.chatInstance) return;
+  let message = "";
+  try {
+    message = window.sessionStorage.getItem("smartboss_pending_prompt") || "";
+    window.sessionStorage.removeItem("smartboss_pending_prompt");
+  } catch (_) {}
+  if (message) window.setTimeout(() => window.chatInstance.send(message), 180);
+}
+
 // ── INIT ─────────────────────────────────────────────────
 document.addEventListener("DOMContentLoaded", () => {
   initAuthNav();
   initNav();
   initScrollAnimations();
+  initHomepageStrategyLauncher();
 
   // Counters on index
   const statsSection = document.querySelector(".stats-bar");
@@ -1886,6 +1640,7 @@ document.addEventListener("DOMContentLoaded", () => {
   if (document.getElementById("chat-messages")) {
     const mode = document.body.dataset.mode || "business";
     window.chatInstance = new SmartBossChat({ mode });
+    sendPendingHomepagePrompt();
   }
 
   // Init prompt generator
@@ -1921,8 +1676,3 @@ window.getCurrentSmartBossUser = getCurrentSmartBossUser;
 window.getCurrentUsageSnapshot = getCurrentUsageSnapshot;
 window.redeemSmartBossAccessCode = redeemSmartBossAccessCode;
 window.loadSmartBossPublicConfig = loadSmartBossPublicConfig;
-window.startSmartBossCheckout = startSmartBossCheckout;
-window.getPendingSmartBossCheckout = getPendingSmartBossCheckout;
-window.clearPendingSmartBossCheckout = clearPendingSmartBossCheckout;
-window.activateSmartBossPaidPlan = activateSmartBossPaidPlan;
-window.getSmartBossPaidPlanLabel = getSmartBossPaidPlanLabel;

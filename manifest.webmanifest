@@ -1,0 +1,14 @@
+{
+  "name": "THE SMART BOSS AI",
+  "short_name": "Smart Boss AI",
+  "description": "Business strategy, planning, pricing and productivity AI.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#07111f",
+  "theme_color": "#07111f",
+  "orientation": "any",
+  "icons": [
+    { "src": "/assets/ai-crown.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }
+  ]
+}
