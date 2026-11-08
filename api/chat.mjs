@@ -149,8 +149,11 @@ export default async function handler(req, res) {
     res.end();
   } catch (error) {
     console.error("Vercel API error:", error);
-    res.statusCode = 500;
+    res.statusCode = error.statusCode || 500;
     res.setHeader("Content-Type", "application/json; charset=utf-8");
-    res.end(JSON.stringify({ error: "Internal server error", detail: error.message }));
+    res.end(JSON.stringify({
+      error: error.statusCode ? error.message : "Internal server error",
+      code: error.code || "INTERNAL_SERVER_ERROR",
+    }));
   }
 }

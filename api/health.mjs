@@ -32,5 +32,6 @@ export default function handler(req, res) {
     model: MODEL,
     fallbackModels: FALLBACK_MODELS,
     hasApiKey: Boolean(process.env.NVIDIA_API_KEY),
+    aiVerification: "unverified",
   }));
 }

@@ -74,6 +74,7 @@ function handleHealth(res) {
     model: MODEL,
     fallbackModels: FALLBACK_MODELS,
     hasApiKey: Boolean(process.env.NVIDIA_API_KEY),
+    aiVerification: "unverified",
   });
 }
 
@@ -254,7 +255,10 @@ async function handleChat(req, res) {
     console.error("Server error:", error);
 
     if (!res.headersSent) {
-      sendJson(res, 500, { error: "Internal server error", detail: error.message });
+      sendJson(res, error.statusCode || 500, {
+        error: error.statusCode ? error.message : "Internal server error",
+        code: error.code || "INTERNAL_SERVER_ERROR",
+      });
       return;
     }
 
