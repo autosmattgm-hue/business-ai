@@ -1,0 +1,169 @@
+import { apiFetch, setSession, clearToken, getCurrentUser, redirectToVerification } from "./api.js";
+
+function loadFirebaseAuth() {
+  return import("./firebase-auth.js");
+}
+
+function redirectAfterAuth() {
+  const next = new URLSearchParams(window.location.search).get("next");
+  window.location.href = next && next.startsWith("/") ? next : "/dashboard.html";
+}
+
+function initAuthForm() {
+  const form = document.querySelector("[data-auth-form]");
+  if (!form) return;
+
+  const mode = form.dataset.authForm;
+  const status = document.querySelector("[data-form-status]");
+
+  const googleBtn = document.querySelector("[data-google-auth]");
+  if (googleBtn) {
+    googleBtn.addEventListener("click", async () => {
+      if (googleBtn.disabled) return;
+      googleBtn.disabled = true;
+      try {
+        const { signInWithGoogle } = await loadFirebaseAuth();
+        await signInWithGoogle(status);
+      } catch (error) {
+        let message = "Google sign-in failed. Please try again.";
+        try { message = (await loadFirebaseAuth()).authErrorMessage(error); } catch {}
+        if (status && !String(status.textContent).includes("Redirecting")) {
+          status.textContent = message;
+        }
+      } finally {
+        googleBtn.disabled = false;
+      }
+    });
+  }
+
+  form.addEventListener("submit", async (event) => {
+    event.preventDefault();
+
+    if (status) status.textContent = "Submitting...";
+
+    const formData = new FormData(form);
+    const payload = Object.fromEntries(formData.entries());
+
+    if (mode === "register") {
+      const ref = new URLSearchParams(window.location.search).get("ref") || "";
+      try {
+        const { registerWithEmail } = await loadFirebaseAuth();
+        await registerWithEmail(payload.name, payload.email, payload.password, status);
+      } catch (error) {
+        if (error?.code === "ACCOUNT_EXISTS") {
+          if (status) {
+            status.textContent = "This email already has an account. ";
+            const login = document.createElement("a");
+            login.href = `/login.html?email=${encodeURIComponent(payload.email || "")}`;
+            login.textContent = "Log in to resend verification";
+            login.style.textDecoration = "underline";
+            status.append(login);
+          }
+          return;
+        }
+        const hostname = String(window.location.hostname || "").toLowerCase();
+        const localDevelopment = ["localhost", "127.0.0.1", "::1"].includes(hostname);
+        if (!localDevelopment) {
+          if (status) {
+            try { status.textContent = (await loadFirebaseAuth()).authErrorMessage(error); }
+            catch { status.textContent = "We couldn't send the verification email. Please retry."; }
+          }
+          return;
+        }
+        try {
+          if (status) status.textContent = "Firebase is unreachable. Using local development sign-up...";
+          const result = await apiFetch("/api/auth/register", {
+            method: "POST",
+            body: JSON.stringify({ name: payload.name, email: payload.email, password: payload.password, ref })
+          });
+          if (result.verificationRequired) {
+            if (status) status.textContent = result.message || "Check your email to verify your account.";
+            window.location.href = `/verify-email.html?sent=${result.verificationSent ? "1" : "0"}&email=${encodeURIComponent(payload.email || "")}`;
+            return;
+          }
+          setSession(result);
+          if (status) status.textContent = "Success. Redirecting...";
+          redirectAfterAuth();
+        } catch (fallbackError) {
+          if (status && fallbackError.code === "ACCOUNT_EXISTS") {
+            status.textContent = "This account already exists. Use Log in, then choose Resend verification link if needed.";
+          } else if (status) {
+            status.textContent = "We couldn't complete registration. Check your details and try again.";
+          }
+        }
+      }
+      return;
+    }
+
+    try {
+      const { signInWithEmail } = await loadFirebaseAuth();
+      await signInWithEmail(payload.email, payload.password, status);
+    } catch (error) {
+      if (status && error.code === "ACCOUNT_NOT_VERIFIED") {
+        status.textContent = "";
+        const line = document.createElement("span");
+        line.textContent = `${error.message} `;
+        const resend = document.createElement("a");
+        resend.href = `/verify-email.html?resend=1&email=${encodeURIComponent(payload.email || "")}`;
+        resend.textContent = "Resend verification link";
+        resend.style.textDecoration = "underline";
+        status.append(line, resend);
+      } else if (status) {
+        try {
+          status.textContent = (await loadFirebaseAuth()).authErrorMessage(error);
+        } catch {
+          status.textContent = "We couldn't sign you in. Check your details and try again.";
+        }
+      }
+    }
+  });
+}
+
+function initForgotPassword() {
+  const form = document.querySelector("[data-forgot-form]");
+  if (!form) return;
+  const status = document.querySelector("[data-form-status]");
+  form.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    const email = String(new FormData(form).get("email") || "").trim();
+    if (!email || !status) return;
+    try {
+      const { sendPasswordReset } = await loadFirebaseAuth();
+      await sendPasswordReset(email, status);
+    } catch (error) {
+      status.textContent = error?.message || "Could not send the reset email.";
+    }
+  });
+}
+
+function initVerifyBanner() {
+  if (!document.querySelector("[data-verify-banner]")) return;
+  loadFirebaseAuth()
+    .then((m) => m.watchVerificationBanner())
+    .catch(() => {});
+}
+
+function guardUnverifiedDashboard() {
+  if (window.location.pathname !== "/dashboard.html") return;
+  const user = getCurrentUser();
+  if (user?.verificationRequired && user?.emailVerified === false) {
+    redirectToVerification(user.email);
+  }
+}
+
+function initLogout() {
+  document.addEventListener("click", (event) => {
+    if (event.target.closest("[data-logout]")) {
+      clearToken();
+      window.location.href = "/login.html";
+    }
+  });
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  guardUnverifiedDashboard();
+  initAuthForm();
+  initForgotPassword();
+  initVerifyBanner();
+  initLogout();
+});
